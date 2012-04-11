@@ -1,0 +1,2 @@
+module OutgoingLettersHelper
+end
