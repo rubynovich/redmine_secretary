@@ -20,11 +20,4 @@ class IncomingLetter < ActiveRecord::Base
     # || (self.author == usr && usr.allowed_to?(:delete_own_incoming_letters, nil, :global => true))
     )
   end
-
-  private
-
-  def add_author_as_watcher
-    Watcher.create(:watchable => self.root, :user => author)
-  end
-  
 end

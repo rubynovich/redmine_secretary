@@ -18,5 +18,5 @@ class OutgoingLetter < ActiveRecord::Base
     usr && usr.logged? && (usr.allowed_to?(:delete_outgoing_letters, nil, :global => true) 
     # || (self.author == usr && usr.allowed_to?(:delete_own_outgoing_letters, nil, :global => true))
     )
-  
+  end
 end
