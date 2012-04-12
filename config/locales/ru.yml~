@@ -1,4 +1,0 @@
-# Russian strings go here for Rails i18n
-en:
-  outgoing: "Исходящие письма"
-  incoming: "Входящие письма"

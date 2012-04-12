@@ -1,5 +1,0 @@
-class AssociatedProject < ActiveRecord::Base
-  unloadable
-  belongs_to :outgoing_letters
-  belongs_to :incoming_letters
-end
