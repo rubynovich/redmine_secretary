@@ -2,5 +2,5 @@
 ru:
   label_outgoing: "Исходящие письма"
   label_incoming: "Входящие письма"
-  label_add_incoming_letter: "добавить двходящее письмо"
-  label_add_outgoing_letter: "добавить исходящее письмо"  
+  label_add_incoming_letter: "зарегистрировать входящее письмо"
+  label_add_outgoing_letter: "зарегистрировать исходящее письмо"  
