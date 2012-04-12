@@ -1,0 +1,25 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+one:
+  id: 1
+  code: MyString
+  incoming_code: MyString
+  description: MyText
+  recipient: MyString
+  shipping_on: 2012-04-12 13:59:35
+  shipping_place: MyString
+  shipping_type: MyString
+  served_on: 2012-04-12 13:59:35
+  created_on: 2012-04-12 13:59:35
+  signer: MyString
+two:
+  id: 2
+  code: MyString
+  incoming_code: MyString
+  description: MyText
+  recipient: MyString
+  shipping_on: 2012-04-12 13:59:35
+  shipping_place: MyString
+  shipping_type: MyString
+  served_on: 2012-04-12 13:59:35
+  created_on: 2012-04-12 13:59:35
+  signer: MyString

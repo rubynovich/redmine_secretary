@@ -1,0 +1,27 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+one:
+  id: 1
+  code: MyString
+  outgoing_code: MyString
+  shipping_date: 2012-04-12
+  place: MyString
+  signer: MyString
+  description: MyText
+  comment: 
+  recipient: MyString
+  shipping_type: MyString
+  requires_original: false
+  user_id: 1
+two:
+  id: 2
+  code: MyString
+  outgoing_code: MyString
+  shipping_date: 2012-04-12
+  place: MyString
+  signer: MyString
+  description: MyText
+  comment: 
+  recipient: MyString
+  shipping_type: MyString
+  requires_original: false
+  user_id: 1
