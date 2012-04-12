@@ -2,3 +2,5 @@
 en:
   label_outgoing: "Outgoing"
   label_incoming: "Incoming"
+  label_add_incoming_letter: "add incoming letter"
+  label_add_outgoing_letter: "add outgoing letter"

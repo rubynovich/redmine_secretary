@@ -1,1 +1,6 @@
-<h2>OutgoingLetters#index</h2>
+<div class="contextual">
+  <% if User.current.allowed_to?(:add_outgoing_letters, nil, {:global => true}}) %>
+    <%= link_to l(:label_add_outgoing_letter), {:controller => 'outgoing_letters', :action => 'new'}, :class => 'icon icon-add' %>
+  <% end %>
+</div>
+<h2><%= t(:label_outgoing) %></h2>

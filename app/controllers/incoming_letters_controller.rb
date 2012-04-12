@@ -1,10 +1,13 @@
 class IncomingLettersController < ApplicationController
   unloadable
 
-
   def index
+    @collection = IncomingLetter.all
   end
 
+  def new
+  end
+  
   def show
   end
 
