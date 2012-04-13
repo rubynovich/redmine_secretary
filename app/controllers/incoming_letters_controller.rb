@@ -4,9 +4,20 @@ class IncomingLettersController < ApplicationController
   before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
    
   helper :attachments
+  helper :sort
+  include SortHelper
    
   def index
-    @collection = model_class.all
+    sort_init 'incoming_code', 'asc'
+    sort_update %w(incoming_code outgoing_code signer shipping_from shipping_type shipping_on original_required recipient executor_id description created_on author_id)
+
+    @collection = model_class.find :all, :order => sort_clause
+
+    respond_to do |format|
+      format.html {
+        render :layout => !request.xhr?
+      }
+    end	    
   end
 
   def new
