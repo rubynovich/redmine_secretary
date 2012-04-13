@@ -2,17 +2,14 @@
 ru:
   label_outgoing: "Исходящие письма"
   label_incoming: "Входящие письма"
-  label_add_letter: "Зарегистрировать новое"
-  label_edit_letter: "Исправить"
-  label_delete_letter: "Удалить"
   label_new_incoming_letter: "Регистрация входящего письма"
   label_new_outgoing_letter: "Регистрация исходящего письма"  
   label_edit_incoming_letter: "Правка входящего письма"
-  label_edit_outgoing_letter: "Правка исходящего письма" 
+  label_edit_outgoing_letter: "Правка исходящего письма"
   field_executor: "Исполнитель"
   field_original_required: "Требуется оригинал"
-  field_from: "Откуда"
-  field_to: "Откуда"  
+  field_shipping_from: "Откуда"
+  field_shipping_to: "Куда"  
   field_shipping_on: "Дата отправки"
   field_served_on: "Дата подтверждения вручения"  
   field_shipping_type: "Способ доставки"
@@ -21,7 +18,7 @@ ru:
   field_outgoing_code: "Исходящий №"
   field_incoming_code: "Входящий №"
   message_confirm_destroy: "Вы уверены, что ходите удалить эту запись?"
-  shipping_type_list:
+  list_shipping_type:
     - Письмо
     - Факс
     - Курьер

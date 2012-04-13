@@ -9,8 +9,8 @@ class OutgoingLetter < ActiveRecord::Base
   
   acts_as_attachable :after_add => :attachment_added, :after_remove => :attachment_removed
   
-  safe_attributes :code, :incoming_code, :signer,
-    :shipping_place, :shipping_type, :shipping_on, 
+  safe_attributes :outgoing_code, :incoming_code, :signer,
+    :shipping_to, :shipping_type, :shipping_on, 
     :served_on, :recipient, :description  
   
   def editable_by?(usr)

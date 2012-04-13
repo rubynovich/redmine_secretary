@@ -1,14 +1,19 @@
 <%= error_messages_for @object %>
 
 <div class="box tabular">
-<p><label for="code" id="code_label"><%= t(:field_outgoing_code) %></label><%= f.text_field :code, :size => 60, :no_label => true %></p>
-<p><%= f.text_field :incoming_code, :required => true, :size => 60 %></p>
-<p><%= f.text_field :signer, :required => true, :size => 60 %></p>
-<p><%= f.text_field :recipient, :required => true, :size => 60 %></p>
-<p><%= f.text_field :shipping_on, :size => 10 %><%= calendar_for('incoming_letter_shipping_on') %></p>
-<p><%= f.select :shipping_type, ['post','courier','fax'] %></p>
-<p><label for="shipping_place" id="shipping_place_label"><%= t(:field_to) %></label><%= f.text_field :shipping_place, :size => 60, :no_label => true %></p>
-<p><%= f.text_field :served_on, :size => 10 %><%= calendar_for('incoming_letter_served_on') %></p>
+<div class="splitcontentleft">
+<p><%= f.text_field :outgoing_code, :required => true, :size => 40 %></p>
+<p><%= f.text_field :incoming_code, :required => true, :size => 40 %></p>
+<p><%= f.text_field :signer, :required => true, :size => 40 %></p>
+<p><%= f.text_field :recipient, :required => true, :size => 40 %></p>
+</div>
+<div class="splitcontentright">
+<p><%= f.text_field :shipping_on, :required => true, :size => 10 %><%= calendar_for('incoming_letter_shipping_on') %></p>
+<p><%= f.select :shipping_type, t(:list_shipping_type), :required => true %></p>
+<p><%= f.text_field :shipping_to, :required => true, :size => 40 %></p>
+<p><%= f.text_field :served_on, :required => true, :size => 10 %><%= calendar_for('incoming_letter_served_on') %></p>
+</div>
+<div style="clear:both"></div>
 <p><%= f.text_area :description, :required => true, :cols => 60, :rows => 15, :class => 'wiki-edit' %></p>
 <p id="attachments_form"><%= label_tag('attachments[1][file]', l(:label_attachment_plural))%><%= render :partial => 'attachments/form', :locals => {:container => @object} %></p>
 </div>

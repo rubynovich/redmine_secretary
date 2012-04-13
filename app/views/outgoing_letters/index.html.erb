@@ -1,6 +1,4 @@
 <div class="contextual">
-  <% if User.current.allowed_to?(:add_outgoing_letters, nil, {:global => true}) %>
-    <%= link_to l(:button_add), {:action => 'new'}, :class => 'icon icon-add' %>
-  <% end %>
+  <%= link_to l(:button_add), {:action => 'new'}, :class => 'icon icon-add' if User.current.allowed_to?(:add_outgoing_letters, nil, :global => true) %>
 </div>
 <h2><%= t(:label_outgoing) %></h2>
