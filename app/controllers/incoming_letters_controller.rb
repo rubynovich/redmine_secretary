@@ -1,13 +1,16 @@
 class IncomingLettersController < ApplicationController
   unloadable
 
+  before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
+   
+  helper :attachments
+   
   def index
     @collection = model_class.all
   end
 
   def new
     @object = model_class.new
-    @object.author = User.current
     if request.post?
       @object.save_attachments(params[:attachments])
       if @object.save
@@ -18,15 +21,14 @@ class IncomingLettersController < ApplicationController
   end
   
   def show
-    @object = model_class.find(params[:id])
   end
 
   def edit
-    @object = model_class.find(params[:id])
   end
 
   def update
-    @object = model_class.find(params[:id])
+    @object.safe_attributes = params[model_name]
+    @object.save_attachments(params[:attachments])    
     if @object.update_attribute(params[model_name])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index'
@@ -36,11 +38,20 @@ class IncomingLettersController < ApplicationController
   end
 
   def create
-    model_class.create(params[model_name])
+    @object = model_class.new(:author => User.current)
+    @object.safe_attributes = params[model_name]
+    @object.save_attachments(params[:attachments])
+
+    if @object.save
+      render_attachment_warning_if_needed(@object)
+      flash[:notice] = l(:notice_successful_create)
+      redirect_to( params[:continue] ? {:action => 'new'} :                     {:action => 'show', :id => @object} )
+    else
+      render :action => 'new'
+    end    
   end
 
   def destroy
-    @object = model_class.find(params[:id])
     (render_403; return false) unless @object.destroyable_by?(User.current)
     @object.destroy
     flash[:notice] = l(:notice_successful_delete)
@@ -55,4 +66,8 @@ class IncomingLettersController < ApplicationController
     def model_name
       :incoming_letter
     end  
+    
+    def find_object_by_id
+      @object = model_class.find(params[:id])
+    end
 end

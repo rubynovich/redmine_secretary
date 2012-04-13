@@ -1,9 +1,10 @@
 <h2><%=l(:label_new_incoming_letter)%></h2>
 
 <% labelled_form_for @object, :url => incoming_letters_path,
-                                           :html => { :id => 'object-form', :multipart => true, :method => :post} do |f| %>
+                                           :html => { :id => 'object-form', :multipart => true} do |f| %>
   <%= render :partial => 'form', :locals => { :f => f } %>
   <%= submit_tag l(:button_create) %>
+  <%= submit_tag l(:button_create_and_continue), :name => 'continue' %>  
   <%# link_to_remote l(:label_preview),
                      { :url => preview_incoming_letter_path,
                        :method => 'get',

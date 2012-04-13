@@ -1,5 +1,6 @@
 class OutgoingLetter < ActiveRecord::Base
   unloadable
+  include Redmine::SafeAttributes    
   
   belongs_to  :author, :class_name => 'User', :foreign_key => 'author_id'
   has_many    :projects, :through => :associated_projects
@@ -7,6 +8,10 @@ class OutgoingLetter < ActiveRecord::Base
   has_many    :comments, :as => :commented, :dependent => :destroy  
   
   acts_as_attachable :after_add => :attachment_added, :after_remove => :attachment_removed
+  
+  safe_attributes :code, :incoming_code, :signer,
+    :shipping_place, :shipping_type, :shipping_on, 
+    :served_on, :recipient, :description  
   
   def editable_by?(usr)
     usr && usr.logged? && (usr.allowed_to?(:edit_outgoing_letters, nil, :global => true)

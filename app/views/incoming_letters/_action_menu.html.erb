@@ -1,0 +1,7 @@
+<div class="contextual">
+  <% if User.current.allowed_to?(:add_incoming_letters, nil, {:global => true}) %>
+    <%= link_to l(:button_add), {:action => 'new'}, :class => 'icon icon-add' %>
+  <% end %>
+  <%= link_to l(:button_update), {:action => 'edit', :id => @object.id}, :class => 'icon icon-edit' %>
+  <%= link_to l(:button_delete), incoming_letter_path(@object), :confirm => l(:message_confirm_destroy), :method => :delete, :class => 'icon icon-del' if User.current.allowed_to?(:delete_incoming_letters, nil, :global => true) %>
+</div>

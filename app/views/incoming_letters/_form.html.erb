@@ -1,18 +1,18 @@
 <%= error_messages_for @object %>
 
 <div class="box tabular">
-<p><label for="code" id="code_label"><%= t(:field_incoming_code) %></label><%= f.text_field :code, :required => true, :size => 60, :no_label => true %></p>
+<p><label for="code" id="code_label"><%= t(:field_incoming_code) %></label><%= f.text_field :code, :size => 60, :no_label => true %></p>
 <p><%= f.text_field :outgoing_code, :required => true, :size => 60 %></p>
 <p><%= f.text_field :signer, :required => true, :size => 60 %></p>
 <p><%= f.text_field :recipient, :required => true, :size => 60 %></p>
-<p><%= f.text_area :description, :required => true, :cols => 60, :rows => 15, :class => 'wiki-edit' %></p>
 <p><label for="user_id" id="user_id_label"><%= t(:field_executor) %></label><%= f.select :user_id, User.all.collect {|c| [c.name, c.id]}, :no_label => true %></p>
-<p id="attachments_form"><%= label_tag('attachments[1][file]', l(:label_attachment_plural))%><%= render :partial => 'attachments/form', :locals => {:container => @object} %></p>
 <p><%= f.text_field :shipping_on, :size => 10 %><%= calendar_for('incoming_letter_shipping_on') %></p>
 <p><%= f.select :shipping_type, ['post','courier','fax'] %></p>
-<p><label for="shipping_place" id="shipping_place_label"><%= t(:field_from) %></label><%= f.text_field :shipping_place, :required => true, :size => 60, :no_label => true %></p>
+<p><label for="shipping_place" id="shipping_place_label"><%= t(:field_from) %></label><%= f.text_field :shipping_place, :size => 60, :no_label => true %></p>
 <p>
   <label class="inline" for="original_required" id="original_required_label"><%= f.check_box :original_required, :no_label => true %> <%= l(:field_original_required) %></label></p>
+<p><%= f.text_area :description, :required => true, :cols => 60, :rows => 15, :class => 'wiki-edit' %></p> 
+<p id="attachments_form"><%= label_tag('attachments[1][file]', l(:label_attachment_plural))%><%= render :partial => 'attachments/form', :locals => {:container => @object} %></p>  
 </div>
 
 <%= wikitoolbar_for 'incoming_letter_description' %>

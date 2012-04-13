@@ -1,6 +1,6 @@
 <div class="contextual">
   <% if User.current.allowed_to?(:add_incoming_letters, nil, {:global=>true}) %>
-    <%= link_to l(:label_add_incoming_letter), {:controller => 'incoming_letters', :action => 'new'}, :class => 'icon icon-add' %>
+    <%= link_to l(:button_add), {:action => 'new'}, :class => 'icon icon-add' %>
   <% end %>
 </div>
 

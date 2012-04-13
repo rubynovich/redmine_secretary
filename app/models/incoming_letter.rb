@@ -1,5 +1,6 @@
 class IncomingLetter < ActiveRecord::Base
   unloadable
+  include Redmine::SafeAttributes  
   
   belongs_to  :author, :class_name => 'User', :foreign_key => 'author_id'  
   belongs_to  :user
@@ -8,6 +9,10 @@ class IncomingLetter < ActiveRecord::Base
   has_many    :comments, :as => :commented, :dependent => :destroy
 
   acts_as_attachable :after_add => :attachment_added, :after_remove => :attachment_removed
+  
+  safe_attributes :code, :outgoing_code, :signer,
+    :shipping_place, :shipping_type, :shipping_on, 
+    :original_required, :recipient, :user_id, :description
 
   def editable_by?(usr)
     usr && usr.logged? && (usr.allowed_to?(:edit_incoming_letters, nil, :global => true)
