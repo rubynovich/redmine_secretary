@@ -1,4 +1,42 @@
 <div class="contextual">
-  <%= link_to l(:button_add), {:action => 'new'}, :class => 'icon icon-add' if User.current.allowed_to?(:add_outgoing_letters, nil, :global => true) %>
+  <%= link_to l(:button_add), {:action => 'new'}, :class => 'icon icon-add' if User.current.allowed_to?(:add_outgoing_letters, nil, :global=>true) %>
 </div>
+
 <h2><%= t(:label_outgoing) %></h2>
+
+<div class="autoscroll">
+<table class="list">
+  <thead><tr>
+  <%= sort_header_tag('outgoing_code', :caption => l(:field_outgoing_code)) %>
+  <%= sort_header_tag('incoming_code', :caption => l(:field_incoming_code)) %>  
+  <%= sort_header_tag('signer', :caption => l(:field_signer)) %>
+  <%= sort_header_tag('shipping_to', :caption => l(:field_shipping_to)) %>
+  <%= sort_header_tag('shipping_type', :caption => l(:field_shipping_type)) %>
+  <%= sort_header_tag('shipping_on', :caption => l(:field_shipping_on)) %>      
+  <%= sort_header_tag('recipient', :caption => l(:field_recipient)) %>
+  <%= sort_header_tag('served_on', :caption => l(:field_served_on)) %>
+  <%= sort_header_tag('created_on', :caption => l(:field_created_on), :default_order => 'desc') %>
+  <%= sort_header_tag('author_id', :caption => l(:field_author)) %>    
+    <th></th>
+  </tr></thead>
+  <tbody>
+<% for object in @collection -%>
+  <tr class="user <%= cycle("odd", "even") %>">
+  <td class="outgoing_code"><%= link_to h(object.outgoing_code), edit_incoming_letter_path(object) %></td>  
+  <td class="incoming_code"><%= link_to h(object.incoming_code) %></td>
+  <td class="signer"><%= h(object.signer) %></td>
+  <td class="shipping_to"><%= h(object.shipping_to) %></td>
+  <td class="shipping_type"><%= h(object.shipping_type) %></td>
+  <td class="shipping_on"><%= format_time(object.shipping_on) %></td>          
+  <td class="recipient"><%= h(object.recipient) %></td>
+  <td class="served_on"><%= format_time(object.served_on) %></td>
+  <td class="created_on" align="center"><%= format_time(object.created_on) %></td>
+  <td class="author"><%= h(object.author) %></td>          
+  <td class="buttons">
+    <%= link_to(l(:button_delete), incoming_letter_path(object), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del') if object.destroyable_by?(User.current) %>
+  </td>
+  </tr>
+<% end -%>
+  </tbody>
+</table>
+</div>

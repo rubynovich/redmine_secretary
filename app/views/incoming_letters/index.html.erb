@@ -34,9 +34,9 @@
   <td class="created_on" align="center"><%= format_time(object.created_on) %></td>
   <td class="executor"><%= h(object.executor) %></td>
   <td class="author"><%= h(object.author) %></td>          
-    <td class="buttons">
-      <%= link_to(l(:button_delete), incoming_letter_path(object), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del') %>
-    </td>
+  <td class="buttons">
+    <%= link_to(l(:button_delete), incoming_letter_path(object), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del') if object.destroyable_by?(User.current) %>
+  </td>
   </tr>
 <% end -%>
   </tbody>

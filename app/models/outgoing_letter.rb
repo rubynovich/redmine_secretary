@@ -14,14 +14,12 @@ class OutgoingLetter < ActiveRecord::Base
     :served_on, :recipient, :description  
   
   def editable_by?(usr)
-    usr && usr.logged? && (usr.allowed_to?(:edit_outgoing_letters, nil, :global => true)
-    # || (self.author == usr && usr.allowed_to?(:edit_own_outgoing_letters, nil, :global => true))
+    usr && usr.logged? && (usr.allowed_to?(:edit_outgoing_letters, nil, :global => true) || (self.author == usr && usr.allowed_to?(:edit_own_outgoing_letters, nil, :global => true))
     )
   end
 
   def destroyable_by?(usr)
-    usr && usr.logged? && (usr.allowed_to?(:delete_outgoing_letters, nil, :global => true) 
-    # || (self.author == usr && usr.allowed_to?(:delete_own_outgoing_letters, nil, :global => true))
+    usr && usr.logged? && (usr.allowed_to?(:delete_outgoing_letters, nil, :global => true) || (self.author == usr && usr.allowed_to?(:delete_own_outgoing_letters, nil, :global => true))
     )
   end
   

@@ -5,9 +5,21 @@ class OutgoingLettersController < ApplicationController
    
   helper :attachments
   include AttachmentsHelper
+  helper :sort
+  include SortHelper
+  
    
   def index
-    @collection = model_class.all
+    sort_init 'incoming_code', 'asc'
+    sort_update %w(incoming_code outgoing_code signer shipping_to shipping_type shipping_on served_on recipient description created_on author_id)
+
+    @collection = model_class.find :all, :order => sort_clause
+
+    respond_to do |format|
+      format.html {
+        render :layout => !request.xhr?
+      }
+    end	    
   end
 
   def new
@@ -28,6 +40,7 @@ class OutgoingLettersController < ApplicationController
   end
 
   def update
+    (render_403; return false) unless @object.editable_by?(User.current)        
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])    
     if @object.update_attributes(params[model_name])

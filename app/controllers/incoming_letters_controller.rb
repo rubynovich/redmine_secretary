@@ -4,6 +4,7 @@ class IncomingLettersController < ApplicationController
   before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
    
   helper :attachments
+  include AttachmentsHelper  
   helper :sort
   include SortHelper
    
@@ -38,6 +39,7 @@ class IncomingLettersController < ApplicationController
   end
 
   def update
+    (render_403; return false) unless @object.editable_by?(User.current)    
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])    
     if @object.update_attributes(params[model_name])

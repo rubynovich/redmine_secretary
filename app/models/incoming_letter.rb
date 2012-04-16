@@ -15,14 +15,12 @@ class IncomingLetter < ActiveRecord::Base
     :original_required, :recipient, :executor_id, :description
 
   def editable_by?(usr)
-    usr && usr.logged? && (usr.allowed_to?(:edit_incoming_letters, nil, :global => true)
-    # || (self.author == usr && usr.allowed_to?(:edit_own_incoming_letters, nil, :global => true))
+    usr && usr.logged? && (usr.allowed_to?(:edit_incoming_letters, nil, :global => true) || (self.author == usr && usr.allowed_to?(:edit_own_incoming_letters, nil, :global => true))
     )
   end
 
   def destroyable_by?(usr)
-    usr && usr.logged? && (usr.allowed_to?(:delete_incoming_letters, nil, :global => true) 
-    # || (self.author == usr && usr.allowed_to?(:delete_own_incoming_letters, nil, :global => true))
+    usr && usr.logged? && (usr.allowed_to?(:delete_incoming_letters, nil, :global => true) || (self.author == usr && usr.allowed_to?(:delete_own_incoming_letters, nil, :global => true))
     )
   end
 
