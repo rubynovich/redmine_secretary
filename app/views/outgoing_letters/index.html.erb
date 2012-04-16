@@ -22,7 +22,7 @@
   <tbody>
 <% for object in @collection -%>
   <tr class="user <%= cycle("odd", "even") %>">
-  <td class="outgoing_code"><%= link_to h(object.outgoing_code), edit_incoming_letter_path(object) %></td>  
+  <td class="outgoing_code"><%= link_to h(object.outgoing_code), edit_outgoing_letter_path(object) %></td>  
   <td class="incoming_code"><%= link_to h(object.incoming_code) %></td>
   <td class="signer"><%= h(object.signer) %></td>
   <td class="shipping_to"><%= h(object.shipping_to) %></td>
@@ -33,7 +33,7 @@
   <td class="created_on" align="center"><%= format_time(object.created_on) %></td>
   <td class="author"><%= h(object.author) %></td>          
   <td class="buttons">
-    <%= link_to(l(:button_delete), incoming_letter_path(object), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del') if object.destroyable_by?(User.current) %>
+    <%= link_to(l(:button_delete), outgoing_letter_path(object), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del') if object.destroyable_by?(User.current) %>
   </td>
   </tr>
 <% end -%>
