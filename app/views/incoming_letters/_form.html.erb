@@ -2,15 +2,15 @@
 
 <div class="box tabular">
 <div class="splitcontentleft">
-<p><%= f.text_field :incoming_code, :required => true, :size => 40 %></p>
-<p><%= f.text_field :outgoing_code, :size => 40 %></p>
+<p><%= f.text_field :incoming_code, :required => true, :size => 10 %></p>
+<p><%= f.text_field :outgoing_code, :size => 10 %></p>
 <p><%= f.text_field :signer, :size => 40 %></p>
 <p><%= f.text_field :recipient, :size => 40 %></p>
 </div>
 <div class="splitcontentright">
 <p><%= f.select :executor_id, User.all.map {|c| [c.name, c.id]}, :required => true, :prompt => t(:prompt_please_select) %></p>
 <p><%= f.text_field :shipping_on, :size => 10 %><%= calendar_for('incoming_letter_shipping_on') %></p>
-<p><%= f.select :shipping_type, t(:list_shipping_type), :required => true %></p>
+<p><%= f.select :shipping_type, t(:list_shipping_type), :required => true, :prompt => t(:prompt_please_select) %></p>
 <p><%= f.text_field :shipping_from, :required => true, :size => 40 %></p>
 <p><%= f.select :original_required, t(:list_original_required), :prompt => t(:prompt_please_select) %></p>
 </div>

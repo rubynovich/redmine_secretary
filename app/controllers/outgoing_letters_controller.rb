@@ -10,7 +10,7 @@ class OutgoingLettersController < ApplicationController
   
    
   def index
-    sort_init 'incoming_code', 'asc'
+    sort_init 'outgoing_code', 'asc'
     sort_update %w(incoming_code outgoing_code signer shipping_to shipping_type shipping_on served_on recipient description created_on author_id)
 
     @collection = model_class.find :all, :order => sort_clause

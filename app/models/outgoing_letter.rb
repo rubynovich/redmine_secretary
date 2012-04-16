@@ -6,6 +6,10 @@ class OutgoingLetter < ActiveRecord::Base
   has_many    :projects, :through => :associated_projects
   has_many    :associated_projects
   has_many    :comments, :as => :commented, :dependent => :destroy  
+
+  validates_presence_of :outgoing_code, :author_id, 
+    :shipping_type, :shipping_to, :shipping_on
+  validates_uniqueness_of :outgoing_code   
   
   acts_as_attachable :after_add => :attachment_added, :after_remove => :attachment_removed
   

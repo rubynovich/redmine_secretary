@@ -8,6 +8,10 @@ class IncomingLetter < ActiveRecord::Base
   has_many    :associated_projects
   has_many    :comments, :as => :commented, :dependent => :destroy
 
+  validates_presence_of :incoming_code, :author_id, :executor_id, 
+    :shipping_type, :shipping_from
+  validates_uniqueness_of :incoming_code
+
   acts_as_attachable :after_add => :attachment_added, :after_remove => :attachment_removed
   
   safe_attributes :incoming_code, :outgoing_code, :signer,
