@@ -30,7 +30,7 @@ class OutgoingLettersController < ApplicationController
   def update
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])    
-    if @object.update_attribute(params[model_name])
+    if @object.update_attributes(params[model_name])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index'
     else
