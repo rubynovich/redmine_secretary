@@ -3,20 +3,20 @@
 <div class="box tabular">
 <div class="splitcontentleft">
 <p><%= f.text_field :incoming_code, :required => true, :size => 40 %></p>
-<p><%= f.text_field :outgoing_code, :required => true, :size => 40 %></p>
-<p><%= f.text_field :signer, :required => true, :size => 40 %></p>
-<p><%= f.text_field :recipient, :required => true, :size => 40 %></p>
+<p><%= f.text_field :outgoing_code, :size => 40 %></p>
+<p><%= f.text_field :signer, :size => 40 %></p>
+<p><%= f.text_field :recipient, :size => 40 %></p>
 </div>
 <div class="splitcontentright">
 <p><%= f.select :executor_id, User.all.map {|c| [c.name, c.id]}, :required => true, :prompt => t(:prompt_please_select) %></p>
-<p><%= f.text_field :shipping_on, :required => true, :size => 10 %><%= calendar_for('incoming_letter_shipping_on') %></p>
+<p><%= f.text_field :shipping_on, :size => 10 %><%= calendar_for('incoming_letter_shipping_on') %></p>
 <p><%= f.select :shipping_type, t(:list_shipping_type), :required => true %></p>
 <p><%= f.text_field :shipping_from, :required => true, :size => 40 %></p>
 <p><%= f.select :original_required, t(:list_original_required), :prompt => t(:prompt_please_select) %></p>
 </div>
 <div style="clear:both"></div>
-<p><%= f.text_area :description, :required => true, :cols => 60, :rows => 15, :class => 'wiki-edit' %></p> 
-<p id="attachments_form"><%= label_tag('attachments[1][file]', l(:label_attachment_plural))%><%= render :partial => 'attachments/form', :locals => {:container => @object} %></p>  
+<p><%= f.text_area :description, :cols => 60, :rows => 15, :class => 'wiki-edit' %></p> 
+<p id="attachments_form"><%= label_tag('attachments[1][file]', l(:label_attachment_plural)) %><%= render :partial => 'attachments/form', :locals => {:container => @object} %></p>  
 </div>
 
 <%= wikitoolbar_for 'incoming_letter_description' %>

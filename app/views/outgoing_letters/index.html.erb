@@ -22,7 +22,7 @@
   <tbody>
 <% for object in @collection -%>
   <tr class="user <%= cycle("odd", "even") %>">
-  <td class="outgoing_code"><%= link_to h(object.outgoing_code), edit_outgoing_letter_path(object) %></td>  
+  <td class="outgoing_code"><%= object.editable_by?(User.current) ? link_to(h(object.outgoing_code), edit_outgoing_letter_path(object)) : h(object.outgoing_code) %></td>  
   <td class="incoming_code"><%= link_to h(object.incoming_code) %></td>
   <td class="signer"><%= h(object.signer) %></td>
   <td class="shipping_to"><%= h(object.shipping_to) %></td>

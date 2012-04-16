@@ -10,7 +10,7 @@ class CreateOutgoingLetters < ActiveRecord::Migration
       t.string    :shipping_type      
       t.string    :shipping_place
       t.datetime  :served_on
-      t.ingeger   :author_id
+      t.integer   :author_id
       t.datetime  :created_on
     end
   end
