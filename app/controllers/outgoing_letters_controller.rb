@@ -4,6 +4,7 @@ class OutgoingLettersController < ApplicationController
   before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
    
   helper :attachments
+  include AttachmentsHelper
    
   def index
     @collection = model_class.all
@@ -34,7 +35,7 @@ class OutgoingLettersController < ApplicationController
       redirect_to :action => 'index'
     else
       render :action => 'edit'
-    end      
+    end 
   end
 
   def create
