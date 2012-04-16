@@ -16,6 +16,7 @@
 </div>
 <div style="clear:both"></div>
 <p><%= f.text_area :description, :cols => 60, :rows => 15, :class => 'wiki-edit' %></p> 
+<%= link_to_attachments @object if @object.attachments.any? %> 
 <p id="attachments_form"><%= label_tag('attachments[1][file]', l(:label_attachment_plural)) %><%= render :partial => 'attachments/form', :locals => {:container => @object} %></p>  
 </div>
 

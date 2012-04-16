@@ -1,3 +1,39 @@
 <%= render :partial => 'action_menu' %>
 
-<h2>OutgoingLetters#show</h2>
+<h2><%= outgoing_letter_heading(@object) %></h2>
+
+<div class="issue details">
+<table class="attributes">
+<tr>
+    <th class="outgoing_code"><%=l(:field_outgoing_code)%>:</th><td class="outgoing_code"><%= h(@object.outgoing_code) %></td>
+    <th class="created_on"><%=l(:field_created_on)%>:</th><td class="created_on"><%= format_date(@object.created_on) %></td>
+</tr>
+<tr>
+    <th class="incoming_code"><%=l(:field_incoming_code)%>:</th><td class="incoming_code"><%= h(@object.incoming_code) %></td>
+    <th class="shipping_on"><%=l(:field_shipping_on)%>:</th><td class="shiping_on"><%= format_date(@object.shipping_on) %></td>
+</tr>
+<tr>
+    <th class="shipping_to"><%=l(:field_shipping_to)%>:</th><td class="shipping_to"><%= h(@object.shipping_to) %></td>
+    <th class="shipping_type"><%=l(:field_shipping_type)%>:</th><td class="shipping_type"><%= h(@object.shipping_type) %></td>
+</tr>
+<tr>
+    <th class="signer"><%=l(:field_signer)%>:</th><td class="signer"><%= h(@object.signer) %></td>
+    <th class="recipient"><%=l(:field_recipient)%>:</th><td class="recipient"><%= h(@object.recipient) %></td>
+</tr>
+<tr>
+    <th class="served_on"><%=l(:field_served_on)%>:</th><td class="served_on"><%= format_date(@object.served_on) %></td>
+    <th class="author"><%=l(:field_author)%>:</th><td class="author"><%= h(@object.author) %></td>
+</tr>
+</table>
+<% if @object.description? || @object.attachments.any? -%>
+<hr />
+<% if @object.description? %>
+  <p><strong><%=l(:field_description)%></strong></p>
+  <div class="wiki">
+  <%= textilizable @object, :description, :attachments => @object.attachments %>
+  </div>
+<% end %>  
+<%= link_to_attachments @object %>
+<% end %>
+<div>
+
