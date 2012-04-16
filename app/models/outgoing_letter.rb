@@ -11,7 +11,9 @@ class OutgoingLetter < ActiveRecord::Base
     :shipping_type, :shipping_to, :shipping_on
   validates_uniqueness_of :outgoing_code   
   
-  acts_as_attachable :after_add => :attachment_added, :after_remove => :attachment_removed
+  acts_as_attachable
+
+  attr_accessor :project
   
   safe_attributes :outgoing_code, :incoming_code, :signer,
     :shipping_to, :shipping_type, :shipping_on, 
