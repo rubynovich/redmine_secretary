@@ -6,6 +6,7 @@ ru:
   label_new_outgoing_letter: "Регистрация исходящего письма"  
   label_edit_incoming_letter: "Правка входящего письма"
   label_edit_outgoing_letter: "Правка исходящего письма"
+  label_attachments_projects: "Объекты:"
   field_executor: "Исполнитель"
   field_original_required: "Оригинал"
   field_shipping_from: "Откуда"

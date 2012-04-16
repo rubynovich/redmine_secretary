@@ -39,7 +39,7 @@ class IncomingLettersController < ApplicationController
   end
 
   def update
-    (render_403; return false) unless @object.editable_by?(User.current)    
+    (render_403; return false) unless @object.editable_by?(User.current)
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])    
     if @object.update_attributes(params[model_name])
