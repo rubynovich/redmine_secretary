@@ -7,14 +7,14 @@ ru:
   label_edit_incoming_letter: "Правка входящего письма"
   label_edit_outgoing_letter: "Правка исходящего письма"
   field_executor: "Исполнитель"
-  field_original_required: "Требуется оригинал"
+  field_original_required: "Оригинал"
   field_shipping_from: "Откуда"
   field_shipping_to: "Куда"  
   field_shipping_on: "Дата отправки"
-  field_served_on: "Дата подтверждения вручения"  
-  field_shipping_type: "Способ доставки"
-  field_recipient: "Адресат (кому адресовано)"
-  field_signer: "Отправитель (кем подписан)"
+  field_served_on: "Дата подтверждения вручения"
+  field_shipping_type: "Вид доставки"
+  field_recipient: "Адресат"
+  field_signer: "Отправитель"
   field_outgoing_code: "Исходящий №"
   field_incoming_code: "Входящий №"
   message_confirm_destroy: "Вы уверены, что ходите удалить эту запись?"
@@ -22,3 +22,8 @@ ru:
     - Письмо
     - Факс
     - Курьер
+    - Электронная почта
+  list_original_required:    
+    - Требуется
+    - Не требуется
+  prompt_please_select: "Выберите..."

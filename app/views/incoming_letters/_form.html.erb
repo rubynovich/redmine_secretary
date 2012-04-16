@@ -12,7 +12,7 @@
 <p><%= f.text_field :shipping_on, :required => true, :size => 10 %><%= calendar_for('incoming_letter_shipping_on') %></p>
 <p><%= f.select :shipping_type, t(:list_shipping_type), :required => true %></p>
 <p><%= f.text_field :shipping_from, :required => true, :size => 40 %></p>
-<p><%= f.check_box :original_required %></p>
+<p><%= f.select :original_required, t(:list_original_required), :prompt => t(:prompt_please_select) %></p>
 </div>
 <div style="clear:both"></div>
 <p><%= f.text_area :description, :required => true, :cols => 60, :rows => 15, :class => 'wiki-edit' %></p> 
