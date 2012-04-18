@@ -22,7 +22,7 @@ class IncomingLettersController < ApplicationController
   end
 
   def new
-    @object = model_class.new(:incoming_code => next_incoming_code)
+    @object = model_class.new(:incoming_code => next_code)
     @related_projects = Member.find(:all, :conditions => {:user_id => User.current.id}).map{ |m| m.project }
 
 #    if request.post?
@@ -58,7 +58,7 @@ class IncomingLettersController < ApplicationController
     @object.save_attachments(params[:attachments])
 
     if @object.save
-      save_incoming_code(@object.incoming_code)
+      save_code(@object.incoming_code)
       render_attachment_warning_if_needed(@object)
       flash[:notice] = l(:notice_successful_create)
       redirect_to( params[:continue] ? {:action => 'new'} :                     {:action => 'show', :id => @object} )
@@ -87,23 +87,23 @@ class IncomingLettersController < ApplicationController
       @object = model_class.find(params[:id])
     end
     
-    def save_incoming_code(incoming_code)
+    def save_code(code)
       attributes = {
-        :value => incoming_code[/\d+/],
-        :year => incoming_code.split('-').last[/\d+/]
+        :value => code[/\d+/],
+        :year => code.split('-').last[/\d+/]
       }      
-      if prev_code = PreviousCode.find_by_name(:incoming_code)
+      if prev_code = PreviousCode.find_by_name(model_name)
         if (prev_code.value.to_i < attributes[:value].to_i)||(prev_code.year.to_i < attributes[:year].to_i)
           prev_code.update_attributes(attributes)
         end
       else
-        PreviousCode.create(attributes.merge(:name => :incoming_code))
+        PreviousCode.create(attributes.merge(:name => model_name))
       end
     end
     
-    def next_incoming_code
+    def next_code
       year = Time.now.strftime("%y")
-      if (prev_code = PreviousCode.find_by_name(:incoming_code))&&(prev_code.year.to_i == year.to_i)
+      if (prev_code = PreviousCode.find_by_name(model_name))&&(prev_code.year.to_i == year.to_i)
         [prev_code.value.succ,year].join('-')
       else
         Time.now.strftime("0001-%y")
