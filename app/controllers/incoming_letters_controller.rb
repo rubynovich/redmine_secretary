@@ -22,14 +22,16 @@ class IncomingLettersController < ApplicationController
   end
 
   def new
-    @object = model_class.new
-    if request.post?
-      @object.save_attachments(params[:attachments])
-      if @object.save
-        render_attachment_warning_if_needed(@object)
-        redirect_to :action => 'show', :id => @object
-      end
-    end    
+    @object = model_class.new(:incoming_code => next_incoming_code)
+    @related_projects = Member.find(:all, :conditions => {:user_id => User.current.id}).map{ |m| m.project }
+
+#    if request.post?
+#      @object.save_attachments(params[:attachments])
+#      if @object.save
+#        render_attachment_warning_if_needed(@object)
+#        redirect_to :action => 'show', :id => @object
+#      end
+#    end    
   end
   
   def show
@@ -56,6 +58,7 @@ class IncomingLettersController < ApplicationController
     @object.save_attachments(params[:attachments])
 
     if @object.save
+      save_incoming_code(@object.incoming_code)
       render_attachment_warning_if_needed(@object)
       flash[:notice] = l(:notice_successful_create)
       redirect_to( params[:continue] ? {:action => 'new'} :                     {:action => 'show', :id => @object} )
@@ -83,4 +86,27 @@ class IncomingLettersController < ApplicationController
     def find_object_by_id
       @object = model_class.find(params[:id])
     end
+    
+    def save_incoming_code(incoming_code)
+      attributes = {
+        :value => incoming_code[/\d+/],
+        :year => incoming_code.split('-').last[/\d+/]
+      }      
+      if prev_code = PreviousCode.find_by_name(:incoming_code)
+        if (prev_code.value.to_i < attributes[:value].to_i)||(prev_code.year.to_i < attributes[:year].to_i)
+          prev_code.update_attributes(attributes)
+        end
+      else
+        PreviousCode.create(attributes.merge(:name => :incoming_code))
+      end
+    end
+    
+    def next_incoming_code
+      year = Time.now.strftime("%y")
+      if (prev_code = PreviousCode.find_by_name(:incoming_code))&&(prev_code.year.to_i == year.to_i)
+        [prev_code.value.succ,year].join('-')
+      else
+        Time.now.strftime("0001-%y")
+      end
+    end    
 end

@@ -18,10 +18,11 @@
 <p><%= f.text_area :description, :cols => 60, :rows => 15, :class => 'wiki-edit' %></p> 
 <%= link_to_attachments @object if @object.attachments.any? %> 
 <p id="attachments_form"><%= label_tag('attachments[1][file]', l(:label_attachment_plural)) %><%= render :partial => 'attachments/form', :locals => {:container => @object} %></p>  
-<p><label><%= t(:label_attachments_projects) %></label></p>
-<% projects = Member.find(:all, :conditions => {:user_id => User.current.id}).map{ |m| m.project } %>
-<% projects.each do |project| %>
+<% if @related_projects.present? %>
+<p><label><%= t(:label_related_projects) %></label></p>
+<% @related_projects.each do |project| %>
 <p><label class="inline" for="projects_<%= project.id %>" id="projects_<%= project.id %>_label"><%= check_box_tag("projects[#{project.id}]", nil) %> <%= project.name %></label></p>
+<% end %>
 <% end %>
 </div>
 
