@@ -18,6 +18,16 @@ class OutgoingLetter < ActiveRecord::Base
   safe_attributes :outgoing_code, :incoming_code, :signer,
     :shipping_to, :shipping_type, :shipping_on, 
     :served_on, :recipient, :description  
+
+  def attachments_visible?(user=User.current)
+    (respond_to?(:visible?) ? visible?(user) : true) &&
+      user.allowed_to?(self.class.attachable_options[:view_permission], self.project, :global => self.project.blank?)
+  end
+
+  def attachments_deletable?(user=User.current)
+    (respond_to?(:visible?) ? visible?(user) : true) &&
+      user.allowed_to?(self.class.attachable_options[:delete_permission], self.project, :global => self.project.blank?)
+  end
   
   def editable_by?(usr)
     usr && usr.logged? && (usr.allowed_to?(:edit_outgoing_letters, nil, :global => true) || (self.author == usr && usr.allowed_to?(:edit_own_outgoing_letters, nil, :global => true))

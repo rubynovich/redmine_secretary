@@ -20,6 +20,14 @@ class IncomingLetter < ActiveRecord::Base
     :shipping_from, :shipping_type, :shipping_on, 
     :original_required, :recipient, :executor_id, :description
 
+  def attachments_visible?(user=User.current)
+      user.allowed_to?(self.class.attachable_options[:view_permission], nil, :global => true)
+  end
+
+  def attachments_deletable?(user=User.current)
+    user.allowed_to?(self.class.attachable_options[:delete_permission], nil, :global => true)
+  end
+       
   def editable_by?(usr)
     usr && usr.logged? && (usr.allowed_to?(:edit_incoming_letters, nil, :global => true) || (self.author == usr && usr.allowed_to?(:edit_own_incoming_letters, nil, :global => true))
     )
