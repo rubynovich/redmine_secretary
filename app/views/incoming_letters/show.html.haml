@@ -1,0 +1,38 @@
+= render :partial => 'action_menu'
+
+%h2= incoming_letter_heading(@object)
+
+.issue.details
+  %table.attributes
+    %tr
+      %th.incoming_code= l(:field_incoming_code)+":"
+      %td.incoming_code= h(@object.incoming_code)
+      %td.created_on= l(:field_created_on)+":"
+      %td.created_on= format_date(@object.created_on)
+    %tr    
+      %td.outgoing_code= l(:field_outgoing_code)+":"
+      %td.outgoing_code= h(@object.outgoing_code)
+      %td.shipping_on= l(:field_shipping_on)+":"
+      %td.shiping_on= format_date(@object.shipping_on)
+    %tr
+      %td.shipping_from= l(:field_shipping_from)+":"
+      %td.shipping_from= h(@object.shipping_from)
+      %td.shipping_type= l(:field_shipping_type)+":"
+      %td.shipping_type= h(@object.shipping_type)
+    %tr
+      %td.signer= l(:field_signer)+":"
+      %td.signer= h(@object.signer)
+      %td.recipient= l(:field_recipient)+":"
+      %td.recipient= h(@object.recipient)
+    %tr
+      %td.original_required= l(:field_original_required)+":"
+      %td.original_required= h(@object.original_required)
+      %td.author= l(:field_author)+":"
+      %td.author= h(@object.author)
+  - if @object.description? || @object.attachments.any?
+    %hr
+    - if @object.description?
+      %p
+        %strong= l(:field_description)
+      .wiki= textilizable @object, :description, :attachments => @object.attachments
+    = link_to_attachments @object

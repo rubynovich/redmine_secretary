@@ -30,16 +30,16 @@ class IncomingLetter < ActiveRecord::Base
     )
   end
 
-  def save_attachments(params)
-    if valid?
-      attachments = Attachment.attach_files(self, params)
-      begin
-        raise ActiveRecord::Rollback unless save
-      rescue ActiveRecord::StaleObjectError
-        attachments[:files].each(&:destroy)
-        errors.add :base, l(:notice_locking_conflict)
-        raise ActiveRecord::Rollback
-      end
-    end  
-  end  
+#  def save_attachments(params)
+#    if valid?
+#      attachments = Attachment.attach_files(self, params)
+#      begin
+#        raise ActiveRecord::Rollback unless save
+#      rescue ActiveRecord::StaleObjectError
+#        attachments[:files].each(&:destroy)
+#        errors.add :base, l(:notice_locking_conflict)
+#        raise ActiveRecord::Rollback
+#      end
+#    end  
+#  end  
 end

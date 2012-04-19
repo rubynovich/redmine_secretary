@@ -1,0 +1,39 @@
+.contextual
+  - if User.current.allowed_to?(:add_incoming_letters, nil, :global=>true)
+    = link_to l(:button_add), {:action => 'new'}, :class => 'icon icon-add'
+
+%h2= t(:label_incoming)
+
+.autoscroll
+  %table.list
+    %thead
+      %tr
+        = sort_header_tag('incoming_code', :caption => l(:field_incoming_code)) 
+        = sort_header_tag('outgoing_code', :caption => l(:field_outgoing_code)) 
+        = sort_header_tag('signer', :caption => l(:field_signer)) 
+        = sort_header_tag('shipping_from', :caption => l(:field_shipping_from)) 
+        = sort_header_tag('shipping_type', :caption => l(:field_shipping_type)) 
+        = sort_header_tag('shipping_on', :caption => l(:field_shipping_on))       
+        = sort_header_tag('recipient', :caption => l(:field_recipient)) 
+        = sort_header_tag('original_required', :caption => l(:field_original_required)) 
+        = sort_header_tag('created_on', :caption => l(:field_created_on), :default_order => 'desc') 
+        = sort_header_tag('executor_id', :caption => l(:field_executor)) 
+        = sort_header_tag('author_id', :caption => l(:field_author))     
+        %th
+    %tbody
+      - for object in @collection
+        %tr{:class => "user "+cycle("odd", "even")}
+          %td.incoming_code= link_to(h(object.incoming_code), incoming_letter_path(object))
+          %td.outgoing_code= h(object.outgoing_code)
+          %td.signer= h(object.signer)
+          %td.shipping_from= h(object.shipping_from)
+          %td.shipping_type= h(object.shipping_type)
+          %td.shipping_on= format_time(object.shipping_on)          
+          %td.recipient= h(object.recipient)
+          %td.original_required= h(object.original_required)
+          %td.created_on{:align=>"center"}= format_time(object.created_on)
+          %td.executor= h(object.executor)
+          %td.author= h(object.author)          
+          %td.buttons
+            - if object.destroyable_by?(User.current) 
+              = link_to(l(:button_delete), incoming_letter_path(object), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del')
