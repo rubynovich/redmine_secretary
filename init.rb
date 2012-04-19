@@ -4,7 +4,7 @@ Redmine::Plugin.register :redmine_secretary do
   name 'Redmine Secretary plugin'
   author 'Roman Shipiev'
   description 'Plugin for the registration of incoming and outgoing documents'
-  version '0.0.8'
+  version '0.1.0'
   url 'https://github.com/rubynovich/redmine_secretary'
   author_url 'http://roman.shipiev.me'
   
