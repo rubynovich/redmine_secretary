@@ -7,8 +7,7 @@ class OutgoingLettersController < ApplicationController
   include AttachmentsHelper
   helper :sort
   include SortHelper
-  
-   
+     
   def index
     sort_init 'outgoing_code', 'asc'
     sort_update %w(incoming_code outgoing_code signer shipping_to shipping_type shipping_on served_on recipient description created_on author_id)
@@ -24,13 +23,15 @@ class OutgoingLettersController < ApplicationController
 
   def new
     @object = model_class.new(:outgoing_code => next_code)
-    if request.post?
-      @object.save_attachments(params[:attachments])
-      if @object.save
-        render_attachment_warning_if_needed(@object)
-        redirect_to :action => 'show', :id => @object
-      end
-    end    
+    @related_projects = Member.find(:all, :conditions => {:user_id => User.current.id}).map{ |m| m.project }
+    
+#    if request.post?
+#      @object.save_attachments(params[:attachments])
+#      if @object.save
+#        render_attachment_warning_if_needed(@object)
+#        redirect_to :action => 'show', :id => @object
+#      end
+#    end    
   end
   
   def show
@@ -79,7 +80,7 @@ class OutgoingLettersController < ApplicationController
     end
     
     def model_name
-      :outgoing_letter
+      model_class.name.underscore
     end  
     
     def find_object_by_id

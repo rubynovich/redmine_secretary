@@ -80,7 +80,7 @@ class IncomingLettersController < ApplicationController
     end
     
     def model_name
-      :incoming_letter
+      model_class.name.underscore
     end  
     
     def find_object_by_id
