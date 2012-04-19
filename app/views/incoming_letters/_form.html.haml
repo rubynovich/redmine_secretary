@@ -8,7 +8,7 @@
     %p= f.text_field :recipient, :size => 40
     
   .splitcontentright
-    %p= f.select :executor_id, User.all.map {|c| [c.name, c.id]}, :required => true, :prompt => t(:prompt_please_select)
+    %p= f.select :executor_id, possible_executors.map {|c| [c.name, c.id]}, :required => true, :prompt => t(:prompt_please_select)
     %p
       = f.text_field :shipping_on, :size => 10
       = calendar_for('incoming_letter_shipping_on')

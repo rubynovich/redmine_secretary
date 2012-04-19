@@ -7,6 +7,8 @@ class IncomingLettersController < ApplicationController
   include AttachmentsHelper  
   helper :sort
   include SortHelper
+  helper :incoming_letters
+  include IncomingLettersHelper
    
   def index
     sort_init 'incoming_code', 'asc'
@@ -23,15 +25,7 @@ class IncomingLettersController < ApplicationController
 
   def new
     @object = model_class.new(:incoming_code => next_code)
-    @related_projects = Member.find(:all, :conditions => {:user_id => User.current.id}).map{ |m| m.project }
-
-#    if request.post?
-#      @object.save_attachments(params[:attachments])
-#      if @object.save
-#        render_attachment_warning_if_needed(@object)
-#        redirect_to :action => 'show', :id => @object
-#      end
-#    end    
+    @related_projects = related_projects
   end
   
   def show
@@ -56,9 +50,10 @@ class IncomingLettersController < ApplicationController
     @object = model_class.new(:author => User.current)
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
-
+      
     if @object.save
       save_code(@object.incoming_code)
+      @object.create_issues(params[:projects])      
       render_attachment_warning_if_needed(@object)
       flash[:notice] = l(:notice_successful_create)
       redirect_to( params[:continue] ? {:action => 'new'} :                     {:action => 'show', :id => @object} )
