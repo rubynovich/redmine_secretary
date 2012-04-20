@@ -1,24 +1,24 @@
 # Russian strings go here for Rails i18n
 ru:
-  label_outgoing: "Исходящие письма"
-  label_incoming: "Входящие письма"
-  label_new_incoming_letter: "Регистрация входящего письма"
-  label_new_outgoing_letter: "Регистрация исходящего письма"  
-  label_edit_incoming_letter: "Правка входящего письма"
-  label_edit_outgoing_letter: "Правка исходящего письма"
+  label_outgoing: Исходящие письма
+  label_incoming: Входящие письма
+  label_new_incoming_letter: Регистрация входящего письма
+  label_new_outgoing_letter: Регистрация исходящего письма
+  label_edit_incoming_letter: Правка входящего письма
+  label_edit_outgoing_letter: Правка исходящего письма
   label_related_projects: "Объекты:"
-  field_executor: "Исполнитель"
-  field_original_required: "Оригинал"
-  field_shipping_from: "Откуда"
-  field_shipping_to: "Куда"  
-  field_shipping_on: "Отправлено"
-  field_served_on: "Вручено"
-  field_shipping_type: "Вид доставки"
-  field_recipient: "Адресат"
-  field_signer: "Отправитель"
-  field_outgoing_code: "Исходящий №"
-  field_incoming_code: "Входящий №"
-  message_confirm_destroy: "Вы уверены, что ходите удалить эту запись?"
+  field_executor: Исполнитель
+  field_original_required: Оригинал
+  field_shipping_from: Откуда
+  field_shipping_to: Куда  
+  field_shipping_on: Отправлено
+  field_served_on: Вручено
+  field_shipping_type: Вид доставки
+  field_recipient: Адресат
+  field_signer: Отправитель
+  field_outgoing_code: Исходящий №
+  field_incoming_code: Входящий №
+  message_confirm_destroy: Вы уверены, что ходите удалить эту запись?
   list_shipping_type:
     - Письмо
     - Факс
@@ -27,6 +27,18 @@ ru:
   list_original_required:    
     - Требуется
     - Не требуется
-  prompt_please_select: "Выберите..."
-  dated: "от"
+  prompt_please_select: Выберите...
+  dated: от
   incoming_issue_subject: "[Входящее письмо] %{shipping_from} (%{signer})"
+  permission_view_incoming_letters: Просмотр входящих
+  permission_add_incoming_letters: Создание входящих
+  permission_edit_incoming_letters: Редактирование входящих
+  permission_edit_own_incoming_letters: Редактирование своих входящих
+  permission_delete_incoming_letters: Удаление входящих
+  permission_delete_own_incoming_letters: Удаление своих входящих
+  permission_view_outgoing_letters: Просмотр исходящих
+  permission_add_outgoing_letters: Создание исходящих
+  permission_edit_outgoing_letters: Редактирование исходящих
+  permission_edit_own_outgoing_letters: Редактирование своих исходящих
+  permission_delete_outgoing_letters: Удаление исходящих
+  permission_delete_own_outgoing_letters: Удаление своих исходящих
