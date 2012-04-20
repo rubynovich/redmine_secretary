@@ -20,13 +20,11 @@ class OutgoingLetter < ActiveRecord::Base
     :served_on, :recipient, :description  
 
   def attachments_visible?(user=User.current)
-    (respond_to?(:visible?) ? visible?(user) : true) &&
-      user.allowed_to?(self.class.attachable_options[:view_permission], self.project, :global => self.project.blank?)
+    user.allowed_to?(self.class.attachable_options[:view_permission], nil, :global => true)
   end
 
   def attachments_deletable?(user=User.current)
-    (respond_to?(:visible?) ? visible?(user) : true) &&
-      user.allowed_to?(self.class.attachable_options[:delete_permission], self.project, :global => self.project.blank?)
+    user.allowed_to?(self.class.attachable_options[:delete_permission], nil, :global => true)
   end
   
   def editable_by?(usr)

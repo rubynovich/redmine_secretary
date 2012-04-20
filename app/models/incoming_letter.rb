@@ -63,7 +63,7 @@ class IncomingLetter < ActiveRecord::Base
       :description => description, 
       :author => User.current, 
       :start_date => Date.today,
-      :due_date => Date.today + settings[:issue_runtime_days].days,
+      :due_date => next_work_day,
       :priority => IssuePriority.active[settings[:issue_priority]],
       :assigned_to => executor)
       
@@ -74,6 +74,18 @@ class IncomingLetter < ActiveRecord::Base
       ).save
     end
   end        
+  
+  def next_work_day(now_day = Date.today)
+    next_day = now_day + 1.day
+    case next_day.wday
+      when 0
+        next_day + 1.day
+      when 6
+        next_day + 2.days      
+      else
+        next_day
+    end
+  end
   
   def issue_subject
     options = to_hash

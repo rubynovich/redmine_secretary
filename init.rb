@@ -4,7 +4,7 @@ Redmine::Plugin.register :redmine_secretary do
   name 'Redmine Secretary plugin'
   author 'Roman Shipiev'
   description 'Plugin for the registration of incoming and outgoing documents'
-  version '0.1.0'
+  version '0.1.1'
   url 'https://github.com/rubynovich/redmine_secretary'
   author_url 'http://roman.shipiev.me'
   
@@ -27,7 +27,6 @@ Redmine::Plugin.register :redmine_secretary do
   
   settings :default => {
     :issue_priority => -1,
-    :issue_tracker => 0,
-    :issue_runtime_days => 3
+    :issue_tracker => 0
   }
 end
