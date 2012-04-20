@@ -4,3 +4,29 @@ en:
   label_incoming: "Incoming"
   label_add_incoming_letter: "add incoming letter"
   label_add_outgoing_letter: "add outgoing letter"
+  label_edit_incoming_letter: "edit incoming letter"
+  label_edit_outgoing_letter: "edit outgoing letter"
+  label_related_projects: "Projects:"
+  field_executor: "Assigned to"
+  field_original_required: "Original"
+  field_shipping_from: "From"
+  field_shipping_to: "To"  
+  field_shipping_on: "Shipping on"
+  field_served_on: "Served on"
+  field_shipping_type: "Shipping type"
+  field_recipient: "Recipient"
+  field_signer: "Sender"
+  field_outgoing_code: "Incoming #"
+  field_incoming_code: "Outgoing #"
+  message_confirm_destroy: "Are you shure?"
+  list_shipping_type:
+    - Mail
+    - Fax
+    - Courier
+    - E-Mail
+  list_original_required:    
+    - required
+    - not required
+  prompt_please_select: "Select..."
+  dated: "from"
+  incoming_issue_subject: "[Incoming letter] %{shipping_from} (%{signer})"  
