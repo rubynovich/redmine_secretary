@@ -55,6 +55,7 @@ class OutgoingLettersController < ApplicationController
     @object = model_class.new(:author => User.current)
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
+    @object.files = params[:attachments].keys if params[:attachments]["1"]["file"].present?
 
     if @object.save
       save_code(@object.outgoing_code)

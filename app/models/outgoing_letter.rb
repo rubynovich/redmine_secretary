@@ -9,11 +9,12 @@ class OutgoingLetter < ActiveRecord::Base
 
   validates_presence_of :outgoing_code, :author_id, 
     :shipping_type, :shipping_to, :shipping_on
+  validates_presence_of :files, :on => :create
   validates_format_of :outgoing_code, :with => /^\d+\-\d{2}(\/\d+)?$/,
     :message => I18n.t(:message_incorrect_format_outgoing_code)    
   validates_uniqueness_of :outgoing_code   
   validate :outgoing_code_incorrect_year
-  validate :outgoing_code_in_series  
+  validate :outgoing_code_in_series, :on => :create
   
   acts_as_attachable
 
@@ -34,6 +35,7 @@ class OutgoingLetter < ActiveRecord::Base
   def outgoing_code_in_series
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
     if outgoing_code[regexp]
+      return if created_on.present?    
       return if outgoing_code[regexp,3].present?
       return if outgoing_code[regexp,2].to_i < Time.now.strftime("%y").to_i
       return if previous_code.blank?

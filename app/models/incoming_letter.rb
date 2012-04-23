@@ -9,12 +9,13 @@ class IncomingLetter < ActiveRecord::Base
   has_many    :comments, :as => :commented, :dependent => :destroy
 
   validates_presence_of :incoming_code, :author_id, :executor_id, 
-    :shipping_type, :shipping_from, :projects, :files
+    :shipping_type, :shipping_from
   validates_format_of :incoming_code, :with => /^\d+\-\d{2}(\/\d+)?$/,
     :message => I18n.t(:message_incorrect_format_incoming_code)
   validates_uniqueness_of :incoming_code
   validate :incoming_code_incorrect_year
-  validate :incoming_code_in_series  
+  validate :incoming_code_in_series, :on => :create
+  validates_presence_of :projects, :files, :on => :create  
 
   acts_as_attachable
   
@@ -35,6 +36,7 @@ class IncomingLetter < ActiveRecord::Base
   def incoming_code_in_series
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
     if incoming_code[regexp]
+      return if created_on.present?
       return if incoming_code[regexp,3].present?
       return if incoming_code[regexp,2].to_i < Time.now.strftime("%y").to_i
       return if previous_code.blank?
