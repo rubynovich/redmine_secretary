@@ -21,6 +21,8 @@ ru:
   field_incoming_code: Входящий №
   message_confirm_destroy: Вы уверены, что ходите удалить эту запись?
   message_incorrect_format_incoming_code: имеет неверный формат (НННН-ГГ или НННН-ГГ/Д)
+  message_incorrect_format_outgoing_code: имеет неверный формат (НННН-ГГ или НННН-ГГ/Д)
+  
   list_shipping_type:
     - Письмо
     - Факс
@@ -52,3 +54,6 @@ ru:
             incoming_code:
               in_series: должен быть следующим
               incorrect_year: имеет неверно заданный год
+            outgoing_code:
+              in_series: должен быть следующим
+              incorrect_year: имеет неверно заданный год              
