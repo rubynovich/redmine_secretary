@@ -22,15 +22,7 @@ class OutgoingLettersController < ApplicationController
   end
 
   def new
-    @object = model_class.new(:outgoing_code => next_code)
-        
-#    if request.post?
-#      @object.save_attachments(params[:attachments])
-#      if @object.save
-#        render_attachment_warning_if_needed(@object)
-#        redirect_to :action => 'show', :id => @object
-#      end
-#    end    
+    @object = model_class.new(:outgoing_code => next_code)         
   end
   
   def show
