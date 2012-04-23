@@ -54,6 +54,8 @@ ru:
             incoming_code:
               in_series: должен быть следующим
               incorrect_year: имеет неверно заданный год
+        outgoing_letter:
+          attributes:
             outgoing_code:
               in_series: должен быть следующим
               incorrect_year: имеет неверно заданный год              
