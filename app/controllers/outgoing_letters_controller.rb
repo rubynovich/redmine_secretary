@@ -94,11 +94,14 @@ class OutgoingLettersController < ApplicationController
     end
     
     def next_code
-      year = Time.now.strftime("%y")
-      if (prev_code = PreviousCode.find_by_name(model_name))&&(prev_code.year.to_i == year.to_i)
-        [prev_code.value.succ,year].join('-')
+      if prev_code = previous_code
+        [prev_code.value.succ,Time.now.strftime("%y")].join('-')
       else
         Time.now.strftime("0001-%y")
       end
-    end      
+    end
+    
+    def previous_code
+      PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y")})
+    end   
 end

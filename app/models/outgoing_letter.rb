@@ -8,7 +8,7 @@ class OutgoingLetter < ActiveRecord::Base
   has_many    :comments, :as => :commented, :dependent => :destroy  
 
   validates_presence_of :outgoing_code, :author_id, 
-    :shipping_type, :shipping_to, :shipping_on, :files
+    :shipping_type, :shipping_to, :shipping_on
   validates_presence_of :files, :on => :create
   validates_format_of :outgoing_code, :with => /^\d+\-\d{2}(\/\d+)?$/,
     :message => I18n.t(:message_incorrect_format_outgoing_code)    
