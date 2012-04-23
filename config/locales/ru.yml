@@ -31,6 +31,7 @@ ru:
   list_original_required:    
     - Требуется
     - Не требуется
+    - Является оригиналом
   prompt_please_select: Выберите...
   dated: от
   incoming_issue_subject: "[Входящее письмо] %{shipping_from} (%{signer})"

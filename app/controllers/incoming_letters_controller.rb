@@ -56,7 +56,8 @@ class IncomingLettersController < ApplicationController
           
     if @object.save
       save_code(@object.incoming_code)
-      @object.create_issues
+      issues = @object.create_issues.map{ |issue| "##{issue.id}" }.join(", ")
+      add_to_description(issues)
       render_attachment_warning_if_needed(@object)
       flash[:notice] = l(:notice_successful_create)
       redirect_to( params[:continue] ? {:action => 'new'} :                     {:action => 'show', :id => @object} )
@@ -109,5 +110,9 @@ class IncomingLettersController < ApplicationController
     
     def previous_code
       PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y")})
-    end    
+    end
+    
+    def add_to_description(str)
+      @object.update_attribute :description, [@object.description, str].join("\n\n")
+    end 
 end

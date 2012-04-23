@@ -19,7 +19,7 @@ class IncomingLetter < ActiveRecord::Base
 
   acts_as_attachable
   
-  attr_accessor :project, :projects, :files  
+  attr_accessor :project, :projects, :files, :subject  
   
   safe_attributes :incoming_code, :outgoing_code, :signer,
     :shipping_from, :shipping_type, :shipping_on, 
@@ -80,7 +80,7 @@ class IncomingLetter < ActiveRecord::Base
   def create_issues
     projects.
       map{ |key| Project.find(key) }.
-      each{ |project|
+      map{ |project|
         create_issue(project)
       }
   end
@@ -105,14 +105,15 @@ class IncomingLetter < ActiveRecord::Base
         :container_type => issue.class.name
       ).save
     end
+    issue
   end        
   
   def next_work_day(now_day = Date.today)
     next_day = now_day + 1.day
     case next_day.wday
-      when 0
-        next_day + 1.day
       when 6
+        next_day + 1.day
+      when 5
         next_day + 2.days      
       else
         next_day
@@ -120,13 +121,17 @@ class IncomingLetter < ActiveRecord::Base
   end
   
   def issue_subject
-    options = to_hash
-    options = I18n.t(:incoming_issue_subject).
-      scan(/%\{.*?\}/).
-      map{ |str| str[2..-2] }.
-      inject({}){ |result, name| 
-        result.merge name.to_sym => options[name] 
-      }              
-    I18n.t(:incoming_issue_subject, options)
+    if subject.present?
+      subject
+    else
+      options = to_hash
+      options = I18n.t(:incoming_issue_subject).
+        scan(/%\{.*?\}/).
+        map{ |str| str[2..-2] }.
+        inject({}){ |result, name| 
+          result.merge name.to_sym => options[name] 
+        }              
+      I18n.t(:incoming_issue_subject, options)
+    end
   end    
 end

@@ -15,6 +15,8 @@
     %p= f.text_field :shipping_from, :required => true, :size => 40
     %p= f.select :original_required, t(:list_original_required), :prompt => t(:prompt_please_select)
   %div{:style=>"clear:both"}
+  - if ["new", "create"].include? params[:action]
+    %p= f.text_field :subject, :size => 40
   %p= f.text_area :description, :cols => 60, :rows => 15, :class => 'wiki-edit'
   = link_to_attachments @object if @object.attachments.any? 
   %p#attachments_form
