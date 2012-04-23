@@ -18,7 +18,7 @@ class OutgoingLetter < ActiveRecord::Base
   
   acts_as_attachable
 
-  attr_accessor :project
+  attr_accessor :project, :files
   
   safe_attributes :outgoing_code, :incoming_code, :signer,
     :shipping_to, :shipping_type, :shipping_on, 
