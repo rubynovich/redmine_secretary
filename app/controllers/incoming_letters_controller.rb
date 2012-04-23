@@ -49,11 +49,14 @@ class IncomingLettersController < ApplicationController
   def create
     @object = model_class.new(:author => User.current)
     @object.safe_attributes = params[model_name]
-    @object.save_attachments(params[:attachments])
-      
+    @object.save_attachments(params[:attachments])          
+    @object.projects = params[:projects].keys if params[:projects].present?
+    @object.files = params[:attachments].keys if params[:attachments].present?
+    @related_projects = related_projects
+          
     if @object.save
       save_code(@object.incoming_code)
-      @object.create_issues(params[:projects])      
+      @object.create_issues
       render_attachment_warning_if_needed(@object)
       flash[:notice] = l(:notice_successful_create)
       redirect_to( params[:continue] ? {:action => 'new'} :                     {:action => 'show', :id => @object} )

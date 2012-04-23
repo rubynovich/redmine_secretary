@@ -4,7 +4,7 @@ Redmine::Plugin.register :redmine_secretary do
   name 'Redmine Secretary plugin'
   author 'Roman Shipiev'
   description 'Plugin for the registration of incoming and outgoing documents'
-  version '0.1.2'
+  version '0.1.3'
   url 'https://github.com/rubynovich/redmine_secretary'
   author_url 'http://roman.shipiev.me'
   
@@ -26,7 +26,7 @@ Redmine::Plugin.register :redmine_secretary do
   menu :application_menu, :outgoing_letters, {:controller => :outgoing_letters, :action => :index}, :caption => :label_outgoing, :param => :project_id, :if => Proc.new{ User.current.allowed_to?({:controller => :outgoing_letters, :action => :index}, nil, {:global => true})}
   
   settings :default => {
-    :issue_priority => -1,
+    :issue_priority => 2,
     :issue_tracker => 0
   }
 end

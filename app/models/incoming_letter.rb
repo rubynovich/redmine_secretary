@@ -9,16 +9,38 @@ class IncomingLetter < ActiveRecord::Base
   has_many    :comments, :as => :commented, :dependent => :destroy
 
   validates_presence_of :incoming_code, :author_id, :executor_id, 
-    :shipping_type, :shipping_from
+    :shipping_type, :shipping_from, :projects, :files
+  validates_format_of :incoming_code, :with => /^\d+\-\d{2}(\/\d+)?$/,
+    :message => I18n.t(:message_incorrect_format_incoming_code)
   validates_uniqueness_of :incoming_code
+  validate :incoming_code_incorrect_year
+#  validate :incoming_code_in_series  
 
   acts_as_attachable
   
-  attr_accessor :project
+  attr_accessor :project, :projects, :files  
   
   safe_attributes :incoming_code, :outgoing_code, :signer,
     :shipping_from, :shipping_type, :shipping_on, 
     :original_required, :recipient, :executor_id, :description
+
+  def incoming_code_incorrect_year
+    regexp = /^(\d+)-(\d{2})(\/\d+)?$/
+    if incoming_code[regexp]
+      return if incoming_code[regexp,2].to_i <= Time.now.strftime("%y").to_i
+    end
+    errors.add(:incoming_code, :incorrect_year)
+  end
+
+#  def incoming_code_in_series
+#    regexp = /^(\d+)-(\d{2})(\/\d+)?$/
+#    if incoming_code[regexp]
+#      return if incoming_code[regexp,3].present?
+#      return if incoming_code[regexp,2] <= Time.now.strftime("%y")
+#      return if incoming_code[regexp,1] == PreviousCode.find_by_name(:incoming_letter).value.succ
+#    end
+#    errors.add(:incoming_code, :in_series)
+#  end
 
   def attachments_visible?(user=User.current)
       user.allowed_to?(self.class.attachable_options[:view_permission], nil, :global => true)
@@ -45,8 +67,8 @@ class IncomingLetter < ActiveRecord::Base
       }
   end
 
-  def create_issues(projects)
-    projects.keys.
+  def create_issues
+    projects.
       map{ |key| Project.find(key) }.
       each{ |project|
         create_issue(project)

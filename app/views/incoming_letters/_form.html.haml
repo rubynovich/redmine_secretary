@@ -1,5 +1,4 @@
 = error_messages_for @object
-
 .box.tabular
   .splitcontentleft
     %p= f.text_field :incoming_code, :required => true, :size => 10
@@ -23,7 +22,7 @@
     = render :partial => 'attachments/form', :locals => {:container => @object}
   - if @related_projects.present?
     %p
-      %label= t(:label_related_projects)
+      %label= t(:field_projects) + ":"
     - @related_projects.each do |project|
       %p
         %label.inline{:for=>"projects_"+project.id.to_s, :id=>"projects_"+project.id.to_s+"_label"}

@@ -23,8 +23,7 @@ class OutgoingLettersController < ApplicationController
 
   def new
     @object = model_class.new(:outgoing_code => next_code)
-    @related_projects = Member.find(:all, :conditions => {:user_id => User.current.id}).map{ |m| m.project }
-    
+        
 #    if request.post?
 #      @object.save_attachments(params[:attachments])
 #      if @object.save

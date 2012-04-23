@@ -6,7 +6,8 @@ ru:
   label_new_outgoing_letter: Регистрация исходящего письма
   label_edit_incoming_letter: Правка входящего письма
   label_edit_outgoing_letter: Правка исходящего письма
-  label_related_projects: "Объекты:"
+  field_projects: "Объекты"
+  field_files: "Файлы"
   field_executor: Исполнитель
   field_original_required: Оригинал
   field_shipping_from: Откуда
@@ -19,6 +20,7 @@ ru:
   field_outgoing_code: Исходящий №
   field_incoming_code: Входящий №
   message_confirm_destroy: Вы уверены, что ходите удалить эту запись?
+  message_incorrect_format_incoming_code: имеет неверный формат (НННН-ГГ или НННН-ГГ/Д)
   list_shipping_type:
     - Письмо
     - Факс
@@ -42,3 +44,11 @@ ru:
   permission_edit_own_outgoing_letters: Редактирование своих исходящих
   permission_delete_outgoing_letters: Удаление исходящих
   permission_delete_own_outgoing_letters: Удаление своих исходящих
+  activerecord:
+    errors:
+      models:
+        incoming_letter:
+          attributes:
+            incoming_code:
+              in_series: должен быть следующим
+              incorrect_year: имеет неверно заданный год
