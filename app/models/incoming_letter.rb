@@ -14,7 +14,7 @@ class IncomingLetter < ActiveRecord::Base
     :message => I18n.t(:message_incorrect_format_incoming_code)
   validates_uniqueness_of :incoming_code
   validate :incoming_code_incorrect_year
-#  validate :incoming_code_in_series  
+  validate :incoming_code_in_series  
 
   acts_as_attachable
   
@@ -32,15 +32,23 @@ class IncomingLetter < ActiveRecord::Base
     errors.add(:incoming_code, :incorrect_year)
   end
 
-#  def incoming_code_in_series
-#    regexp = /^(\d+)-(\d{2})(\/\d+)?$/
-#    if incoming_code[regexp]
-#      return if incoming_code[regexp,3].present?
-#      return if incoming_code[regexp,2] <= Time.now.strftime("%y")
-#      return if incoming_code[regexp,1] == PreviousCode.find_by_name(:incoming_letter).value.succ
-#    end
-#    errors.add(:incoming_code, :in_series)
-#  end
+  def incoming_code_in_series
+    regexp = /^(\d+)-(\d{2})(\/\d+)?$/
+    if incoming_code[regexp]
+      return if incoming_code[regexp,3].present?
+      return if incoming_code[regexp,2].to_i < Time.now.strftime("%y").to_i
+      return if previous_code.blank?
+      return if incoming_code[regexp,1] == previous_code.value.succ
+    end
+    errors.add(:incoming_code, :in_series)
+  end
+  
+  def previous_code
+    PreviousCode.find(:last, :conditions => {
+      :name => self.class.name.underscore, 
+      :year => Time.now.strftime("%y")
+    })
+  end
 
   def attachments_visible?(user=User.current)
       user.allowed_to?(self.class.attachable_options[:view_permission], nil, :global => true)
@@ -119,17 +127,4 @@ class IncomingLetter < ActiveRecord::Base
       }              
     I18n.t(:incoming_issue_subject, options)
   end    
-
-#  def save_attachments(params)
-#    if valid?
-#      attachments = Attachment.attach_files(self, params)
-#      begin
-#        raise ActiveRecord::Rollback unless save
-#      rescue ActiveRecord::StaleObjectError
-#        attachments[:files].each(&:destroy)
-#        errors.add :base, l(:notice_locking_conflict)
-#        raise ActiveRecord::Rollback
-#      end
-#    end  
-#  end  
 end

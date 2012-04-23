@@ -10,6 +10,8 @@ class OutgoingLetter < ActiveRecord::Base
   validates_presence_of :outgoing_code, :author_id, 
     :shipping_type, :shipping_to, :shipping_on
   validates_uniqueness_of :outgoing_code   
+  validate :incoming_code_incorrect_year
+  validate :incoming_code_in_series  
   
   acts_as_attachable
 
@@ -18,6 +20,32 @@ class OutgoingLetter < ActiveRecord::Base
   safe_attributes :outgoing_code, :incoming_code, :signer,
     :shipping_to, :shipping_type, :shipping_on, 
     :served_on, :recipient, :description  
+
+  def outgoing_code_incorrect_year
+    regexp = /^(\d+)-(\d{2})(\/\d+)?$/
+    if outgoing_code[regexp]
+      return if outgoing_code[regexp,2].to_i <= Time.now.strftime("%y").to_i
+    end
+    errors.add(:outgoing_code, :incorrect_year)
+  end
+
+  def outgoing_code_in_series
+    regexp = /^(\d+)-(\d{2})(\/\d+)?$/
+    if outgoing_code[regexp]
+      return if outgoing_code[regexp,3].present?
+      return if outgoing_code[regexp,2].to_i < Time.now.strftime("%y").to_i
+      return if previous_code.blank?
+      return if outgoing_code[regexp,1] == previous_code.value.succ
+    end
+    errors.add(:outgoing_code, :in_series)
+  end
+  
+  def previous_code
+    PreviousCode.find(:last, :conditions => {
+      :name => self.class.name.underscore, 
+      :year => Time.now.strftime("%y")
+    })
+  end
 
   def attachments_visible?(user=User.current)
     user.allowed_to?(self.class.attachable_options[:view_permission], nil, :global => true)
@@ -36,17 +64,4 @@ class OutgoingLetter < ActiveRecord::Base
     usr && usr.logged? && (usr.allowed_to?(:delete_outgoing_letters, nil, :global => true) || (self.author == usr && usr.allowed_to?(:delete_own_outgoing_letters, nil, :global => true))
     )
   end
-  
-#  def save_attachments(params)
-#    if valid?
-#      attachments = Attachment.attach_files(self, params)
-#      begin
-#        raise ActiveRecord::Rollback unless save
-#      rescue ActiveRecord::StaleObjectError
-#        attachments[:files].each(&:destroy)
-#        errors.add :base, l(:notice_locking_conflict)
-#        raise ActiveRecord::Rollback
-#      end
-#    end  
-#  end
 end

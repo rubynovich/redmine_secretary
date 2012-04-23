@@ -51,7 +51,7 @@ class IncomingLettersController < ApplicationController
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])          
     @object.projects = params[:projects].keys if params[:projects].present?
-    @object.files = params[:attachments].keys if params[:attachments].present?
+    @object.files = params[:attachments].keys if params[:attachments]["1"]["file"].present?
     @related_projects = related_projects
           
     if @object.save
@@ -90,8 +90,8 @@ class IncomingLettersController < ApplicationController
         :value => code[/\d+/],
         :year => code.split('-').last[/\d+/]
       }      
-      if prev_code = PreviousCode.find_by_name(model_name)
-        if (prev_code.value.to_i < attributes[:value].to_i)||(prev_code.year.to_i < attributes[:year].to_i)
+      if prev_code = previous_code
+        if prev_code.value.to_i < attributes[:value].to_i
           prev_code.update_attributes(attributes)
         end
       else
@@ -100,11 +100,14 @@ class IncomingLettersController < ApplicationController
     end
     
     def next_code
-      year = Time.now.strftime("%y")
-      if (prev_code = PreviousCode.find_by_name(model_name))&&(prev_code.year.to_i == year.to_i)
-        [prev_code.value.succ,year].join('-')
+      if prev_code = previous_code
+        [prev_code.value.succ,Time.now.strftime("%y")].join('-')
       else
         Time.now.strftime("0001-%y")
       end
+    end
+    
+    def previous_code
+      PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y")})
     end    
 end
