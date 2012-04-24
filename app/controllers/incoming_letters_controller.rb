@@ -73,6 +73,11 @@ class IncomingLettersController < ApplicationController
     redirect_to :action => 'index'
   end
   
+  def clean_previous_code
+    PreviousCode.destroy_all(:name => model_name)
+    redirect_to :action => 'new'
+  end
+  
   private
     def model_class
       IncomingLetter
