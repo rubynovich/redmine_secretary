@@ -22,7 +22,7 @@ class IncomingLetter < ActiveRecord::Base
   attr_accessor :project, :projects, :files, :subject  
   
   safe_attributes :incoming_code, :outgoing_code, :signer,
-    :shipping_from, :shipping_type, :shipping_on, 
+    :shipping_from, :shipping_type, :shipping_on, :subject,
     :original_required, :recipient, :executor_id, :description
 
   def incoming_code_incorrect_year

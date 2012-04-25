@@ -1,6 +1,10 @@
 class OutgoingLettersController < ApplicationController
   unloadable
 
+  autocomplete_for :incoming_letter, :shipping_to
+  autocomplete_for :incoming_letter, :signer
+  autocomplete_for :incoming_letter, :recipient
+
   before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
    
   helper :attachments

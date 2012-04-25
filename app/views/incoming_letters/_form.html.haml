@@ -1,9 +1,13 @@
 = error_messages_for @object
+- content_for :header_tags do
+  = stylesheet_link_tag 'jquery.autocomplete.css', :plugin => "redmine_secretary"
+  = javascript_include_tag 'jquery.js', :plugin => "redmine_secretary"
+  = javascript_include_tag 'jquery.autocomplete.js', :plugin => "redmine_secretary"
 .box.tabular
   .splitcontentleft
     %p= f.text_field :incoming_code, :required => true, :size => 10
     %p= f.text_field :outgoing_code, :size => 10
-    %p= f.text_field :signer, :size => 40
+    %p= f.text_field :signer, :size => 40, :class => "autocomplete", "data-autocomplete_url" => autocomplete_for_incoming_letter_signer_incoming_letters_path
     %p= f.text_field :recipient, :size => 40
     
   .splitcontentright
