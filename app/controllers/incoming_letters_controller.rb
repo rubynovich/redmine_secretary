@@ -15,7 +15,7 @@ class IncomingLettersController < ApplicationController
   include IncomingLettersHelper
    
   def index
-    sort_init 'incoming_code', 'asc'
+    sort_init 'incoming_code', 'desc'
     sort_update %w(incoming_code outgoing_code signer shipping_from shipping_type shipping_on original_required recipient executor_id description created_on author_id)
 
     @collection = model_class.find :all, :order => sort_clause
