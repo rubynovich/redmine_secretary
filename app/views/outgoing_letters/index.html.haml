@@ -1,7 +1,9 @@
 .contextual
-  = link_to l(:button_add), {:action => 'new'}, :class => 'icon icon-add' if User.current.allowed_to?(:add_outgoing_letters, nil, :global=>true)
+  = link_to l(:button_add), {:action => 'new', :organization_id => @organization.id}, :class => 'icon icon-add' if User.current.allowed_to?(:add_outgoing_letters, nil, :global=>true)
 
 %h2= t(:label_outgoing)
+
+= render :partial => "organization_menu"
 
 .autoscroll
   %table.list

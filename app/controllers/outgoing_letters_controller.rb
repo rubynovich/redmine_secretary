@@ -1,12 +1,9 @@
 class OutgoingLettersController < ApplicationController
   unloadable
 
-  autocomplete_for :incoming_letter, :shipping_to
-  autocomplete_for :incoming_letter, :signer
-  autocomplete_for :incoming_letter, :recipient
-
   before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
-   
+  before_filter :find_organization, :only => [:index, :new]
+     
   helper :attachments
   include AttachmentsHelper
   helper :sort
@@ -16,7 +13,9 @@ class OutgoingLettersController < ApplicationController
     sort_init 'outgoing_code', 'desc'
     sort_update %w(incoming_code outgoing_code signer shipping_to shipping_type shipping_on served_on recipient description created_on author_id)
 
-    @collection = model_class.find :all, :order => sort_clause
+    @collection = model_class.find :all, 
+      :conditions => ["organization_id=?", @organization.id], 
+      :order => sort_clause
 
     respond_to do |format|
       format.html {
@@ -26,7 +25,9 @@ class OutgoingLettersController < ApplicationController
   end
 
   def new
-    @object = model_class.new(:outgoing_code => next_code)         
+    @object = model_class.new(
+      :outgoing_code => next_code, 
+      :organization_id => @organization.id)
   end
   
   def show
@@ -87,11 +88,17 @@ class OutgoingLettersController < ApplicationController
     def find_object_by_id
       @object = model_class.find(params[:id])
     end
-
+    
+    def find_organization
+      @organization = if params[:organization_id].present?
+        Organization.find(params[:organization_id])
+      end || Organization.default
+    end
     def save_code(code)
       attributes = {
         :value => code[/\d+/],
-        :year => code.split('-').last[/\d+/]
+        :year => code.split('-').last[/\d+/],
+        :organization_id => @object.organization_id
       }      
       if prev_code = PreviousCode.find_by_name(model_name)
         if (prev_code.value.to_i < attributes[:value].to_i)||(prev_code.year.to_i < attributes[:year].to_i)
@@ -111,6 +118,6 @@ class OutgoingLettersController < ApplicationController
     end
     
     def previous_code
-      PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y")})
+      PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y"), :organization_id => find_organization.id})
     end   
 end

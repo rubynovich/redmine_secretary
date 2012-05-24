@@ -1,6 +1,6 @@
 .contextual
   - if User.current.allowed_to?(:add_outgoing_letters, nil, :global => true)
-    = link_to l(:button_add), {:action => 'new'}, :class => 'icon icon-add'
+    = link_to l(:button_add), {:action => 'new', :organization_id => @object.organization_id}, :class => 'icon icon-add'
   - if @object.editable_by?(User.current)    
     = link_to l(:button_update), {:action => 'edit', :id => @object.id}, :class => 'icon icon-edit'
   - if @object.destroyable_by?(User.current)

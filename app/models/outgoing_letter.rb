@@ -3,16 +3,17 @@ class OutgoingLetter < ActiveRecord::Base
   include Redmine::SafeAttributes    
   
   belongs_to  :author, :class_name => 'User', :foreign_key => 'author_id'
+  belongs_to  :organization
   has_many    :projects, :through => :associated_projects
   has_many    :associated_projects
   has_many    :comments, :as => :commented, :dependent => :destroy  
 
   validates_presence_of :outgoing_code, :author_id, 
-    :shipping_type, :shipping_to, :shipping_on
+    :shipping_type, :shipping_to, :shipping_on, :organization_id
   validates_presence_of :files, :on => :create
   validates_format_of :outgoing_code, :with => /^\d+\-\d{2}(\/\d+)?$/,
     :message => I18n.t(:message_incorrect_format_outgoing_code)    
-  validates_uniqueness_of :outgoing_code   
+  validates_uniqueness_of :outgoing_code, :scope => :organization_id 
   validate :outgoing_code_incorrect_year
   validate :outgoing_code_in_series, :on => :create
   
@@ -22,7 +23,7 @@ class OutgoingLetter < ActiveRecord::Base
   
   safe_attributes :outgoing_code, :incoming_code, :signer,
     :shipping_to, :shipping_type, :shipping_on, 
-    :served_on, :recipient, :description  
+    :served_on, :recipient, :description, :organization_id
 
   def outgoing_code_incorrect_year
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
@@ -47,7 +48,8 @@ class OutgoingLetter < ActiveRecord::Base
   def previous_code
     PreviousCode.find(:last, :conditions => {
       :name => self.class.name.underscore, 
-      :year => Time.now.strftime("%y")
+      :year => Time.now.strftime("%y"),
+      :organization_id => self.organization_id
     })
   end
 

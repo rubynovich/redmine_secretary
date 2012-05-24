@@ -3,7 +3,7 @@
   .splitcontentleft
     %p= f.text_field :incoming_code, :required => true, :size => 10
     %p= f.text_field :outgoing_code, :size => 10
-    %p= f.text_field :signer, :size => 40, :class => "autocomplete", "data-autocomplete_url" => autocomplete_for_incoming_letter_signer_incoming_letters_path
+    %p= f.text_field :signer, :size => 40
     %p= f.text_field :recipient, :size => 40
     
   .splitcontentright
@@ -32,14 +32,5 @@
           = project.name
 
 = wikitoolbar_for 'incoming_letter_description'
-#signer.autocomplete
-= observe_field(:incoming_letter_signer,
-  :frequency => 0.5,
-  :update => :signer,
-  :url => autocomplete_for_incoming_letter_signer_incoming_letters_path,
-  :method => :get,
-  :before => '$("incoming_letter_signer").addClassName("ajax-loading")',
-  :complete => '$("incoming_letter_signer").removeClassName("ajax-loading")',
-  :with => 'q')
 
 

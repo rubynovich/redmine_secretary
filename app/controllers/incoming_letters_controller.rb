@@ -1,11 +1,8 @@
 class IncomingLettersController < ApplicationController
   unloadable
 
-  autocomplete_for :incoming_letter, :shipping_from
-  autocomplete_for :incoming_letter, :signer
-  autocomplete_for :incoming_letter, :recipient    
-
   before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
+  before_filter :find_organization, :only => [:index, :new]
    
   helper :attachments
   include AttachmentsHelper  
@@ -18,7 +15,9 @@ class IncomingLettersController < ApplicationController
     sort_init 'incoming_code', 'desc'
     sort_update %w(incoming_code outgoing_code signer shipping_from shipping_type shipping_on original_required recipient executor_id description created_on author_id)
 
-    @collection = model_class.find :all, :order => sort_clause
+    @collection = model_class.find :all, 
+      :conditions => ["organization_id=?", @organization.id], 
+      :order => sort_clause
 
     respond_to do |format|
       format.html {
@@ -28,7 +27,9 @@ class IncomingLettersController < ApplicationController
   end
 
   def new
-    @object = model_class.new(:incoming_code => next_code)
+    @object = model_class.new(
+      :incoming_code => next_code, 
+      :organization_id => @organization.id)
     @related_projects = related_projects
   end
   
@@ -95,10 +96,17 @@ class IncomingLettersController < ApplicationController
       @object = model_class.find(params[:id])
     end
     
+    def find_organization
+      @organization = if params[:organization_id].present?
+        Organization.find(params[:organization_id])
+      end || Organization.default
+    end
+    
     def save_code(code)
       attributes = {
         :value => code[/\d+/],
-        :year => code.split('-').last[/\d+/]
+        :year => code.split('-').last[/\d+/],
+        :organization_id => @object.organization_id
       }      
       if prev_code = previous_code
         if prev_code.value.to_i < attributes[:value].to_i
@@ -118,7 +126,7 @@ class IncomingLettersController < ApplicationController
     end
     
     def previous_code
-      PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y")})
+      PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y"), :organization_id => find_organization.id})
     end
     
     def add_to_description(str)

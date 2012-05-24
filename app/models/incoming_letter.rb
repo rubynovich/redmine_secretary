@@ -4,15 +4,16 @@ class IncomingLetter < ActiveRecord::Base
   
   belongs_to  :author, :class_name => 'User', :foreign_key => 'author_id'  
   belongs_to  :executor, :class_name => 'User', :foreign_key => 'executor_id'  
+  belongs_to  :organization
   has_many    :projects, :through => :associated_projects
   has_many    :associated_projects
   has_many    :comments, :as => :commented, :dependent => :destroy
 
   validates_presence_of :incoming_code, :author_id, :executor_id, 
-    :shipping_type, :shipping_from
+    :shipping_type, :shipping_from, :organization_id
   validates_format_of :incoming_code, :with => /^\d+\-\d{2}(\/\d+)?$/,
     :message => I18n.t(:message_incorrect_format_incoming_code)
-  validates_uniqueness_of :incoming_code
+  validates_uniqueness_of :incoming_code, :scope => :organization_id
   validate :incoming_code_incorrect_year
   validate :incoming_code_in_series, :on => :create
   validates_presence_of :projects, :files, :on => :create  
@@ -23,7 +24,8 @@ class IncomingLetter < ActiveRecord::Base
   
   safe_attributes :incoming_code, :outgoing_code, :signer,
     :shipping_from, :shipping_type, :shipping_on, :subject,
-    :original_required, :recipient, :executor_id, :description
+    :original_required, :recipient, :executor_id, :description, 
+    :organization_id
 
   def incoming_code_incorrect_year
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
@@ -48,7 +50,8 @@ class IncomingLetter < ActiveRecord::Base
   def previous_code
     PreviousCode.find(:last, :conditions => {
       :name => self.class.name.underscore, 
-      :year => Time.now.strftime("%y")
+      :year => Time.now.strftime("%y"),
+      :organization_id => self.organization_id
     })
   end
 
