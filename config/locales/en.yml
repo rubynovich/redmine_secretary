@@ -7,6 +7,7 @@ en:
   label_edit_incoming_letter: "edit incoming letter"
   label_edit_outgoing_letter: "edit outgoing letter"
   label_related_projects: "Projects:"
+  label_organizations: Organizations  
   field_executor: "Assigned to"
   field_original_required: "Original"
   field_shipping_from: "From"
