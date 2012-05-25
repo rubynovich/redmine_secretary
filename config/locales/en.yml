@@ -7,7 +7,9 @@ en:
   label_edit_incoming_letter: "edit incoming letter"
   label_edit_outgoing_letter: "edit outgoing letter"
   label_related_projects: "Projects:"
-  label_organizations: Organizations  
+  label_organization_plural: "Organizations"
+  label_organization_new: "New organization"
+  field_title: "Title"
   field_executor: "Assigned to"
   field_original_required: "Original"
   field_shipping_from: "From"
@@ -31,3 +33,29 @@ en:
   prompt_please_select: "Select..."
   dated: "from"
   incoming_issue_subject: "[Incoming letter] %{shipping_from} (%{signer})"  
+  permission_view_incoming_letters: View incoming letters
+  permission_add_incoming_letters: Add incoming letters
+  permission_edit_incoming_letters: Edit incoming letters
+  permission_edit_own_incoming_letters: Edit own incoming letters
+  permission_delete_incoming_letters: Delete incoming letters
+  permission_delete_own_incoming_letters: Delete own incoming letters
+  permission_view_outgoing_letters: View outgoing letters
+  permission_add_outgoing_letters: Add outgoing letters
+  permission_edit_outgoing_letters: Edit outgoing letters
+  permission_edit_own_outgoing_letters: Edit own outgoing letters  
+  permission_delete_outgoing_letters: Delete outgoing letters
+  permission_delete_own_outgoing_letters: Delete own outgoing letters
+  activerecord:
+    errors:
+      models:
+        incoming_letter:
+          attributes:
+            incoming_code:
+              in_series: will be next
+              incorrect_year: incorrect year
+        outgoing_letter:
+          attributes:
+            outgoing_code:
+              in_series: will be next
+              incorrect_year: incorrect year
+  error_unable_delete_organization: Unable delete organization

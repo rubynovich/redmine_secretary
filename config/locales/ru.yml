@@ -6,7 +6,9 @@ ru:
   label_new_outgoing_letter: Регистрация исходящего письма
   label_edit_incoming_letter: Правка входящего письма
   label_edit_outgoing_letter: Правка исходящего письма
-  label_organizations: Организации
+  label_organization_plural: Организации
+  label_organization_new: Новая организация
+  field_title: Название
   field_projects: "Объекты"
   field_files: "Файлы"
   field_executor: Исполнитель
@@ -60,4 +62,5 @@ ru:
           attributes:
             outgoing_code:
               in_series: должен быть следующим
-              incorrect_year: имеет неверно заданный год              
+              incorrect_year: имеет неверно заданный год
+  error_unable_delete_organization: Невозможно ликвидировать организацию с зарегистрированными письмами              

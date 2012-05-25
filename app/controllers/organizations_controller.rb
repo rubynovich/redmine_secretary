@@ -1,4 +1,5 @@
 class OrganizationsController < ApplicationController
+  unloadable
   layout 'admin'
 
   before_filter :require_admin
@@ -7,41 +8,39 @@ class OrganizationsController < ApplicationController
 
   # GET /organizations
   def index
-    @organizations = Organization.find(:all, :order => 'title')
-  end
-
-  # GET /organizations/1
-  def show
-    @organization = Organization.find(params[:id])
+    @organization_pages, @organizations = paginate :organizations, :per_page => 25, :order => "position"
+    render :action => "index", :layout => false if request.xhr?
   end
 
   # GET /organizations/new
   def new
-    @organizations = Organization.new
-
-    respond_to do |format|
-      format.html # new.html.erb
+    @organization = Organization.new
+  end
+  
+  # POST /organizations
+  def create
+    @organization = Organization.new(params[:organization])
+    if request.post? && @organization.save
+      flash[:notice] = l(:notice_successful_create)
+      redirect_to :action => 'index'
+    else
+      render :action => 'new'
     end
   end
 
   # GET /organizations/1/edit
   def edit
-    @organization = Organization.find(params[:id], :include => :projects)
+    @organization = Organization.find(params[:id])
   end
 
   # POST /organizations
   def create
-    @organization = Organization.new(params[:group])
-
-    respond_to do |format|
-      if @organization.save
-        format.html {
-          flash[:notice] = l(:notice_successful_create)
-          redirect_to(params[:continue] ? new_organization_path : organizations_path)
-        }
-      else
-        format.html { render :action => "new" }
-      end
+    @organization = Organization.new(params[:organization])
+    if request.post? && @organization.save
+      flash[:notice] = l(:notice_successful_create)
+      redirect_to :action => 'index'
+    else
+      render :action => 'new'
     end
   end
 
@@ -58,14 +57,13 @@ class OrganizationsController < ApplicationController
       end
     end
   end
-
-  # DELETE /groups/1
+  
+  # DELETE /organizations/1
   def destroy
-    @organization = Organization.find(params[:id])
-    @organization.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(organizations_url) }
-    end
-  end
+    Organization.find(params[:id]).destroy
+    redirect_to :action => 'index'
+  rescue
+    flash[:error] = l(:error_unable_delete_organization)
+    redirect_to :action => 'index'
+  end  
 end

@@ -1,0 +1,24 @@
+.contextual
+  = link_to l(:label_organization_new), new_organization_path, :class => 'icon icon-add'
+
+%h2=l(:label_organization_plural)
+
+%table.list
+  %thead
+    %tr
+      %th=l(:field_title)
+      %th=l(:field_is_default)
+      %th=l(:button_sort)
+      %th
+  %tbody
+    - for organization in @organizations
+      %tr{:class=>cycle("odd", "even")}
+        %td= link_to h(organization.title), edit_organization_path(organization)
+        %td{:align=>"center"}= checked_image organization.is_default?
+        %td{:align=>"center", :style=>"width:15%;"}= reorder_links('organization', {:action => 'update', :id => organization}, :put)
+        %td.buttons
+          = link_to(l(:button_delete), organization_path(organization), :method => :delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del')
+
+%p.pagination= pagination_links_full @organization_pages
+
+- html_title(l(:label_organization_plural))
