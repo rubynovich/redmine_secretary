@@ -6,6 +6,7 @@ class Organization < ActiveRecord::Base
   before_destroy :check_integrity
   
   validates_presence_of :title
+  validates_uniqueness_of :title
   
   def <=>(status)
     position <=> status.position

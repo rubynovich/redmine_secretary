@@ -1,10 +1,10 @@
 class AddPositionToOrganization < ActiveRecord::Migration
   def self.up
-    add_column :organizations, :position, :integer, :default => 1
-    pos = 1
-    Organization.find_each do |org|
-      org.update_attribute(:position, pos+=1)
-    end    
+    Organization.create(:title => "Default organization", :is_default => true, :position => 1)
+    Organization.create(:title => "Second organization", :position => 2)
+    IncomingLetter.update_all(:organization_id => Organization.default.id)
+    OutgoingLetter.update_all(:organization_id => Organization.default.id)    
+    PreviousCode.update_all(:organization_id => Organization.default.id)    
   end
 
   def self.down
