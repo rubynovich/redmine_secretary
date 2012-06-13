@@ -2,7 +2,7 @@ class IncomingLettersController < ApplicationController
   unloadable
 
   before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
-  before_filter :find_organization, :only => [:index, :new]
+  before_filter :find_organization, :only => [:index, :new, :create]
    
   helper :attachments
   include AttachmentsHelper  
@@ -101,8 +101,8 @@ class IncomingLettersController < ApplicationController
         :value => code[/\d+/],
         :year => code.split('-').last[/\d+/],
         :organization_id => @object.organization_id
-      }      
-      if prev_code = previous_code
+      }
+      if prev_code = previous_code(@object.organization_id)
         if prev_code.value.to_i < attributes[:value].to_i
           prev_code.update_attributes(attributes)
         end
@@ -119,8 +119,8 @@ class IncomingLettersController < ApplicationController
       end
     end
     
-    def previous_code
-      PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y"), :organization_id => find_organization.id})
+    def previous_code(organization_id = find_organization.id)
+      PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y"), :organization_id => organization_id})
     end
     
     def add_to_description(str)

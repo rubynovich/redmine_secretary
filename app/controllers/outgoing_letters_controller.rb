@@ -94,7 +94,7 @@ class OutgoingLettersController < ApplicationController
         :year => code.split('-').last[/\d+/],
         :organization_id => @object.organization_id
       }      
-      if prev_code = PreviousCode.find_by_name(model_name)
+      if prev_code = previous_code(@object.organization_id)
         if (prev_code.value.to_i < attributes[:value].to_i)||(prev_code.year.to_i < attributes[:year].to_i)
           prev_code.update_attributes(attributes)
         end
@@ -111,7 +111,7 @@ class OutgoingLettersController < ApplicationController
       end
     end
     
-    def previous_code
-      PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y"), :organization_id => find_organization.id})
+    def previous_code(organization_id = find_organization.id)
+      PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y"), :organization_id => organization_id})
     end   
 end
