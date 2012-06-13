@@ -27,6 +27,13 @@ class IncomingLetter < ActiveRecord::Base
     :original_required, :recipient, :executor_id, :description, 
     :organization_id
 
+  named_scope :this_organization, lambda {|q|
+    if q.present?
+      {:conditions => ["organization_id=?", q]}
+    end
+  }
+  
+
   def incoming_code_incorrect_year
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
     if incoming_code[regexp]

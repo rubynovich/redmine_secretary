@@ -39,3 +39,5 @@
           %td.buttons
             - if object.destroyable_by?(User.current) 
               = link_to(l(:button_delete), incoming_letter_path(object), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del')
+
+%p.pagination= pagination_links_full @pages, @count

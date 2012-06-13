@@ -15,30 +15,24 @@ class IncomingLettersController < ApplicationController
     sort_init 'incoming_code', 'desc'
     sort_update %w(incoming_code outgoing_code signer shipping_from shipping_type shipping_on original_required recipient executor_id description created_on author_id)
 
-    @collection = model_class.find :all, 
-      :conditions => ["organization_id=?", @organization.id], 
-      :order => sort_clause
-
-    respond_to do |format|
-      format.html {
-        render :layout => !request.xhr?
-      }
-    end	    
+    scope = model_class.this_organization(@organization.id)
+    @limit = per_page_option
+    @count = scope.count
+    @pages = Paginator.new self, @count, @limit, params[:page]
+    @offset ||= @pages.current.offset
+    @collection =  scope.find :all,
+                              :order => sort_clause,
+                              :limit  =>  @limit,
+                              :offset =>  @offset
   end
 
-  def new
+  def new    
     @object = model_class.new(
       :incoming_code => next_code, 
       :organization_id => @organization.id)
     @related_projects = related_projects
   end
   
-  def show
-  end
-
-  def edit
-  end
-
   def update
     (render_403; return false) unless @object.editable_by?(User.current)
     @object.safe_attributes = params[model_name]
@@ -65,7 +59,7 @@ class IncomingLettersController < ApplicationController
       add_to_description(issues)
       render_attachment_warning_if_needed(@object)
       flash[:notice] = l(:notice_successful_create)
-      redirect_to( params[:continue] ? {:action => 'new'} :                     {:action => 'show', :id => @object} )
+      redirect_to( {:action => 'show', :id => @object} )
     else
       render :action => 'new'
     end    

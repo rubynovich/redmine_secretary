@@ -25,6 +25,12 @@ class OutgoingLetter < ActiveRecord::Base
     :shipping_to, :shipping_type, :shipping_on, 
     :served_on, :recipient, :description, :organization_id
 
+  named_scope :this_organization, lambda {|q|
+    if q.present?
+      {:conditions => ["organization_id=?", q]}
+    end
+  }
+
   def outgoing_code_incorrect_year
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
     if outgoing_code[regexp]
