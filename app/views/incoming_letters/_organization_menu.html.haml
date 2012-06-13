@@ -1,6 +1,6 @@
-%ul{:style => "margin:0;padding:0;"}
+%ul{:style => "margin:1em 0;padding:0;"}
   - Organization.find(:all, :order => :position).each do |org|
-    %li{:style => "margin:0;padding:0;list-style:none;"}
+    %li{:style => "display:inline;padding:2em 1em;"}
       - unless org == @organization
         = link_to org.title, {:action => :index, :organization_id => org.id}
       - else

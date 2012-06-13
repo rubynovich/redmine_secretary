@@ -1,4 +1,6 @@
-%h2=l(:label_new_outgoing_letter)
+%h2
+  =l(:label_new_outgoing_letter)
+  =h(@object.organization)  
 
 - labelled_form_for @object, :url => outgoing_letters_path, :html => {:id => 'object-form', :multipart => true} do |f|
   = render :partial => 'form', :locals => { :f => f }
