@@ -21,6 +21,7 @@ en:
   field_signer: "Sender"
   field_outgoing_code: "Incoming #"
   field_incoming_code: "Outgoing #"
+  field_answer_for: "Answer for"
   message_confirm_destroy: "Are you shure?"
   list_shipping_type:
     - Mail
@@ -50,11 +51,15 @@ en:
       models:
         incoming_letter:
           attributes:
+            answer_for:
+              not_exist: a nonexistent letter
             incoming_code:
               in_series: will be next
               incorrect_year: incorrect year
         outgoing_letter:
           attributes:
+            answer_for:
+              not_exist: a nonexistent letter          
             outgoing_code:
               in_series: will be next
               incorrect_year: incorrect year

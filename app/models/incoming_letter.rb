@@ -16,13 +16,14 @@ class IncomingLetter < ActiveRecord::Base
   validates_uniqueness_of :incoming_code, :scope => :organization_id
   validate :incoming_code_incorrect_year
   validate :incoming_code_in_series, :on => :create
+  validate :answer_for_exist
   validates_presence_of :projects, :files, :on => :create  
 
   acts_as_attachable
   
   attr_accessor :project, :projects, :files, :subject  
   
-  safe_attributes :incoming_code, :outgoing_code, :signer,
+  safe_attributes :incoming_code, :outgoing_code, :answer_for, :signer,
     :shipping_from, :shipping_type, :shipping_on, :subject,
     :original_required, :recipient, :executor_id, :description, 
     :organization_id
@@ -32,7 +33,6 @@ class IncomingLetter < ActiveRecord::Base
       {:conditions => ["organization_id=?", q]}
     end
   }
-  
 
   def incoming_code_incorrect_year
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
@@ -40,7 +40,7 @@ class IncomingLetter < ActiveRecord::Base
       return if incoming_code[regexp,2].to_i <= Time.now.strftime("%y").to_i
     end
     errors.add(:incoming_code, :incorrect_year)
-  end
+  end  
 
   def incoming_code_in_series
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
@@ -52,6 +52,15 @@ class IncomingLetter < ActiveRecord::Base
       return if incoming_code[regexp,1] == previous_code.value.succ
     end
     errors.add(:incoming_code, :in_series)
+  end
+
+  def answer_for_exist
+    if answer_for.present?
+      return if OutgoingLetter.find(:first, :conditions => {
+        :outgoing_code => answer_for, 
+        :organization_id => organization_id}).present?
+    end
+    errors.add(:answer_for, :not_exist)
   end
   
   def previous_code

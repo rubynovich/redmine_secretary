@@ -15,20 +15,26 @@
       %th.shipping_on= l(:field_shipping_on)+":"
       %td.shipping_on= format_date(@object.shipping_on)
     %tr
+      %th.answer_for= l(:field_answer_for)+":"
+      %td.answer_for
+        - if @object.answer_for.present?
+          = link_to h(@object.answer_for), :controller => :incoming_letters, :action => :show, :id => IncomingLetter.find(:first, :conditions => {:organization_id => @object.organization_id, :incoming_code => @object.answer_for})
       %th.shipping_to= l(:field_shipping_to)+":"
       %td.shipping_to= h(@object.shipping_to)
+    %tr
       %th.shipping_type= l(:field_shipping_type)+":"
       %td.shipping_type= h(@object.shipping_type)
-    %tr
       %th.signer= l(:field_signer)+":"
       %td.signer= h(@object.signer)
+    %tr
       %th.recipient= l(:field_recipient)+":"
       %td.recipient= h(@object.recipient)
-    %tr
       %th.served_on= l(:field_served_on)+":"
       %td.served_on= format_date(@object.served_on)
+    %tr
       %th.author= l(:field_author)+":"
       %td.author= h(@object.author)
+
   - if @object.description? || @object.attachments.any?
     %hr
     - if @object.description?

@@ -22,6 +22,7 @@ ru:
   field_signer: Отправитель
   field_outgoing_code: Исходящий №
   field_incoming_code: Входящий №
+  field_answer_for: Ответ на
   message_confirm_destroy: Вы уверены, что ходите удалить эту запись?
   message_incorrect_format_incoming_code: имеет неверный формат (НННН-ГГ или НННН-ГГ/Д)
   message_incorrect_format_outgoing_code: имеет неверный формат (НННН-ГГ или НННН-ГГ/Д)
@@ -55,11 +56,15 @@ ru:
       models:
         incoming_letter:
           attributes:
+            answer_for:
+              not_exist: несуществующее письмо          
             incoming_code:
               in_series: должен быть следующим
               incorrect_year: имеет неверно заданный год
         outgoing_letter:
           attributes:
+            answer_for:
+              not_exist: несуществующее письмо
             outgoing_code:
               in_series: должен быть следующим
               incorrect_year: имеет неверно заданный год

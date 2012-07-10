@@ -16,12 +16,13 @@ class OutgoingLetter < ActiveRecord::Base
   validates_uniqueness_of :outgoing_code, :scope => :organization_id 
   validate :outgoing_code_incorrect_year
   validate :outgoing_code_in_series, :on => :create
+  validate :answer_for_exist
   
   acts_as_attachable
 
   attr_accessor :project, :files
   
-  safe_attributes :outgoing_code, :incoming_code, :signer,
+  safe_attributes :outgoing_code, :incoming_code, :answer_for, :signer,
     :shipping_to, :shipping_type, :shipping_on, 
     :served_on, :recipient, :description, :organization_id
 
@@ -49,6 +50,15 @@ class OutgoingLetter < ActiveRecord::Base
       return if outgoing_code[regexp,1] == previous_code.value.succ
     end
     errors.add(:outgoing_code, :in_series)
+  end
+
+  def answer_for_exist
+    if answer_for.present?
+      return if IncomingLetter.find(:first, :conditions => {
+        :incoming_code => answer_for, 
+        :organization_id => organization_id}).present?
+    end
+    errors.add(:answer_for, :not_exist)
   end
   
   def previous_code

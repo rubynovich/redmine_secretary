@@ -13,7 +13,7 @@ class IncomingLettersController < ApplicationController
    
   def index
     sort_init 'incoming_code', 'desc'
-    sort_update %w(incoming_code outgoing_code signer shipping_from shipping_type shipping_on original_required recipient executor_id description created_on author_id)
+    sort_update %w(incoming_code outgoing_code answer_for signer shipping_from shipping_type shipping_on original_required recipient executor_id description created_on author_id)
 
     scope = model_class.this_organization(@organization.id)
     @limit = per_page_option
