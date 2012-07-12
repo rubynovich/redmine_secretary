@@ -32,6 +32,46 @@ class OutgoingLetter < ActiveRecord::Base
     end
   }
 
+  named_scope :time_period, lambda {|q, field|
+    today = Date.today
+    if q.present? && field.present?
+      {:conditions => 
+        (case q
+          when "yesterday"
+            {field => 1.day.ago}
+          when "today"
+            {field => today}
+          when "prev_week"       
+            ["#{field} BETWEEN ? AND ?", 
+              2.week.ago - today.wday.days, 
+              1.week.ago - today.wday.days]            
+          when "this_week"       
+            ["#{field} BETWEEN ? AND ?", 
+              today, 
+              1.week.from_now - today.wday.days]
+          when "prev_month"       
+            ["#{field} BETWEEN ? AND ?", 
+              2.month.ago - today.day.days, 
+              1.month.ago - today.day.days]                          
+          when "this_month"
+            ["#{field} BETWEEN ? AND ?", 
+              today, 
+              1.month.from_now - today.day.days]
+          when "prev_year"       
+            ["#{field} BETWEEN ? AND ?", 
+              2.year.ago - today.yday.days, 
+              1.year.ago - today.yday.days]                          
+          when "this_year"
+            ["#{field} BETWEEN ? AND ?", 
+              today, 
+              1.year.from_now - today.yday.days]
+          else
+            {}
+        end)
+      }
+    end
+  }
+
   def outgoing_code_incorrect_year
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
     if outgoing_code[regexp]
@@ -54,11 +94,13 @@ class OutgoingLetter < ActiveRecord::Base
 
   def answer_for_exist
     if answer_for.present?
-      return if IncomingLetter.find(:first, :conditions => {
+      if IncomingLetter.find(:first, :conditions => {
         :incoming_code => answer_for, 
-        :organization_id => organization_id}).present?
+        :organization_id => organization_id}).blank?
+       
+        errors.add(:answer_for, :not_exist) 
+      end
     end
-    errors.add(:answer_for, :not_exist)
   end
   
   def previous_code
