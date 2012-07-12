@@ -34,7 +34,7 @@ class IncomingLetter < ActiveRecord::Base
     end
   }
 
-  named_scope :period_time_period, lambda {|q, field|
+  named_scope :time_period, lambda {|q, field|
     today = Date.today
     if q.present? && field.present?
       {:conditions => 

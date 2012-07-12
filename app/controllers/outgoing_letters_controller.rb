@@ -13,7 +13,19 @@ class OutgoingLettersController < ApplicationController
     sort_init 'outgoing_code', 'desc'
     sort_update %w(incoming_code outgoing_code answer_for signer shipping_to shipping_type shipping_on served_on recipient description created_on author_id)
 
-    scope = model_class.this_organization(@organization.id)
+    scope = model_class.
+      this_organization(@organization.id).
+      like_executor(params[:executor]).
+      like_field(params[:incoming_code], :incoming_code).
+      like_field(params[:outgoing_code], :outgoing_code).
+      like_field(params[:answer_for], :answer_for).
+      like_field(params[:signer], :signer).
+      like_field(params[:shipping_to], :shipping_to).
+      like_field(params[:recipient], :recipient).
+      eql_field(params[:shipping_type], :shipping_type).
+      time_period(params[:time_period_served_on], :served_on).
+      time_period(params[:time_period_created_on], :created_on)
+      
     @limit = per_page_option
     @count = scope.count
     @pages = Paginator.new self, @count, @limit, params[:page]
