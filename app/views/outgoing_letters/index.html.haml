@@ -3,6 +3,25 @@
 
 %h2= t(:label_outgoing)
 
+- form_tag({}, :method => :get) do
+  %fieldset
+    %legend= l(:label_filter_plural)
+
+    = hidden_field_tag :organization_id, @organization.id
+
+    %label{:for=>'shipping_type'}= l(:field_shipping_type) + ":"
+    %select{:id => 'shipping_type', :name => 'shipping_type', :class => "small", :onchange => "this.form.submit(); return false;"}
+      %option
+      - t(:list_shipping_type).each do |shipping_type|
+        - if params[:shipping_type] == shipping_type
+          %option{:value => shipping_type, :selected => "selected"}
+            = shipping_type
+            = "(#{OutgoingLetter.eql_field(shipping_type, :shipping_type).this_organization(@organization.id).count})"
+        - else
+          %option{:value => shipping_type}
+            = shipping_type
+            = "(#{OutgoingLetter.eql_field(shipping_type, :shipping_type).this_organization(@organization.id).count})"
+
 = render :partial => "organization_menu"
 
 .autoscroll
@@ -11,7 +30,7 @@
       %tr
         = sort_header_tag('outgoing_code', :caption => l(:field_outgoing_code))
         = sort_header_tag('incoming_code', :caption => l(:field_incoming_code)) 
-        = sort_header_tag('answer_for', :caption => l(:field_incoming_code))        
+        = sort_header_tag('answer_for', :caption => l(:field_answer_for))        
         = sort_header_tag('signer', :caption => l(:field_signer))
         = sort_header_tag('shipping_to', :caption => l(:field_shipping_to))
         = sort_header_tag('shipping_type', :caption => l(:field_shipping_type))
@@ -45,6 +64,8 @@
           %td.created_on{:align=>"center"}
             = format_time(object.created_on)
           %td.buttons
+            - if object.editable_by?(User.current)
+              = link_to(l(:button_update), edit_outgoing_letter_path(object), :class => 'icon icon-edit')
             - if object.destroyable_by?(User.current)
               = link_to(l(:button_delete), outgoing_letter_path(object), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del')
               

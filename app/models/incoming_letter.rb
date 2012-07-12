@@ -34,38 +34,42 @@ class IncomingLetter < ActiveRecord::Base
     end
   }
 
-  named_scope :time_period, lambda {|q, field|
+  named_scope :period_time_period, lambda {|q, field|
     today = Date.today
     if q.present? && field.present?
       {:conditions => 
         (case q
           when "yesterday"
-            {field.to_sym => 1.day.ago}
+            ["#{field} BETWEEN ? AND ?", 
+              2.days.ago, 
+              1.day.ago]
           when "today"
-            {field.to_sym => today}
+            ["#{field} BETWEEN ? AND ?", 
+              1.day.ago, 
+              1.day.from_now]
           when "prev_week"
             ["#{field} BETWEEN ? AND ?", 
-              2.week.ago - today.wday.days, 
-              1.week.ago - today.wday.days]
+              2.weeks.ago + today.wday.days, 
+              1.week.ago + today.wday.days]
           when "this_week"       
             ["#{field} BETWEEN ? AND ?", 
-              today, 
+              1.week.ago + today.wday.days, 
               1.week.from_now - today.wday.days]
           when "prev_month"
             ["#{field} BETWEEN ? AND ?", 
-              2.month.ago - today.day.days, 
-              1.month.ago - today.day.days]
+              2.months.ago + today.day.days, 
+              1.month.ago + today.day.days]
           when "this_month"
             ["#{field} BETWEEN ? AND ?", 
-              today, 
+              1.month.ago + today.day.days, 
               1.month.from_now - today.day.days]
           when "prev_year"       
             ["#{field} BETWEEN ? AND ?", 
-              2.year.ago - today.yday.days, 
-              1.year.ago - today.yday.days]                          
+              2.years.ago + today.yday.days, 
+              1.year.ago + today.yday.days]                          
           when "this_year"
             ["#{field} BETWEEN ? AND ?", 
-              today, 
+              1.year.ago + today.yday.days, 
               1.year.from_now - today.yday.days]
           else
             {}

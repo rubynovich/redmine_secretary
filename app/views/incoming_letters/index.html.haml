@@ -51,7 +51,7 @@
             = "(#{IncomingLetter.eql_field(executor.id, :executor_id).this_organization(@organization.id).count})"
 
 
-    -# %w{shipping_on created_on}.each do |type_date|
+    - %w{shipping_on created_on}.each do |type_date|
       %br
       %label=l(:"field_#{type_date}") + ":"
       - %w{all yesterday today this_week prev_week this_month prev_month this_year prev_year}.each do |key|
@@ -60,7 +60,7 @@
             = l(:"label_#{key}")
         - else
           = link_to l(:"label_#{key}"), params.merge( :"time_period_#{type_date}" => key )
-        = "(#{IncomingLetter.time_period(key, type_date).this_organization(@organization.id).count}) /"
+        = "(#{IncomingLetter.period_time_period(key, type_date).this_organization(@organization.id).count}) /"
    
 &nbsp;
 
@@ -99,6 +99,8 @@
           %td.created_on{:align=>"center"}= format_time(object.created_on)
           %td.executor= h(object.executor)
           %td.buttons
+            - if object.editable_by?(User.current)
+              = link_to(l(:button_update), edit_outgoing_letter_path(object), :class => 'icon icon-edit')
             - if object.destroyable_by?(User.current) 
               = link_to(l(:button_delete), incoming_letter_path(object), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del')
 
