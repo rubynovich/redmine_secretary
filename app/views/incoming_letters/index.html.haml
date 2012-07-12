@@ -37,6 +37,20 @@
             = "(#{IncomingLetter.eql_field(original_required, :original_required).this_organization(@organization.id).count})"
             
 
+    %label{:for=>'executor_id'}= l(:field_executor) + ":"
+    %select{:id => 'executor_id', :name => 'original_required', :class => "small", :onchange => "this.form.submit(); return false;"}
+      %option
+      - possible_executors.each do |executor|
+        - if params[:executor_id] == executor.id
+          %option{:value => executor.id, :selected => "selected"}
+            = executor.name
+            = "(#{IncomingLetter.eql_field(executor.id, :executor_id).this_organization(@organization.id).count})"
+        - else
+          %option{:value => executor.id}
+            = executor.name
+            = "(#{IncomingLetter.eql_field(executor.id, :executor_id).this_organization(@organization.id).count})"
+
+
     -# %w{shipping_on created_on}.each do |type_date|
       %br
       %label=l(:"field_#{type_date}") + ":"
@@ -104,9 +118,6 @@
     %label{:for=>'signer'}= l(:field_signer) + ":"
     = text_field_tag 'signer', params[:signer], :size => 30
 
-    %label{:for=>'shipping_from'}= l(:field_shipping_from) + ":"
-    = text_field_tag 'shipping_from', params[:shipping_from], :size => 30
-
     %br
 
     %label{:for=>'outgoing_code'}= l(:field_outgoing_code) + ":"
@@ -115,13 +126,13 @@
     %label{:for=>'recipient'}= l(:field_recipient) + ":"
     = text_field_tag 'recipient', params[:recipient], :size => 30
 
-    %label{:for=>'executor'}= l(:field_executor) + ":"
-    = text_field_tag 'executor', params[:executor], :size => 30
-
-    %br
+    %br    
 
     %label{:for=>'answer_for'}= l(:field_answer_for) + ":"
     = text_field_tag 'answer_for', params[:answer_for], :size => 10
+
+    %label{:for=>'shipping_from'}= l(:field_shipping_from) + ":"
+    = text_field_tag 'shipping_from', params[:shipping_from], :size => 30
 
     = submit_tag l(:button_apply), :class => "small", :name => nil
     = link_to l(:button_clear), {:action => params[:action]}, :class => 'icon icon-reload'

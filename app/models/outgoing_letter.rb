@@ -72,6 +72,21 @@ class OutgoingLetter < ActiveRecord::Base
     end
   }
 
+  named_scope :like_field, lambda {|q, field|
+    if q.present? && field.present?
+      {:conditions => 
+        ["LOWER(#{field}) LIKE :p OR #{field} LIKE :p", 
+        {:p => "%#{q.to_s.downcase}%"}]}
+    end
+  }  
+
+  named_scope :eql_field, lambda {|q, field|
+    if q.present? && field.present?
+      {:conditions => {field => q}}
+    end
+  }  
+
+
   def outgoing_code_incorrect_year
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
     if outgoing_code[regexp]
