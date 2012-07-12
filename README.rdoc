@@ -11,3 +11,6 @@
 
   cd vendor/plugins/redmine_secretary
   git pull
+  cd ../../..
+  rake db:migrate_plugins RAILS_ENV=production
+  
