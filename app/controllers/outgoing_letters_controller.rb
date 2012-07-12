@@ -15,7 +15,6 @@ class OutgoingLettersController < ApplicationController
 
     scope = model_class.
       this_organization(@organization.id).
-      like_executor(params[:executor]).
       like_field(params[:incoming_code], :incoming_code).
       like_field(params[:outgoing_code], :outgoing_code).
       like_field(params[:answer_for], :answer_for).
