@@ -1,5 +1,8 @@
 # English strings go here for Rails i18n
 en:
+  label_last_week: "last week"
+  label_last_month: "last month"
+  label_last_year: "last year"
   label_outgoing: "Outgoing"
   label_incoming: "Incoming"
   label_add_incoming_letter: "add incoming letter"

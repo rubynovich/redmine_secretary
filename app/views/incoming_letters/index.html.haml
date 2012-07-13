@@ -53,7 +53,7 @@
     - %w{shipping_on created_on}.each do |type_date|
       %br
       %label=l(:"field_#{type_date}") + ":"
-      - %w{all yesterday today this_week prev_week this_month prev_month this_year prev_year}.each do |key|
+      - %w{all yesterday today last_week this_week last_month this_month last_year this_year}.each do |key|
         - if params[:"time_period_#{type_date}"] == key
           %strong
             = l(:"label_#{key}")

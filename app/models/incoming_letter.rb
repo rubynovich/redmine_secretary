@@ -47,7 +47,7 @@ class IncomingLetter < ActiveRecord::Base
             ["#{field} BETWEEN ? AND ?", 
               1.day.ago, 
               1.day.from_now]
-          when "prev_week"
+          when "last_week"
             ["#{field} BETWEEN ? AND ?", 
               2.weeks.ago + today.wday.days, 
               1.week.ago + today.wday.days]
@@ -55,7 +55,7 @@ class IncomingLetter < ActiveRecord::Base
             ["#{field} BETWEEN ? AND ?", 
               1.week.ago + today.wday.days, 
               1.week.from_now - today.wday.days]
-          when "prev_month"
+          when "last_month"
             ["#{field} BETWEEN ? AND ?", 
               2.months.ago + today.day.days, 
               1.month.ago + today.day.days]
@@ -63,7 +63,7 @@ class IncomingLetter < ActiveRecord::Base
             ["#{field} BETWEEN ? AND ?", 
               1.month.ago + today.day.days, 
               1.month.from_now - today.day.days]
-          when "prev_year"       
+          when "last_year"       
             ["#{field} BETWEEN ? AND ?", 
               2.years.ago + today.yday.days, 
               1.year.ago + today.yday.days]                          

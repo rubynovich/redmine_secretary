@@ -1,5 +1,8 @@
 # Russian strings go here for Rails i18n
 ru:
+  label_last_week: "на прошлой неделе"
+  label_last_month: "прошлый месяц"
+  label_last_year: "прошлый год"
   label_outgoing: Исходящие письма
   label_incoming: Входящие письма
   label_new_incoming_letter: Регистрация входящего письма
