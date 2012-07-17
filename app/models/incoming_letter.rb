@@ -122,10 +122,10 @@ class IncomingLetter < ActiveRecord::Base
   end
 
   def answer_for_exist
-    if answer_for.present?
+    if self.answer_for.present?
       if OutgoingLetter.find(:first, :conditions => {
-        :outgoing_code => answer_for, 
-        :organization_id => organization_id}).blank?
+        :outgoing_code => self.answer_for, 
+        :organization_id => self.organization_id}).blank?
         
         errors.add(:answer_for, :not_exist)
       end
