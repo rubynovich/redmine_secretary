@@ -38,10 +38,10 @@
             
 
     %label{:for=>'executor_id'}= l(:field_executor) + ":"
-    %select{:id => 'executor_id', :name => 'original_required', :class => "small", :onchange => "this.form.submit(); return false;"}
+    %select{:id => 'executor_id', :name => 'executor_id', :class => "small", :onchange => "this.form.submit(); return false;"}
       %option
       - possible_executors.each do |executor|
-        - if params[:executor_id] == executor.id
+        - if params[:executor_id] == executor.id.to_s
           %option{:value => executor.id, :selected => "selected"}
             = executor.name
             = "(#{IncomingLetter.eql_field(executor.id, :executor_id).this_organization(@organization.id).count})"
@@ -99,7 +99,7 @@
           %td.executor= h(object.executor)
           %td.buttons
             - if object.editable_by?(User.current)
-              = link_to(l(:button_update), edit_outgoing_letter_path(object), :class => 'icon icon-edit')
+              = link_to l(:button_update), {:action => 'edit', :id => object.id}, :class => 'icon icon-edit'
             -# if object.destroyable_by?(User.current) 
               = link_to(l(:button_delete), incoming_letter_path(object), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del')
 
