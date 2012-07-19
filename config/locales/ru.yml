@@ -10,7 +10,11 @@ ru:
   label_edit_incoming_letter: Правка входящего письма
   label_edit_outgoing_letter: Правка исходящего письма
   label_organization_plural: Организации
+  label_secretary_member_plural: Секретари
   label_organization_new: Новая организация
+  label_new: Создание
+  label_edit: Правка
+  label_delete: Удаление
   field_title: Название
   field_projects: "Объекты"
   field_files: "Файлы"
@@ -26,6 +30,14 @@ ru:
   field_outgoing_code: Исходящий №
   field_incoming_code: Входящий №
   field_answer_for: Ответ на
+  field_organization: Организация
+  field_incoming_new: Создание входящих
+  field_incoming_edit: Правка входящих
+  field_incoming_delete: Удаление входящих
+  field_outgoing_new: Создание исходящих
+  field_outgoing_edit: Правка исходящих
+  field_outgoing_delete: Удаление исходящих
+  field_secretary_member: Пользователь
   message_confirm_destroy: Вы уверены, что ходите удалить эту запись?
   message_incorrect_format_incoming_code: имеет неверный формат (НННН-ГГ или НННН-ГГ/Д)
   message_incorrect_format_outgoing_code: имеет неверный формат (НННН-ГГ или НННН-ГГ/Д)

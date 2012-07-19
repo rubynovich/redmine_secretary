@@ -3,10 +3,3 @@
 - labelled_form_for @object, :html => { :id => 'object-form', :multipart => true, :method => :put} do |f|
   = render :partial => 'form', :locals => { :f => f }
   = submit_tag l(:button_save)
-  -# link_to_remote l(:label_preview),
-    { :url => preview_incoming_letter_path,
-    :method => 'get',
-    :update => 'preview',
-    :with => "Form.serialize('object-form')"
-    }, :accesskey => accesskey(:preview)
-#preview.wiki

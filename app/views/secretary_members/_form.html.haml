@@ -1,0 +1,13 @@
+= error_messages_for 'secretary_member'
+.tabular
+  .splitcontentleft
+    %p= f.select :user_id, @users.map {|c| [c.name, c.id]}, :required => true, :prompt => t(:prompt_please_select)
+    %p= f.check_box :incoming_new
+    %p= f.check_box :incoming_edit  
+    %p= f.check_box :incoming_delete
+    
+  .splitcontentright
+    %p= f.select :organization_id, @organizations.map {|c| [c.title, c.id]}, :required => true, :prompt => t(:prompt_please_select)    
+    %p= f.check_box :outgoing_new
+    %p= f.check_box :outgoing_edit
+    %p= f.check_box :outgoing_delete

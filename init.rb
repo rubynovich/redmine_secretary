@@ -25,7 +25,13 @@ Redmine::Plugin.register :redmine_secretary do
   
   menu :application_menu, :outgoing_letters, {:controller => :outgoing_letters, :action => :index}, :caption => :label_outgoing, :param => :project_id, :if => Proc.new{ User.current.allowed_to?({:controller => :outgoing_letters, :action => :index}, nil, {:global => true})}
   
-  menu :admin_menu, :organizations, {:controller => :organizations, :action => :index}, :caption => :label_organization_plural, :html => {:class => :enumerations}
+  menu :admin_menu, :organizations, 
+    {:controller => :organizations, :action => :index},
+    :caption => :label_organization_plural, :html => {:class => :enumerations}
+
+  menu :admin_menu, :secretary_members, 
+    {:controller => :secretary_members, :action => :index},
+    :caption => :label_secretary_member_plural, :html => {:class => :users}
   
   settings :default => {
     :issue_priority => 2,
