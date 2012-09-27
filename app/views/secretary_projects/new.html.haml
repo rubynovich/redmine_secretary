@@ -1,0 +1,8 @@
+%h2
+  =l(:label_new_secretary_project)
+  &#187; 
+  =h @secretary_project.organization
+
+- labelled_form_for @secretary_project do |f|
+  = render :partial => 'form', :locals => { :f => f }
+  = f.submit l(:button_create)

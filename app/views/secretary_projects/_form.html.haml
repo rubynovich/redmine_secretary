@@ -1,0 +1,6 @@
+= error_messages_for 'secretary_project'
+
+.tabular
+  = f.hidden_field :organization_id
+  %p= f.select :project_id, @projects, :required => true, :prompt => t(:prompt_please_select)    
+  %p= f.select :user_id, @users, :required => true, :prompt => t(:prompt_please_select)

@@ -8,6 +8,9 @@ class Organization < ActiveRecord::Base
   validates_presence_of :title
   validates_uniqueness_of :title
   
+  has_many :secretary_members
+  has_many :secretary_projects
+  
   def <=>(status)
     position <=> status.position
   end
@@ -26,6 +29,6 @@ class Organization < ActiveRecord::Base
   
   private
     def check_integrity
-      raise "Can't delete organization" if IncomingLetter.find(:first, :conditions => ["organization_id=?", self.id]) || OutgoingLetter.find(:first, :conditions => ["organization_id=?", self.id])
+      raise "Can't delete organization" if [IncomingLetter, OutgoingLetter, SecretaryMember, SecretaryProject].any?{ |c| c.find(:first, :conditions => ["organization_id=?", self.id])}
     end
 end

@@ -33,6 +33,10 @@ Redmine::Plugin.register :redmine_secretary do
     {:controller => :secretary_members, :action => :index},
     :caption => :label_secretary_member_plural, :html => {:class => :users}
   
+  menu :admin_menu, :secretary_projects, 
+    {:controller => :secretary_projects, :action => :index},
+    :caption => :label_secretary_project_plural, :html => {:class => :enumerations}
+  
   settings :default => {
     :issue_priority => 2,
     :issue_tracker => 0

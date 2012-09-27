@@ -1,0 +1,14 @@
+%table.list
+  %thead
+    %tr
+      %th=l(:field_project)    
+      %th=l(:field_user)
+      %th
+  %tbody
+    - secretary_projects.each do |secretary_project|
+      %tr{:class=>cycle("odd", "even")}
+        %td= h(secretary_project.project)
+        %td= h(secretary_project.user)        
+        %td.buttons
+          = link_to(l(:button_edit), :action => :edit, :id => secretary_project.id, :class => 'icon icon-edit')
+          = link_to(l(:button_delete), secretary_project_path(secretary_project), :method => :delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del')

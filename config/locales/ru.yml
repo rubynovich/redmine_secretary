@@ -11,7 +11,9 @@ ru:
   label_edit_outgoing_letter: Правка исходящего письма
   label_organization_plural: Организации
   label_secretary_member_plural: Секретари
-  label_organization_new: Новая организация
+  label_secretary_project_plural: Получатели писем
+  label_new_organization: Новая организация
+  label_new_secretary_project: Новый получатель писем
   label_new: Создание
   label_edit: Правка
   label_delete: Удаление
@@ -37,7 +39,7 @@ ru:
   field_outgoing_new: Создание исходящих
   field_outgoing_edit: Правка исходящих
   field_outgoing_delete: Удаление исходящих
-  field_secretary_member: Пользователь
+  field_secretary_member: Пользователь  
   message_confirm_destroy: Вы уверены, что ходите удалить эту запись?
   message_incorrect_format_incoming_code: имеет неверный формат (НННН-ГГ или НННН-ГГ/Д)
   message_incorrect_format_outgoing_code: имеет неверный формат (НННН-ГГ или НННН-ГГ/Д)
