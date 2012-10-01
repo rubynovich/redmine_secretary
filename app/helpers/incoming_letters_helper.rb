@@ -21,4 +21,8 @@ module IncomingLettersHelper
     project_members.
       inject(project_members.flatten){ |result, arr| result & arr }
   end
+  
+  def time_periods
+    %w{last_week this_week last_month this_month last_year this_year}
+  end
 end
