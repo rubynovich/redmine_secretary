@@ -26,7 +26,8 @@ class IncomingLettersController < ApplicationController
       like_field(params[:recipient], :recipient).
       eql_field(params[:shipping_type], :shipping_type).
       eql_field(params[:original_required], :original_required).      
-      eql_field(params[:executor_id], :executor_id).
+      eql_field(params[:shipping_on], :shipping_on).
+      eql_field(params[:created_on], :created_on).
       time_period(params[:time_period_shipping_on], :shipping_on).
       time_period(params[:time_period_created_on], :created_on)
       

@@ -49,27 +49,27 @@ class IncomingLetter < ActiveRecord::Base
               1.day.from_now]
           when "last_week"
             ["#{field} BETWEEN ? AND ?", 
-              2.weeks.ago + today.wday.days, 
-              1.week.ago + today.wday.days]
+              1.week.ago - today.wday.days, 
+              1.week.ago - today.wday.days + 1.week]
           when "this_week"       
             ["#{field} BETWEEN ? AND ?", 
-              1.week.ago + today.wday.days, 
+              1.week.from_now - today.wday.days - 1.week, 
               1.week.from_now - today.wday.days]
           when "last_month"
             ["#{field} BETWEEN ? AND ?", 
-              2.months.ago + today.day.days, 
-              1.month.ago + today.day.days]
+              1.month.ago - today.day.days, 
+              1.month.ago - today.day.days + 1.month]
           when "this_month"
             ["#{field} BETWEEN ? AND ?", 
-              1.month.ago + today.day.days, 
+              1.month.from_now - today.day.days - 1.month, 
               1.month.from_now - today.day.days]
           when "last_year"       
             ["#{field} BETWEEN ? AND ?", 
-              2.years.ago + today.yday.days, 
-              1.year.ago + today.yday.days]                          
+              1.year.ago - today.yday.days, 
+              1.year.ago - today.yday.days + 1.year]
           when "this_year"
             ["#{field} BETWEEN ? AND ?", 
-              1.year.ago + today.yday.days, 
+              1.year.from_now - today.yday.days - 1.year, 
               1.year.from_now - today.yday.days]
           else
             {}

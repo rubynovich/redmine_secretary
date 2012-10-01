@@ -53,13 +53,24 @@
     - %w{shipping_on created_on}.each do |type_date|
       %br
       %label=l(:"field_#{type_date}") + ":"
-      - %w{all yesterday today last_week this_week last_month this_month last_year this_year}.each do |key|
+      - %w{all}.each do |key|
+        - if params[:"time_period_#{type_date}"] == key
+          %strong
+            = l(:"label_#{key}")
+        - else
+          = link_to l(:"label_#{key}"), params.merge( :"time_period_#{type_date}" => key, :"#{type_date}" => "" )
+        = "(#{IncomingLetter.time_period(key, type_date).this_organization(@organization.id).count}) /"
+      
+      %input{:id => type_date, :name => type_date, :size => 10, :onchange => "this.form.submit(); return false;", :value => (params[type_date] if params[:"time_period_#{type_date}"].blank?) }
+      = calendar_for(type_date)
+      - %w{last_week this_week last_month this_month last_year this_year}.each do |key|
+        = "/"
         - if params[:"time_period_#{type_date}"] == key
           %strong
             = l(:"label_#{key}")
         - else
           = link_to l(:"label_#{key}"), params.merge( :"time_period_#{type_date}" => key )
-        = "(#{IncomingLetter.time_period(key, type_date).this_organization(@organization.id).count}) /"
+        = "(#{IncomingLetter.time_period(key, type_date).this_organization(@organization.id).count})"
    
 &nbsp;
 
