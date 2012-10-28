@@ -19,7 +19,8 @@ module IncomingLettersHelper
   
   def possible_executors
     project_members.
-      inject(project_members.flatten){ |result, arr| result & arr }
+      inject(project_members.flatten){ |result, arr| result & arr }.
+      compact
   end
   
   def time_periods
