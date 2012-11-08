@@ -29,16 +29,18 @@ Redmine::Plugin.register :redmine_secretary do
     {:controller => :organizations, :action => :index},
     :caption => :label_organization_plural, :html => {:class => :enumerations}
 
-  menu :admin_menu, :secretary_members, 
-    {:controller => :secretary_members, :action => :index},
-    :caption => :label_secretary_member_plural, :html => {:class => :users}
+#  menu :admin_menu, :secretary_members, 
+#    {:controller => :secretary_members, :action => :index},
+#    :caption => :label_secretary_member_plural, :html => {:class => :users}
+#  
+#  menu :admin_menu, :secretary_projects, 
+#    {:controller => :secretary_projects, :action => :index},
+#    :caption => :label_secretary_project_plural, :html => {:class => :enumerations}
   
-  menu :admin_menu, :secretary_projects, 
-    {:controller => :secretary_projects, :action => :index},
-    :caption => :label_secretary_project_plural, :html => {:class => :enumerations}
-  
-  settings :default => {
-    :issue_priority => 2,
-    :issue_tracker => 0
-  }
+  settings :default => { 
+                         :issue_tracker => Tracker.first.id,
+                         :issue_priority => IssuePriority.default.id,
+                         :issue_status => IssueStatus.default.id
+                       }, 
+           :partial => 'incoming_letters/settings'
 end

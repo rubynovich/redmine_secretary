@@ -1,0 +1,9 @@
+%p
+  = content_tag(:label, l(:label_issue_tracker))
+  = select_tag("settings[issue_tracker]", options_from_collection_for_select(Tracker.all, :id, :name, @settings[:issue_tracker] && @settings[:issue_tracker].to_i || Tracker.first))
+%p
+  = content_tag(:label, l(:label_issue_priority))
+  = select_tag("settings[issue_priority]", options_from_collection_for_select(IssuePriority.all, :id, :name, @settings[:issue_priority] && @settings[:issue_priority].to_i || IssuePriority.default))
+%p
+  = content_tag(:label, l(:label_issue_status))
+  = select_tag("settings[issue_status]", options_from_collection_for_select(IssueStatus.all, :id, :name, @settings[:issue_status] && @settings[:issue_status].to_i || IssueStatus.default))

@@ -176,15 +176,15 @@ class IncomingLetter < ActiveRecord::Base
   def create_issue(project)
     settings = Setting[:plugin_redmine_secretary]
     issue = Issue.create(
-      :status => IssueStatus.default, 
-      :tracker => project.trackers[settings[:issue_tracker]], 
+      :status => IssueStatus.find(settings[:issue_status]), 
+      :tracker => Tracker.find(settings[:issue_tracker]), 
       :subject => issue_subject, 
       :project => project, 
       :description => description, 
       :author => User.current, 
       :start_date => Date.today,
       :due_date => next_work_day,
-      :priority => IssuePriority.active[settings[:issue_priority]],
+      :priority => IssuePriority.find(settings[:issue_priority]),
       :assigned_to => executor)
       
     attachments.each do |attachment| 
