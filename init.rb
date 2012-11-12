@@ -1,10 +1,10 @@
 require 'redmine'
 
 Redmine::Plugin.register :redmine_secretary do
-  name 'Redmine Secretary plugin'
+  name 'Секретарь'
   author 'Roman Shipiev'
-  description 'Plugin for the registration of incoming and outgoing documents'
-  version '0.1.8'
+  description 'Позволяет регистрировать входящие и исходящие письма одной или нескольких организаций. Для каждой организации (или обособленного подразделения) ведется своя нумерация входящих и исходящих. При регистрации входящего письма создаются несколько задач (в каждом из указанных проектов).'
+  version '0.1.9'
   url 'https://github.com/rubynovich/redmine_secretary'
   author_url 'http://roman.shipiev.me'
   

@@ -28,79 +28,154 @@ class IncomingLetter < ActiveRecord::Base
     :original_required, :recipient, :executor_id, :description, 
     :organization_id
 
-  named_scope :this_organization, lambda {|q|
-    if q.present?
-      {:conditions => ["organization_id=?", q]}
-    end
-  }
+  if Rails::VERSION::MAJOR >= 3 
+    scope :this_organization, lambda {|q|
+      if q.present?
+        where("organization_id=?", q)
+      end
+    }
 
-  named_scope :time_period, lambda {|q, field|
-    today = Date.today
-    if q.present? && field.present?
-      {:conditions => 
-        (case q
-          when "yesterday"
-            ["#{field} BETWEEN ? AND ?", 
-              2.days.ago, 
-              1.day.ago]
-          when "today"
-            ["#{field} BETWEEN ? AND ?", 
-              1.day.ago, 
-              1.day.from_now]
-          when "last_week"
-            ["#{field} BETWEEN ? AND ?", 
-              1.week.ago - today.wday.days, 
-              1.week.ago - today.wday.days + 1.week]
-          when "this_week"       
-            ["#{field} BETWEEN ? AND ?", 
-              1.week.from_now - today.wday.days - 1.week, 
-              1.week.from_now - today.wday.days]
-          when "last_month"
-            ["#{field} BETWEEN ? AND ?", 
-              1.month.ago - today.day.days, 
-              1.month.ago - today.day.days + 1.month]
-          when "this_month"
-            ["#{field} BETWEEN ? AND ?", 
-              1.month.from_now - today.day.days - 1.month, 
-              1.month.from_now - today.day.days]
-          when "last_year"       
-            ["#{field} BETWEEN ? AND ?", 
-              1.year.ago - today.yday.days, 
-              1.year.ago - today.yday.days + 1.year]
-          when "this_year"
-            ["#{field} BETWEEN ? AND ?", 
-              1.year.from_now - today.yday.days - 1.year, 
-              1.year.from_now - today.yday.days]
-          else
-            {}
-        end)
-      }
-    end
-  }
+    scope :time_period, lambda {|q, field|
+      today = Date.today
+      if q.present? && field.present?
+        {:conditions => 
+          (case q
+            when "yesterday"
+              ["#{field} BETWEEN ? AND ?", 
+                2.days.ago, 
+                1.day.ago]
+            when "today"
+              ["#{field} BETWEEN ? AND ?", 
+                1.day.ago, 
+                1.day.from_now]
+            when "last_week"
+              ["#{field} BETWEEN ? AND ?", 
+                1.week.ago - today.wday.days, 
+                1.week.ago - today.wday.days + 1.week]
+            when "this_week"       
+              ["#{field} BETWEEN ? AND ?", 
+                1.week.from_now - today.wday.days - 1.week, 
+                1.week.from_now - today.wday.days]
+            when "last_month"
+              ["#{field} BETWEEN ? AND ?", 
+                1.month.ago - today.day.days, 
+                1.month.ago - today.day.days + 1.month]
+            when "this_month"
+              ["#{field} BETWEEN ? AND ?", 
+                1.month.from_now - today.day.days - 1.month, 
+                1.month.from_now - today.day.days]
+            when "last_year"       
+              ["#{field} BETWEEN ? AND ?", 
+                1.year.ago - today.yday.days, 
+                1.year.ago - today.yday.days + 1.year]
+            when "this_year"
+              ["#{field} BETWEEN ? AND ?", 
+                1.year.from_now - today.yday.days - 1.year, 
+                1.year.from_now - today.yday.days]
+            else
+              {}
+          end)
+        }
+      end
+    }
 
-  named_scope :like_executor, lambda {|q|
-    if q.present?
-      {:conditions => 
-        ["LOWER(users.firstname) LIKE :p OR users.firstname LIKE :p OR LOWER(users.lastname) LIKE :p OR users.lastname LIKE :p", 
-        {:p => "%#{q.to_s.downcase}%"}],
-       :include => :executor}
-    end
-  }
+    scope :like_executor, lambda {|q|
+      if q.present?
+        {:conditions => 
+          ["LOWER(users.firstname) LIKE :p OR users.firstname LIKE :p OR LOWER(users.lastname) LIKE :p OR users.lastname LIKE :p", 
+          {:p => "%#{q.to_s.downcase}%"}],
+         :include => :executor}
+      end
+    }
+    
+    scope :like_field, lambda {|q, field|
+      if q.present? && field.present?
+        {:conditions => 
+          ["LOWER(#{field}) LIKE :p OR #{field} LIKE :p", 
+          {:p => "%#{q.to_s.downcase}%"}]}
+      end
+    }  
+
+    scope :eql_field, lambda {|q, field|
+      if q.present? && field.present?
+        where(field => q)
+      end
+    }  
+  else
+    named_scope :this_organization, lambda {|q|
+      if q.present?
+        {:conditions => ["organization_id=?", q]}
+      end
+    }
+
+    named_scope :time_period, lambda {|q, field|
+      today = Date.today
+      if q.present? && field.present?
+        {:conditions => 
+          (case q
+            when "yesterday"
+              ["#{field} BETWEEN ? AND ?", 
+                2.days.ago, 
+                1.day.ago]
+            when "today"
+              ["#{field} BETWEEN ? AND ?", 
+                1.day.ago, 
+                1.day.from_now]
+            when "last_week"
+              ["#{field} BETWEEN ? AND ?", 
+                1.week.ago - today.wday.days, 
+                1.week.ago - today.wday.days + 1.week]
+            when "this_week"       
+              ["#{field} BETWEEN ? AND ?", 
+                1.week.from_now - today.wday.days - 1.week, 
+                1.week.from_now - today.wday.days]
+            when "last_month"
+              ["#{field} BETWEEN ? AND ?", 
+                1.month.ago - today.day.days, 
+                1.month.ago - today.day.days + 1.month]
+            when "this_month"
+              ["#{field} BETWEEN ? AND ?", 
+                1.month.from_now - today.day.days - 1.month, 
+                1.month.from_now - today.day.days]
+            when "last_year"       
+              ["#{field} BETWEEN ? AND ?", 
+                1.year.ago - today.yday.days, 
+                1.year.ago - today.yday.days + 1.year]
+            when "this_year"
+              ["#{field} BETWEEN ? AND ?", 
+                1.year.from_now - today.yday.days - 1.year, 
+                1.year.from_now - today.yday.days]
+            else
+              {}
+          end)
+        }
+      end
+    }
+
+    named_scope :like_executor, lambda {|q|
+      if q.present?
+        {:conditions => 
+          ["LOWER(users.firstname) LIKE :p OR users.firstname LIKE :p OR LOWER(users.lastname) LIKE :p OR users.lastname LIKE :p", 
+          {:p => "%#{q.to_s.downcase}%"}],
+         :include => :executor}
+      end
+    }
+    
+    named_scope :like_field, lambda {|q, field|
+      if q.present? && field.present?
+        {:conditions => 
+          ["LOWER(#{field}) LIKE :p OR #{field} LIKE :p", 
+          {:p => "%#{q.to_s.downcase}%"}]}
+      end
+    }  
+
+    named_scope :eql_field, lambda {|q, field|
+      if q.present? && field.present?
+        {:conditions => {field => q}}
+      end
+    }    
+  end
   
-  named_scope :like_field, lambda {|q, field|
-    if q.present? && field.present?
-      {:conditions => 
-        ["LOWER(#{field}) LIKE :p OR #{field} LIKE :p", 
-        {:p => "%#{q.to_s.downcase}%"}]}
-    end
-  }  
-
-  named_scope :eql_field, lambda {|q, field|
-    if q.present? && field.present?
-      {:conditions => {field => q}}
-    end
-  }  
-
   def incoming_code_incorrect_year
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
     if incoming_code[regexp]
