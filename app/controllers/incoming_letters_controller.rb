@@ -13,8 +13,20 @@ class IncomingLettersController < ApplicationController
    
   def index
     sort_init 'incoming_code', 'desc'
-    sort_update %w(incoming_code outgoing_code answer_for signer shipping_from shipping_type shipping_on original_required recipient executor_id description created_on author_id)
-
+#    sort_update %w(incoming_code outgoing_code answer_for signer shipping_from shipping_type shipping_on original_required recipient executor_id description created_on author_id)
+    sort_update 'incoming_code' => ["SUBSTRING(incoming_code,6,2)", "incoming_code"],
+                'outgoing_code' => 'outgoing_code',
+                'answer_for' => ["SUBSTRING(answer_for,6,2)", "answer_for"],
+                'signer' => 'signer',
+                'shipping_from' => 'shipping_from',
+                'shipping_type' => 'shipping_type',
+                'shipping_on' => 'shipping_on',
+                'original_required' => 'original_required',
+                'recipient' => 'recipient',
+                'executor_id' => 'executor_id',
+                'created_on' => 'created_on',
+                'author_id' => 'author_id'
+                
     scope = model_class.
       this_organization(@organization.id).
       like_executor(params[:executor]).

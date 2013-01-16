@@ -11,8 +11,19 @@ class OutgoingLettersController < ApplicationController
      
   def index
     sort_init 'outgoing_code', 'desc'
-    sort_update %w(incoming_code outgoing_code answer_for signer shipping_to shipping_type shipping_on served_on recipient description created_on author_id)
-
+#    sort_update %w(incoming_code outgoing_code answer_for signer shipping_to shipping_type shipping_on served_on recipient description created_on author_id)
+    sort_update 'incoming_code' => "incoming_code",
+                'outgoing_code' => ["SUBSTRING(outgoing_code,6,2)", 'outgoing_code'],
+                'answer_for' => ["SUBSTRING(answer_for,6,2)", "answer_for"],
+                'signer' => 'signer',
+                'shipping_to' => 'shipping_to',
+                'shipping_type' => 'shipping_type',
+                'shipping_on' => 'shipping_on',
+                'served_on' => 'served_on',
+                'recipient' => 'recipient',
+                'created_on' => 'created_on',
+                'author_id' => 'author_id'
+                
     scope = model_class.
       this_organization(@organization.id).
       like_field(params[:incoming_code], :incoming_code).
