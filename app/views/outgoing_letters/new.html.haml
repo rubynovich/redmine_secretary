@@ -1,8 +1,9 @@
 %h2
   =l(:label_new_outgoing_letter)
-  =h(@object.organization)  
+  =h(@object.organization)
 
-- labelled_form_for @object, :url => outgoing_letters_path, :html => {:id => 'object-form', :multipart => true} do |f|
+- form = labelled_form_for @object, :url => outgoing_letters_path, :html => {:id => 'object-form', :multipart => true} do |f|
   = render :partial => 'form', :locals => { :f => f }
-  = f.hidden_field :organization_id  
+  = f.hidden_field :organization_id
   = submit_tag l(:button_create)
+= form if Rails::VERSION::MAJOR >= 3

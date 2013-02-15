@@ -1,5 +1,6 @@
 %h2= l(:label_edit_incoming_letter)
 
-- labelled_form_for @object, :html => { :id => 'object-form', :multipart => true, :method => :put} do |f|
+- form = labelled_form_for @object, :html => { :id => 'object-form', :multipart => true, :method => :put} do |f|
   = render :partial => 'form', :locals => { :f => f }
   = submit_tag l(:button_save)
+= form if Rails::VERSION::MAJOR >= 3

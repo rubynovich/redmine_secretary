@@ -3,7 +3,7 @@
 
 %h2= t(:label_outgoing)
 
-- form_tag({}, :method => :get) do
+%form{:method => :get}
   %fieldset
     %legend= l(:label_filter_plural)
 
@@ -32,7 +32,7 @@
         - else
           = link_to l(:"label_#{key}"), params.merge( :"time_period_#{type_date}" => key, :"#{type_date}" => "" )
         = "(#{OutgoingLetter.time_period(key, type_date).this_organization(@organization.id).count}) /"
-      
+
       %input{:id => type_date, :name => type_date, :size => 10, :onchange => "this.form.submit(); return false;", :value => params[type_date]}
       = calendar_for(type_date)
       - time_periods.each do |key|
@@ -52,16 +52,16 @@
       %thead
         %tr
           = sort_header_tag('outgoing_code', :caption => l(:field_outgoing_code))
-          = sort_header_tag('incoming_code', :caption => l(:field_incoming_code)) 
-          = sort_header_tag('answer_for', :caption => l(:field_answer_for))        
+          = sort_header_tag('incoming_code', :caption => l(:field_incoming_code))
+          = sort_header_tag('answer_for', :caption => l(:field_answer_for))
           = sort_header_tag('signer', :caption => l(:field_signer))
           = sort_header_tag('shipping_to', :caption => l(:field_shipping_to))
           = sort_header_tag('shipping_type', :caption => l(:field_shipping_type))
-          = sort_header_tag('shipping_on', :caption => l(:field_shipping_on))     
+          = sort_header_tag('shipping_on', :caption => l(:field_shipping_on))
           = sort_header_tag('recipient', :caption => l(:field_recipient))
           = sort_header_tag('served_on', :caption => l(:field_served_on))
           = sort_header_tag('created_on', :caption => l(:field_created_on), :default_order => 'desc')
-          %th    
+          %th
       %tbody
         - for object in @collection
           %tr{:class => "user " + cycle("odd", "even")}
@@ -91,13 +91,13 @@
                 = link_to(l(:button_update), edit_outgoing_letter_path(object), :class => 'icon icon-edit')
               -# if object.destroyable_by?(User.current)
                 = link_to(l(:button_delete), outgoing_letter_path(object), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del')
-                
+
   %p.pagination= pagination_links_full @pages, @count
 - else
   %p.nodata
     = l(:label_no_data)
 
-- form_tag({}, :method => :get) do
+%form{:method => :get}
   %fieldset
     %legend= l(:label_filter_plural)
 
@@ -106,7 +106,7 @@
     = hidden_field_tag :time_period_served_on, params[:time_period_served_on]
     = hidden_field_tag :time_period_created_on, params[:time_period_created_on]
 
-    
+
     %label{:for=>'outgoing_code'}= l(:field_outgoing_code) + ":"
     = text_field_tag 'outgoing_code', params[:outgoing_code], :size => 10
 
@@ -121,7 +121,7 @@
     %label{:for=>'recipient'}= l(:field_recipient) + ":"
     = text_field_tag 'recipient', params[:recipient], :size => 30
 
-    %br    
+    %br
 
     %label{:for=>'answer_for'}= l(:field_answer_for) + ":"
     = text_field_tag 'answer_for', params[:answer_for], :size => 10
@@ -131,4 +131,3 @@
 
     = submit_tag l(:button_apply), :class => "small", :name => nil
     = link_to l(:button_clear), {:action => params[:action]}, :class => 'icon icon-reload'
-

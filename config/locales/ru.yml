@@ -23,7 +23,7 @@ ru:
   field_executor: Исполнитель
   field_original_required: Оригинал
   field_shipping_from: Откуда
-  field_shipping_to: Куда  
+  field_shipping_to: Куда
   field_shipping_on: Отправлено
   field_served_on: Вручено
   field_shipping_type: Вид доставки
@@ -39,17 +39,17 @@ ru:
   field_outgoing_new: Создание исходящих
   field_outgoing_edit: Правка исходящих
   field_outgoing_delete: Удаление исходящих
-  field_secretary_member: Пользователь  
+  field_secretary_member: Пользователь
   message_confirm_destroy: Вы уверены, что ходите удалить эту запись?
   message_incorrect_format_incoming_code: имеет неверный формат (НННН-ГГ или НННН-ГГ/Д)
   message_incorrect_format_outgoing_code: имеет неверный формат (НННН-ГГ или НННН-ГГ/Д)
-  
+
   list_shipping_type:
     - Письмо
     - Факс
     - Курьер
     - Электронная почта
-  list_original_required:    
+  list_original_required:
     - Требуется
     - Не требуется
     - Является оригиналом
@@ -74,7 +74,7 @@ ru:
         incoming_letter:
           attributes:
             answer_for:
-              not_exist: несуществующее письмо          
+              not_exist: несуществующее письмо
             incoming_code:
               in_series: должен быть следующим
               incorrect_year: имеет неверно заданный год

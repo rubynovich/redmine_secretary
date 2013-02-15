@@ -6,11 +6,12 @@
     = render :partial => "list", :locals => {:secretary_projects => organization.secretary_projects}
   - else
     %p.nodata
-      = l(:label_no_data)  
+      = l(:label_no_data)
   %p
-  - labelled_form_for SecretaryProject.new(:organization_id => organization.id) do |f|
+  - form = labelled_form_for SecretaryProject.new(:organization_id => organization.id) do |f|
     = render :partial => 'form', :locals => { :f => f }
-    = f.submit l(:button_create)      
+    = f.submit l(:button_create)
+  = form if Rails::VERSION::MAJOR >= 3
   %hr
 
 - html_title(l(:label_secretary_project_plural))

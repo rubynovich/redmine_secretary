@@ -4,7 +4,7 @@
 
 %h2= t(:label_incoming)
 
-- form_tag({}, :method => :get) do
+%form{:method => :get}
   %fieldset
     %legend= l(:label_filter_plural)
 
@@ -33,9 +33,9 @@
             = "(#{IncomingLetter.eql_field(original_required, :original_required).this_organization(@organization.id).count})"
         - else
           %option{:value => original_required}
-            = original_required   
+            = original_required
             = "(#{IncomingLetter.eql_field(original_required, :original_required).this_organization(@organization.id).count})"
-            
+
 
     %label{:for=>'executor_id'}= l(:field_executor) + ":"
     %select{:id => 'executor_id', :name => 'executor_id', :class => "small", :onchange => "this.form.submit(); return false;"}
@@ -60,7 +60,7 @@
         - else
           = link_to l(:"label_#{key}"), params.merge( :"time_period_#{type_date}" => key, :"#{type_date}" => "" )
         = "(#{IncomingLetter.time_period(key, type_date).this_organization(@organization.id).count}) /"
-      
+
       %input{:id => type_date, :name => type_date, :size => 10, :onchange => "this.form.submit(); return false;", :value => params[type_date]}
       = calendar_for(type_date)
       - time_periods.each do |key|
@@ -71,7 +71,7 @@
         - else
           = link_to l(:"label_#{key}"), params.merge( :"time_period_#{type_date}" => key, :"#{type_date}" => "" )
         = "(#{IncomingLetter.time_period(key, type_date).this_organization(@organization.id).count})"
-   
+
 &nbsp;
 
 = render :partial => 'organization_menu'
@@ -81,17 +81,17 @@
     %table.list
       %thead
         %tr
-          = sort_header_tag('incoming_code', :caption => l(:field_incoming_code)) 
-          = sort_header_tag('outgoing_code', :caption => l(:field_outgoing_code)) 
+          = sort_header_tag('incoming_code', :caption => l(:field_incoming_code))
+          = sort_header_tag('outgoing_code', :caption => l(:field_outgoing_code))
           = sort_header_tag('answer_for', :caption => l(:field_answer_for))
-          = sort_header_tag('signer', :caption => l(:field_signer)) 
-          = sort_header_tag('shipping_from', :caption => l(:field_shipping_from)) 
-          = sort_header_tag('shipping_type', :caption => l(:field_shipping_type)) 
-          = sort_header_tag('shipping_on', :caption => l(:field_shipping_on))       
-          = sort_header_tag('recipient', :caption => l(:field_recipient)) 
-          = sort_header_tag('original_required', :caption => l(:field_original_required)) 
-          = sort_header_tag('created_on', :caption => l(:field_created_on), :default_order => 'desc') 
-          = sort_header_tag('executor_id', :caption => l(:field_executor)) 
+          = sort_header_tag('signer', :caption => l(:field_signer))
+          = sort_header_tag('shipping_from', :caption => l(:field_shipping_from))
+          = sort_header_tag('shipping_type', :caption => l(:field_shipping_type))
+          = sort_header_tag('shipping_on', :caption => l(:field_shipping_on))
+          = sort_header_tag('recipient', :caption => l(:field_recipient))
+          = sort_header_tag('original_required', :caption => l(:field_original_required))
+          = sort_header_tag('created_on', :caption => l(:field_created_on), :default_order => 'desc')
+          = sort_header_tag('executor_id', :caption => l(:field_executor))
           %th
       %tbody
         - for object in @collection
@@ -104,7 +104,7 @@
             %td.signer= h(object.signer)
             %td.shipping_from= h(object.shipping_from)
             %td.shipping_type= h(object.shipping_type)
-            %td.shipping_on= format_date(object.shipping_on)          
+            %td.shipping_on= format_date(object.shipping_on)
             %td.recipient= h(object.recipient)
             %td.original_required= h(object.original_required)
             %td.created_on{:align=>"center"}= format_time(object.created_on)
@@ -112,7 +112,7 @@
             %td.buttons
               - if object.editable_by?(User.current)
                 = link_to l(:button_update), {:action => 'edit', :id => object.id}, :class => 'icon icon-edit'
-              -# if object.destroyable_by?(User.current) 
+              -# if object.destroyable_by?(User.current)
                 = link_to(l(:button_delete), incoming_letter_path(object), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del')
 
   %p.pagination= pagination_links_full @pages, @count
@@ -120,7 +120,7 @@
   %p.nodata
     = l(:label_no_data)
 
-- form_tag({}, :method => :get) do
+%form{:method => :get}
   %fieldset
     %legend= l(:label_filter_plural)
 
@@ -129,7 +129,7 @@
     = hidden_field_tag :original_required, params[:original_required]
     = hidden_field_tag :time_period_shipping_on, params[:time_period_shipping_on]
     = hidden_field_tag :time_period_created_on, params[:time_period_created_on]
-    
+
     %label{:for=>'incoming_code'}= l(:field_incoming_code) + ":"
     = text_field_tag 'incoming_code', params[:incoming_code], :size => 10
 
@@ -144,7 +144,7 @@
     %label{:for=>'recipient'}= l(:field_recipient) + ":"
     = text_field_tag 'recipient', params[:recipient], :size => 30
 
-    %br    
+    %br
 
     %label{:for=>'answer_for'}= l(:field_answer_for) + ":"
     = text_field_tag 'answer_for', params[:answer_for], :size => 10
@@ -154,4 +154,3 @@
 
     = submit_tag l(:button_apply), :class => "small", :name => nil
     = link_to l(:button_clear), {:action => params[:action]}, :class => 'icon icon-reload'
-

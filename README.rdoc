@@ -4,17 +4,18 @@
 
 = Secretary plugin
 
+The plugin registers incoming and outgoing correspondence of one or more organizations. For each organization maintains its own numbering (of incoming and outgoing). After registration incomming letter the plugin create issues for each of selected project.
+
 == Installation
 
   cd vendor/plugins
   git clone git://github.com/rubynovich/redmine_secretary.git
   cd ../..
   rake db:migrate_plugins RAILS_ENV=production
-  
+
 == Update
 
   cd vendor/plugins/redmine_secretary
   git pull
   cd ../../..
   rake db:migrate_plugins RAILS_ENV=production
-  

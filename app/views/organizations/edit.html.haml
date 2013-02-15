@@ -1,9 +1,9 @@
 %h2
   = link_to l(:label_organization_plural), organizations_path
-  &#187; 
+  &#187;
   =h @organization
 
-- labelled_form_for @organization do |f|
+- form = labelled_form_for @organization do |f|
   = render :partial => 'form', :locals => {:f => f}
   = submit_tag l(:button_save)
-
+= form if Rails::VERSION::MAJOR >= 3
