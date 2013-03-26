@@ -1,4 +1,5 @@
 require 'redmine'
+require_dependency 'custom_field'
 
 Redmine::Plugin.register :redmine_secretary do
   name 'Secretary'
