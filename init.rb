@@ -4,9 +4,9 @@ require_dependency 'custom_field'
 Redmine::Plugin.register :redmine_secretary do
   name 'Secretary'
   author 'Roman Shipiev'
-  description 'The plugin registers incoming and outgoing correspondence of one or more organizations. '
+  description 'Registering incoming and outgoing correspondence of one or more organizations'
   version '0.1.9'
-  url 'https://github.com/rubynovich/redmine_secretary'
+  url 'https://bitbucket.org/rubynovich/redmine_secretary'
   author_url 'http://roman.shipiev.me'
 
   permission :view_incoming_letters,  :incoming_letters => [:index, :show]

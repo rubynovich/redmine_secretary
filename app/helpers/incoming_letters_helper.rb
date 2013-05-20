@@ -22,6 +22,6 @@ module IncomingLettersHelper
   end
 
   def time_periods
-    %w{last_week this_week last_month this_month last_year this_year}
+    %w{yesterday last_week this_week last_month this_month last_year this_year}
   end
 end
