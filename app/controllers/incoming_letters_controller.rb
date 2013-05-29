@@ -25,7 +25,8 @@ class IncomingLettersController < ApplicationController
                 'recipient' => 'recipient',
                 'executor_id' => 'executor_id',
                 'created_on' => 'created_on',
-                'author_id' => 'author_id'
+                'author_id' => 'author_id',
+                'subject' => 'subject'
 
     scope = model_class.
       this_organization(@organization.id).
@@ -37,6 +38,7 @@ class IncomingLettersController < ApplicationController
       like_field(params[:shipping_from], :shipping_from).
       like_field(params[:recipient], :recipient).
       eql_field(params[:shipping_type], :shipping_type).
+      eql_field(params[:subject], :subject).
       eql_field(params[:original_required], :original_required).
       eql_field(params[:shipping_on], :shipping_on).
       eql_field(params[:created_on], :created_on).
@@ -77,7 +79,9 @@ class IncomingLettersController < ApplicationController
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
     @object.projects = params[:projects].keys if params[:projects].present?
-    @object.files = params[:attachments].keys if params[:attachments]["1"]["file"].present? || params[:attachments]["p0"].present?
+    if params[:attachments]
+      @object.files = params[:attachments].keys
+    end
     @related_projects = related_projects
 
     if @object.save

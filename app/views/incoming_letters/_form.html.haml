@@ -1,12 +1,13 @@
 = error_messages_for @object
 .box.tabular
+  %p= f.select :subject, t(:list_incoming_letter_subject), :required => true, :prompt => t(:prompt_please_select)
   .splitcontentleft
     %p= f.text_field :incoming_code, :required => true, :size => 10
     %p= f.text_field :outgoing_code, :size => 10
     %p= f.text_field :answer_for, :size => 10
     %p= f.text_field :signer, :size => 40
     %p= f.text_field :recipient, :size => 40
-    
+
   .splitcontentright
     %p= f.select :executor_id, possible_executors.map {|c| [c.name, c.id]}, :required => true, :prompt => t(:prompt_please_select)
     %p
@@ -16,10 +17,8 @@
     %p= f.text_field :shipping_from, :required => true, :size => 40
     %p= f.select :original_required, t(:list_original_required), :prompt => t(:prompt_please_select)
   %div{:style=>"clear:both"}
-  - if ["new", "create"].include? params[:action]
-    %p= f.text_field :subject, :size => 40
   %p= f.text_area :description, :cols => 60, :rows => 15, :class => 'wiki-edit'
-  = link_to_attachments @object if @object.attachments.any? 
+  = link_to_attachments @object if @object.attachments.any?
   %p#attachments_form
     = label_tag('attachments[1][file]', l(:label_attachment_plural))
     = render :partial => 'attachments/form', :locals => {:container => @object}
@@ -33,5 +32,3 @@
           = project.name
 
 = wikitoolbar_for 'incoming_letter_description'
-
-

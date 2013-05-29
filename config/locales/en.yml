@@ -16,7 +16,7 @@ en:
   field_executor: "Assigned to"
   field_original_required: "Original"
   field_shipping_from: "From"
-  field_shipping_to: "To"  
+  field_shipping_to: "To"
   field_shipping_on: "Shipping on"
   field_served_on: "Served on"
   field_shipping_type: "Shipping type"
@@ -31,12 +31,14 @@ en:
     - Fax
     - Courier
     - E-Mail
-  list_original_required:    
+  list_original_required:
     - required
     - not required
+  list_subject:
+    - see config/en.yaml
   prompt_please_select: "Select..."
   dated: "from"
-  incoming_issue_subject: "[Incoming letter] %{shipping_from} (%{signer})"  
+  incoming_issue_subject: "[Incoming letter] %{shipping_from} (%{signer})"
   permission_view_incoming_letters: View incoming letters
   permission_add_incoming_letters: Add incoming letters
   permission_edit_incoming_letters: Edit incoming letters
@@ -46,7 +48,7 @@ en:
   permission_view_outgoing_letters: View outgoing letters
   permission_add_outgoing_letters: Add outgoing letters
   permission_edit_outgoing_letters: Edit outgoing letters
-  permission_edit_own_outgoing_letters: Edit own outgoing letters  
+  permission_edit_own_outgoing_letters: Edit own outgoing letters
   permission_delete_outgoing_letters: Delete outgoing letters
   permission_delete_own_outgoing_letters: Delete own outgoing letters
   activerecord:
@@ -62,7 +64,7 @@ en:
         outgoing_letter:
           attributes:
             answer_for:
-              not_exist: a nonexistent letter          
+              not_exist: a nonexistent letter
             outgoing_code:
               in_series: will be next
               incorrect_year: incorrect year

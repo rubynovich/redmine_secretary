@@ -5,11 +5,14 @@
 .issue.details
   %table.attributes
     %tr
+      %th.subject= l(:field_subject)+":"
+      %td.subject{:colspan => 3}= h(@object.subject)
+    %tr
       %th.incoming_code= l(:field_incoming_code)+":"
       %td.incoming_code= h(@object.incoming_code)
       %th.created_on= l(:field_created_on)+":"
       %td.created_on= format_date(@object.created_on)
-    %tr    
+    %tr
       %th.outgoing_code= l(:field_outgoing_code)+":"
       %td.outgoing_code= h(@object.outgoing_code)
       %th.shipping_on= l(:field_shipping_on)+":"
@@ -36,7 +39,7 @@
       %td.executor_id= h(@object.executor)
       %th.author= l(:field_author)+":"
       %td.author= h(@object.author)
-          
+
   - if @object.description? || @object.attachments.any?
     %hr
     - if @object.description?

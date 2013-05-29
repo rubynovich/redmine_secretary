@@ -10,7 +10,7 @@ class IncomingLetter < ActiveRecord::Base
   has_many    :comments, :as => :commented, :dependent => :destroy
 
   validates_presence_of :incoming_code, :author_id, :executor_id,
-    :shipping_type, :shipping_from, :organization_id
+    :shipping_type, :shipping_from, :organization_id, :subject
   validates_format_of :incoming_code, :with => /^\d+\-\d{2}(\/\d+)?$/,
     :message => I18n.t(:message_incorrect_format_incoming_code)
   validates_uniqueness_of :incoming_code, :scope => :organization_id
@@ -21,7 +21,7 @@ class IncomingLetter < ActiveRecord::Base
 
   acts_as_attachable
 
-  attr_accessor :project, :projects, :files, :subject
+  attr_accessor :project, :projects, :files
 
   safe_attributes :incoming_code, :outgoing_code, :answer_for, :signer,
     :shipping_from, :shipping_type, :shipping_on, :subject,
@@ -284,17 +284,13 @@ class IncomingLetter < ActiveRecord::Base
   end
 
   def issue_subject
-    if subject.present?
-      subject
-    else
-      options = to_hash
-      options = I18n.t(:incoming_issue_subject).
-        scan(/%\{.*?\}/).
-        map{ |str| str[2..-2] }.
-        inject({}){ |result, name|
-          result.merge name.to_sym => options[name]
-        }
-      I18n.t(:incoming_issue_subject, options)
-    end
+    options = to_hash
+    options = I18n.t(:incoming_issue_subject).
+      scan(/%\{.*?\}/).
+      map{ |str| str[2..-2] }.
+      inject({}){ |result, name|
+        result.merge name.to_sym => options[name]
+      }
+    I18n.t(:incoming_issue_subject, options)
   end
 end

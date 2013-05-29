@@ -1,10 +1,11 @@
 = error_messages_for @object
 
 .box.tabular
+  %p= f.select :subject, t(:list_outgoing_letter_subject), :required => true, :prompt => t(:prompt_please_select)
   .splitcontentleft
     %p= f.text_field :outgoing_code, :required => true, :size => 10
     %p= f.text_field :incoming_code, :size => 10
-    %p= f.text_field :answer_for, :size => 10    
+    %p= f.text_field :answer_for, :size => 10
     %p= f.text_field :signer, :size => 40
     %p= f.text_field :recipient, :size => 40
 
@@ -32,6 +33,6 @@
       %p
         %label.inline{:for=>"projects_"+project.id.to_s, :id=>"projects_"+project.id.to_s+"_label"}
           = check_box_tag("projects[#{project.id}]", nil)
-          = project.name    
+          = project.name
 
 = wikitoolbar_for 'outgoing_letter_description'
