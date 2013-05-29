@@ -34,7 +34,9 @@ en:
   list_original_required:
     - required
     - not required
-  list_subject:
+  list_incoming_letter_subject:
+    - see config/en.yaml
+  list_outgoing_letter_subject:
     - see config/en.yaml
   prompt_please_select: "Select..."
   dated: "from"
