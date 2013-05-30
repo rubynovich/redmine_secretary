@@ -13,7 +13,7 @@
     %label{:for=>'subject'}= l(:field_subject) + ":"
     %select{:id => 'subject', :name => 'subject', :class => "small", :onchange => "this.form.submit(); return false;"}
       %option
-      - t(:list_subject).each do |subject|
+      - t(:list_outgoing_letter_subject).each do |subject|
         - if params[:subject] == subject
           %option{:value => subject, :selected => "selected"}
             = subject
@@ -144,6 +144,7 @@
     = hidden_field_tag :original_required, params[:original_required]
     = hidden_field_tag :time_period_shipping_on, params[:time_period_shipping_on]
     = hidden_field_tag :time_period_created_on, params[:time_period_created_on]
+    = hidden_field_tag :subject, params[:subject]
 
     %label{:for=>'incoming_code'}= l(:field_incoming_code) + ":"
     = text_field_tag 'incoming_code', params[:incoming_code], :size => 10

@@ -3,12 +3,12 @@ class OutgoingLettersController < ApplicationController
 
   before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
   before_filter :find_organization, :only => [:index, :new]
-     
+
   helper :attachments
   include AttachmentsHelper
   helper :sort
   include SortHelper
-     
+
   def index
     sort_init 'outgoing_code', 'desc'
 #    sort_update %w(incoming_code outgoing_code answer_for signer shipping_to shipping_type shipping_on served_on recipient description created_on author_id)
@@ -22,8 +22,9 @@ class OutgoingLettersController < ApplicationController
                 'served_on' => 'served_on',
                 'recipient' => 'recipient',
                 'created_on' => 'created_on',
-                'author_id' => 'author_id'
-                
+                'author_id' => 'author_id',
+                'subject' => 'subject'
+
     scope = model_class.
       this_organization(@organization.id).
       like_field(params[:incoming_code], :incoming_code).
@@ -36,10 +37,11 @@ class OutgoingLettersController < ApplicationController
       eql_field(params[:shipping_on], :shipping_on).
       eql_field(params[:served_on], :served_on).
       eql_field(params[:created_on], :created_on).
+      eql_field(params[:subject], :subject).
       time_period(params[:time_period_shipping_on], :shipping_on).
       time_period(params[:time_period_served_on], :served_on).
       time_period(params[:time_period_created_on], :created_on)
-      
+
     @limit = per_page_option
     @count = scope.count
     @pages = Paginator.new self, @count, @limit, params[:page]
@@ -52,27 +54,27 @@ class OutgoingLettersController < ApplicationController
 
   def new
     @object = model_class.new(
-      :outgoing_code => next_code, 
+      :outgoing_code => next_code,
       :organization_id => @organization.id)
   end
-  
+
   def update
-    (render_403; return false) unless @object.editable_by?(User.current)        
+    (render_403; return false) unless @object.editable_by?(User.current)
     @object.safe_attributes = params[model_name]
-    @object.save_attachments(params[:attachments])    
+    @object.save_attachments(params[:attachments])
     if @object.update_attributes(params[model_name])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index'
     else
       render :action => 'edit'
-    end 
+    end
   end
 
   def create
     @object = model_class.new(:author => User.current)
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
-    @object.files = params[:attachments].keys if params[:attachments]["1"]["file"].present? || params[:attachments]["p0"].present?
+    @object.files = params[:attachments].keys if params[:attachments].present?
 
     if @object.save
       save_code(@object.outgoing_code)
@@ -81,7 +83,7 @@ class OutgoingLettersController < ApplicationController
       redirect_to( {:action => 'show', :id => @object} )
     else
       render :action => 'new'
-    end    
+    end
   end
 
   def destroy
@@ -90,25 +92,25 @@ class OutgoingLettersController < ApplicationController
     flash[:notice] = l(:notice_successful_delete)
     redirect_to :action => 'index'
   end
-  
+
   def clean_previous_code
     PreviousCode.destroy_all(:name => model_name)
-    redirect_to :action => 'new'    
+    redirect_to :action => 'new'
   end
-  
+
   private
     def model_class
       OutgoingLetter
     end
-    
+
     def model_name
       model_class.name.underscore
-    end  
-    
+    end
+
     def find_object_by_id
       @object = model_class.find(params[:id])
     end
-    
+
     def find_organization
       @organization = if params[:organization_id].present?
         Organization.find(params[:organization_id])
@@ -119,7 +121,7 @@ class OutgoingLettersController < ApplicationController
         :value => code[/\d+/],
         :year => code.split('-').last[/\d+/],
         :organization_id => @object.organization_id
-      }      
+      }
       if prev_code = previous_code(@object.organization_id)
         if (prev_code.value.to_i < attributes[:value].to_i)||(prev_code.year.to_i < attributes[:year].to_i)
           prev_code.update_attributes(attributes)
@@ -128,7 +130,7 @@ class OutgoingLettersController < ApplicationController
         PreviousCode.create(attributes.merge(:name => model_name))
       end
     end
-    
+
     def next_code
       if prev_code = previous_code
         [prev_code.value.succ,Time.now.strftime("%y")].join('-')
@@ -136,8 +138,8 @@ class OutgoingLettersController < ApplicationController
         Time.now.strftime("0001-%y")
       end
     end
-    
+
     def previous_code(organization_id = find_organization.id)
       PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y"), :organization_id => organization_id})
-    end   
+    end
 end

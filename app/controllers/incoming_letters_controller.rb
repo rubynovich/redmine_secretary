@@ -79,9 +79,7 @@ class IncomingLettersController < ApplicationController
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
     @object.projects = params[:projects].keys if params[:projects].present?
-    if params[:attachments]
-      @object.files = params[:attachments].keys
-    end
+    @object.files = params[:attachments].keys if params[:attachments].present?
     @related_projects = related_projects
 
     if @object.save

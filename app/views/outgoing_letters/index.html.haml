@@ -9,6 +9,17 @@
 
     = hidden_field_tag :organization_id, @organization.id
 
+    %label{:for=>'subject'}= l(:field_subject) + ":"
+    %select{:id => 'subject', :name => 'subject', :class => "small", :onchange => "this.form.submit(); return false;"}
+      %option
+      - t(:list_outgoing_letter_subject).each do |subject|
+        - if params[:subject] == subject
+          %option{:value => subject, :selected => "selected"}
+            = subject
+        - else
+          %option{:value => subject}
+            = subject
+
     %label{:for=>'shipping_type'}= l(:field_shipping_type) + ":"
     %select{:id => 'shipping_type', :name => 'shipping_type', :class => "small", :onchange => "this.form.submit(); return false;"}
       %option
@@ -54,6 +65,7 @@
           = sort_header_tag('outgoing_code', :caption => l(:field_outgoing_code))
           = sort_header_tag('incoming_code', :caption => l(:field_incoming_code))
           = sort_header_tag('answer_for', :caption => l(:field_answer_for))
+          = sort_header_tag('subject', :caption => l(:field_subject))
           = sort_header_tag('signer', :caption => l(:field_signer))
           = sort_header_tag('shipping_to', :caption => l(:field_shipping_to))
           = sort_header_tag('shipping_type', :caption => l(:field_shipping_type))
@@ -66,12 +78,14 @@
         - for object in @collection
           %tr{:class => "user " + cycle("odd", "even")}
             %td.outgoing_code
-              = link_to(h(object.outgoing_code), outgoing_letter_path(object))
+              = link_to h(object.outgoing_code), outgoing_letter_path(object)
             %td.incoming_code
-              = link_to h(object.incoming_code)
+              = h(object.incoming_code)
             %td.answer_for
               - if object.answer_for.present?
                 = link_to h(object.answer_for), :controller => :incoming_letters, :action => :show, :id => IncomingLetter.find(:first, :conditions => {:organization_id => @organization.id, :incoming_code => object.answer_for})
+            %td.subject
+              = h(object.subject)
             %td.signer
               = h(object.signer)
             %td.shipping_to
@@ -105,7 +119,7 @@
     = hidden_field_tag :shipping_type, params[:shipping_type]
     = hidden_field_tag :time_period_served_on, params[:time_period_served_on]
     = hidden_field_tag :time_period_created_on, params[:time_period_created_on]
-
+    = hidden_field_tag :subject, params[:subject]
 
     %label{:for=>'outgoing_code'}= l(:field_outgoing_code) + ":"
     = text_field_tag 'outgoing_code', params[:outgoing_code], :size => 10

@@ -5,6 +5,9 @@
 .issue.details
   %table.attributes
     %tr
+      %th.subject= l(:field_subject)+":"
+      %td.subject{:colspan => 3}= h(@object.subject)
+    %tr
       %th.outgoing_code= l(:field_outgoing_code)+":"
       %td.outgoing_code= h(@object.outgoing_code)
       %th.created_on= l(:field_created_on)+":"
@@ -42,4 +45,3 @@
         %strong= l(:field_description)
       .wiki= textilizable @object, :description, :attachments => @object.attachments
     = link_to_attachments @object
-
