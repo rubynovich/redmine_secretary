@@ -63,7 +63,7 @@
       %label{:for=>'executor_id'}= l(:field_executor) + ":"
       %select{:id => 'executor_id', :name => 'executor_id', :class => "small", :onchange => "this.form.submit(); return false;"}
         %option
-        - possible_executors.each do |executor|
+        - executor_id_for_select.each do |executor|
           - if params[:executor_id] == executor.id.to_s
             %option{:value => executor.id, :selected => "selected"}
               = executor.name
