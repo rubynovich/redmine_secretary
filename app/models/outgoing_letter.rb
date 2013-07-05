@@ -4,8 +4,9 @@ class OutgoingLetter < ActiveRecord::Base
 
   belongs_to  :author, :class_name => 'User', :foreign_key => 'author_id'
   belongs_to  :organization
-  has_many    :projects, :through => :associated_projects
-  has_many    :associated_projects
+  has_many    :outgoing_projects
+  has_many    :projects, :through => :outgoing_projects
+
   has_many    :comments, :as => :commented, :dependent => :destroy
 
   validates_presence_of :outgoing_code, :author_id,
@@ -27,6 +28,12 @@ class OutgoingLetter < ActiveRecord::Base
     :served_on, :recipient, :description, :organization_id
 
   if Rails::VERSION::MAJOR >= 3
+    scope :for_project, lambda{ |q|
+      if q.present? && q.try(:id)
+        where("id IN (SELECT #{OutgoingIssue.table_name}.outgoing_letter_id FROM #{OutgoingIssue.table_name} WHERE #{OutgoingIssue.table_name}.project_id = ?)",q.id)
+      end
+    }
+
     scope :this_organization, lambda {|q|
       if q.present?
         where("organization_id=?", q)
@@ -77,7 +84,6 @@ class OutgoingLetter < ActiveRecord::Base
       end
     }
 
-
     scope :like_field, lambda {|q, field|
       if q.present? && field.present?
         {:conditions =>
@@ -92,6 +98,14 @@ class OutgoingLetter < ActiveRecord::Base
       end
     }
   else
+    named_scope :for_project, lambda{ |q|
+      if q.present? && q.try(:id)
+        {:conditions =>
+          ["id IN (SELECT #{OutgoingIssue.table_name}.outgoing_letter_id FROM #{OutgoingIssue.table_name} WHERE #{OutgoingIssue.table_name}.project_id = ?)",q.id]
+        }
+      end
+    }
+
     named_scope :this_organization, lambda {|q|
       if q.present?
         {:conditions => ["organization_id=?", q]}

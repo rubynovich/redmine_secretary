@@ -5,8 +5,9 @@ class IncomingLetter < ActiveRecord::Base
   belongs_to  :author, :class_name => 'User', :foreign_key => 'author_id'
   belongs_to  :executor, :class_name => 'User', :foreign_key => 'executor_id'
   belongs_to  :organization
-  has_many    :projects, :through => :associated_projects
-  has_many    :associated_projects
+  has_many    :incoming_issues
+  has_many    :issues, :through => :incoming_issues
+  has_many    :projects, :through => :issues
   has_many    :comments, :as => :commented, :dependent => :destroy
 
   validates_presence_of :incoming_code, :author_id, :executor_id,
@@ -29,6 +30,13 @@ class IncomingLetter < ActiveRecord::Base
     :organization_id
 
   if Rails::VERSION::MAJOR >= 3
+    scope :for_project, lambda{ |q|
+      if q.present? && q.try(:id)
+        joins(:incoming_issues => :issue).where("#{Issue.table_name}.project_id = ?", q.id)
+#        where("id IN (SELECT #{IncomingIssue.table_name}.incoming_letter_id FROM #{IncomingIssue.table_name} WHERE #{IncomingIssue.table_name}.issue_id IN (SELECT #{Issue.table_name}.id FROM #{Issue.table_name} WHERE #{Issue.table_name}.project_id = ?))",q.id)
+      end
+    }
+
     scope :this_organization, lambda {|q|
       if q.present?
         where("organization_id=?", q)
@@ -102,6 +110,14 @@ class IncomingLetter < ActiveRecord::Base
       end
     }
   else
+    named_scope :for_project, lambda{ |q|
+      if q.present? && q.try(:id)
+        {:conditions =>
+          ["id IN (SELECT #{IncomingIssue.table_name}.incoming_letter_id FROM #{IncomingIssue.table_name} WHERE #{IncomingIssue.table_name}.issue_id IN (SELECT #{Issue.table_name}.id FROM #{Issue.table_name} WHERE #{Issue.table_name}.project_id = ?))",q.id]
+        }
+      end
+    }
+
     named_scope :this_organization, lambda {|q|
       if q.present?
         {:conditions => ["organization_id=?", q]}
