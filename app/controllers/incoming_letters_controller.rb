@@ -61,13 +61,15 @@ class IncomingLettersController < ApplicationController
     @object = model_class.new(
       :incoming_code => next_code,
       :organization_id => @organization.id)
-    @related_projects = related_projects
   end
+
 
   def update
     (render_403; return false) unless @object.editable_by?(User.current)
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
+    @object.projects = params[:projects].keys if params[:projects].present?
+
     if @object.update_attributes(params[model_name])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index'
@@ -82,7 +84,6 @@ class IncomingLettersController < ApplicationController
     @object.save_attachments(params[:attachments])
     @object.projects = params[:projects].keys if params[:projects].present?
     @object.files = params[:attachments].keys if params[:attachments].present?
-    @related_projects = related_projects
 
     if @object.save
       save_code(@object.incoming_code)
@@ -109,6 +110,10 @@ class IncomingLettersController < ApplicationController
   end
 
   private
+    def get_related_projects
+      @related_projects = related_projects
+    end
+
     def model_class
       IncomingLetter
     end

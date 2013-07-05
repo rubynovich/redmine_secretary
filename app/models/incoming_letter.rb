@@ -7,7 +7,7 @@ class IncomingLetter < ActiveRecord::Base
   belongs_to  :organization
   has_many    :incoming_issues
   has_many    :issues, :through => :incoming_issues
-  has_many    :projects, :through => :issues
+#  has_many    :projects, :through => :issues
   has_many    :comments, :as => :commented, :dependent => :destroy
 
   validates_presence_of :incoming_code, :author_id, :executor_id,

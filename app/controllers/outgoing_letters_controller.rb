@@ -4,11 +4,15 @@ class OutgoingLettersController < ApplicationController
   before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
   before_filter :find_organization, :only => [:index, :new]
   before_filter :find_current_project, :only => :index
+  before_filter :get_related_projects, :only => [:edit, :update, :new, :create]
 
   helper :attachments
   include AttachmentsHelper
   helper :sort
   include SortHelper
+  helper :outgoing_letters
+  include OutgoingLettersHelper
+
 
   def index
     sort_init 'outgoing_code', 'desc'
@@ -64,6 +68,8 @@ class OutgoingLettersController < ApplicationController
     (render_403; return false) unless @object.editable_by?(User.current)
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
+    @object.projects = Project.find(params[:projects].keys) rescue nil
+
     if @object.update_attributes(params[model_name])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index'
@@ -76,6 +82,7 @@ class OutgoingLettersController < ApplicationController
     @object = model_class.new(:author => User.current)
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
+    @object.projects = Project.find(params[:projects].keys) rescue nil
     @object.files = params[:attachments].keys if params[:attachments].present?
 
     if @object.save
@@ -101,6 +108,10 @@ class OutgoingLettersController < ApplicationController
   end
 
   private
+    def get_related_projects
+      @related_projects = related_projects
+    end
+
     def model_class
       OutgoingLetter
     end

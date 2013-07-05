@@ -26,13 +26,14 @@
   %p#attachments_form
     = label_tag('attachments[1][file]', l(:label_attachment_plural))
     = render :partial => 'attachments/form', :locals => {:container => @object}
+
   - if @related_projects.present?
     %p
-      %label= t(:label_related_projects)
+      %label= t(:label_project_plural)
     - @related_projects.each do |project|
       %p
         %label.inline{:for=>"projects_"+project.id.to_s, :id=>"projects_"+project.id.to_s+"_label"}
-          = check_box_tag("projects[#{project.id}]", nil)
+          = check_box_tag("projects[#{project.id}]", 'yes', @object.projects.include?(project))
           = project.name
 
 = wikitoolbar_for 'outgoing_letter_description'
