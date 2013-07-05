@@ -4,8 +4,9 @@ module OutgoingLettersHelper
   end
 
   def related_projects
-    Member.where(:user_id => User.current.id).includes(&:project).all.
-        map(&:project).select(&:active?)
+#    Member.where(:user_id => User.current.id).includes(&:project).all.
+#        map(&:project).select(&:active?)
+    Project.active.visible.all
   end
 
   def time_periods
