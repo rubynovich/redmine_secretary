@@ -3,6 +3,7 @@ class OutgoingLettersController < ApplicationController
 
   before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
   before_filter :find_organization, :only => [:index, :new]
+  before_filter :find_current_project, :only => :index
 
   helper :attachments
   include AttachmentsHelper
@@ -26,6 +27,7 @@ class OutgoingLettersController < ApplicationController
                 'subject' => 'subject'
 
     scope = model_class.
+      for_project(@project).
       this_organization(@organization.id).
       like_field(params[:incoming_code], :incoming_code).
       like_field(params[:outgoing_code], :outgoing_code).
@@ -116,6 +118,15 @@ class OutgoingLettersController < ApplicationController
         Organization.find(params[:organization_id])
       end || Organization.default
     end
+
+    def find_current_project
+      @project = begin
+        Project.find(params[:project_id])
+      rescue
+        nil
+      end
+    end
+
     def save_code(code)
       attributes = {
         :value => code[/\d+/],

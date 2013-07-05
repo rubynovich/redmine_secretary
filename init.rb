@@ -30,6 +30,10 @@ Redmine::Plugin.register :redmine_secretary do
     {:controller => :organizations, :action => :index},
     :caption => :label_organization_plural, :html => {:class => :enumerations}
 
+  menu :project_menu, :incoming_letters, {:controller => :incoming_letters, :action => :index}, :caption => :label_incoming, :param => :project_id, :if => Proc.new{ |project| User.current.allowed_to?({:controller => :incoming_letters, :action => :index}, project) }
+
+  menu :project_menu, :outgoing_letters, {:controller => :outgoing_letters, :action => :index}, :caption => :label_outgoing, :param => :project_id, :if => Proc.new{ |project| User.current.allowed_to?({:controller => :outgoing_letters, :action => :index}, project) }
+
 #  menu :admin_menu, :secretary_members,
 #    {:controller => :secretary_members, :action => :index},
 #    :caption => :label_secretary_member_plural, :html => {:class => :users}

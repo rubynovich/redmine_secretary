@@ -24,4 +24,8 @@ module IncomingLettersHelper
   def time_periods
     %w{yesterday last_week this_week last_month this_month last_year this_year}
   end
+
+  def project_id_for_select
+    Project.active.visible.all
+  end
 end

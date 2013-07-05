@@ -3,6 +3,7 @@ class IncomingLettersController < ApplicationController
 
   before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
   before_filter :find_organization, :only => [:index, :new, :create]
+  before_filter :find_current_project, :only => :index
 
   helper :attachments
   include AttachmentsHelper
@@ -29,6 +30,7 @@ class IncomingLettersController < ApplicationController
                 'subject' => 'subject'
 
     scope = model_class.
+      for_project(@project).
       this_organization(@organization.id).
       like_executor(params[:executor]).
       like_field(params[:incoming_code], :incoming_code).
@@ -123,6 +125,14 @@ class IncomingLettersController < ApplicationController
       @organization = if params[:organization_id].present?
         Organization.find(params[:organization_id])
       end || Organization.default
+    end
+
+    def find_current_project
+      @project = begin
+        Project.find(params[:project_id])
+      rescue
+        nil
+      end
     end
 
     def save_code(code)

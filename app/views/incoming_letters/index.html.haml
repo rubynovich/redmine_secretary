@@ -1,3 +1,6 @@
+:css
+  .inline-block{ display: inline-block }
+
 .contextual
   - if User.current.allowed_to?(:add_incoming_letters, nil, :global=>true)
     = link_to l(:button_add), {:action => 'new', :organization_id => @organization.id}, :class => 'icon icon-add'
@@ -10,58 +13,65 @@
 
     = hidden_field_tag :organization_id, @organization.id
 
-    %label{:for=>'subject'}= l(:field_subject) + ":"
-    %select{:id => 'subject', :name => 'subject', :class => "small", :onchange => "this.form.submit(); return false;"}
-      %option
-      - t(:list_outgoing_letter_subject).each do |subject|
-        - if params[:subject] == subject
-          %option{:value => subject, :selected => "selected"}
-            = subject
-        - else
-          %option{:value => subject}
-            = subject
+    .inline-block
+      %label{:for=>'project_id'}= l(:field_project) + ":"
+      %select{:id => 'project_id', :name => 'project_id', :class => "small", :onchange => "this.form.submit(); return false;"}
+        %option
+        = project_tree_options_for_select(project_id_for_select, :selected => @project)
 
-    %br
+    .inline-block
+      %label{:for=>'subject'}= l(:field_subject) + ":"
+      %select{:id => 'subject', :name => 'subject', :class => "small", :onchange => "this.form.submit(); return false;"}
+        %option
+        - t(:list_outgoing_letter_subject).each do |subject|
+          - if params[:subject] == subject
+            %option{:value => subject, :selected => "selected"}
+              = subject
+          - else
+            %option{:value => subject}
+              = subject
 
-    %label{:for=>'shipping_type'}= l(:field_shipping_type) + ":"
-    %select{:id => 'shipping_type', :name => 'shipping_type', :class => "small", :onchange => "this.form.submit(); return false;"}
-      %option
-      - t(:list_shipping_type).each do |shipping_type|
-        - if params[:shipping_type] == shipping_type
-          %option{:value => shipping_type, :selected => "selected"}
-            = shipping_type
-            =# "(#{IncomingLetter.eql_field(shipping_type, :shipping_type).this_organization(@organization.id).count})"
-        - else
-          %option{:value => shipping_type}
-            = shipping_type
-            =# "(#{IncomingLetter.eql_field(shipping_type, :shipping_type).this_organization(@organization.id).count})"
+    .inline-block
+      %label{:for=>'shipping_type'}= l(:field_shipping_type) + ":"
+      %select{:id => 'shipping_type', :name => 'shipping_type', :class => "small", :onchange => "this.form.submit(); return false;"}
+        %option
+        - t(:list_shipping_type).each do |shipping_type|
+          - if params[:shipping_type] == shipping_type
+            %option{:value => shipping_type, :selected => "selected"}
+              = shipping_type
+              =# "(#{IncomingLetter.eql_field(shipping_type, :shipping_type).this_organization(@organization.id).count})"
+          - else
+            %option{:value => shipping_type}
+              = shipping_type
+              =# "(#{IncomingLetter.eql_field(shipping_type, :shipping_type).this_organization(@organization.id).count})"
 
-    %label{:for=>'original_required'}= l(:field_original_required) + ":"
-    %select{:id => 'original_required', :name => 'original_required', :class => "small", :onchange => "this.form.submit(); return false;"}
-      %option
-      - t(:list_original_required).each do |original_required|
-        - if params[:original_required] == original_required
-          %option{:value => original_required, :selected => "selected"}
-            = original_required
-            =# "(#{IncomingLetter.eql_field(original_required, :original_required).this_organization(@organization.id).count})"
-        - else
-          %option{:value => original_required}
-            = original_required
-            =# "(#{IncomingLetter.eql_field(original_required, :original_required).this_organization(@organization.id).count})"
+    .inline-block
+      %label{:for=>'original_required'}= l(:field_original_required) + ":"
+      %select{:id => 'original_required', :name => 'original_required', :class => "small", :onchange => "this.form.submit(); return false;"}
+        %option
+        - t(:list_original_required).each do |original_required|
+          - if params[:original_required] == original_required
+            %option{:value => original_required, :selected => "selected"}
+              = original_required
+              =# "(#{IncomingLetter.eql_field(original_required, :original_required).this_organization(@organization.id).count})"
+          - else
+            %option{:value => original_required}
+              = original_required
+              =# "(#{IncomingLetter.eql_field(original_required, :original_required).this_organization(@organization.id).count})"
 
-
-    %label{:for=>'executor_id'}= l(:field_executor) + ":"
-    %select{:id => 'executor_id', :name => 'executor_id', :class => "small", :onchange => "this.form.submit(); return false;"}
-      %option
-      - possible_executors.each do |executor|
-        - if params[:executor_id] == executor.id.to_s
-          %option{:value => executor.id, :selected => "selected"}
-            = executor.name
-            =# "(#{IncomingLetter.eql_field(executor.id, :executor_id).this_organization(@organization.id).count})"
-        - else
-          %option{:value => executor.id}
-            = executor.name
-            =# "(#{IncomingLetter.eql_field(executor.id, :executor_id).this_organization(@organization.id).count})"
+    .inline-block
+      %label{:for=>'executor_id'}= l(:field_executor) + ":"
+      %select{:id => 'executor_id', :name => 'executor_id', :class => "small", :onchange => "this.form.submit(); return false;"}
+        %option
+        - possible_executors.each do |executor|
+          - if params[:executor_id] == executor.id.to_s
+            %option{:value => executor.id, :selected => "selected"}
+              = executor.name
+              =# "(#{IncomingLetter.eql_field(executor.id, :executor_id).this_organization(@organization.id).count})"
+          - else
+            %option{:value => executor.id}
+              = executor.name
+              =# "(#{IncomingLetter.eql_field(executor.id, :executor_id).this_organization(@organization.id).count})"
 
     - %w{shipping_on created_on}.each do |type_date|
       %br

@@ -1,6 +1,9 @@
 = render :partial => 'action_menu'
 
-%h2= outgoing_letter_heading(@object)
+%h2
+  = link_to t(:label_outgoing), :action => :index
+  &#187;
+  = outgoing_letter_heading(@object)
 
 .issue.details
   %table.attributes
@@ -37,6 +40,13 @@
     %tr
       %th.author= l(:field_author)+":"
       %td.author= h(@object.author)
+  %hr
+    #issue_tree
+      %p
+        %strong=l(:label_project_plural)
+      %ul
+        - @object.projects.each do |project|
+          %li=link_to_project(project)
 
   - if @object.description? || @object.attachments.any?
     %hr

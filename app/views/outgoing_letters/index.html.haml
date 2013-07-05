@@ -1,3 +1,6 @@
+:css
+  .inline-block{ display: inline-block }
+
 .contextual
   = link_to l(:button_add), {:action => 'new', :organization_id => @organization.id}, :class => 'icon icon-add' if User.current.allowed_to?(:add_outgoing_letters, nil, :global=>true)
 
@@ -9,29 +12,37 @@
 
     = hidden_field_tag :organization_id, @organization.id
 
-    %label{:for=>'subject'}= l(:field_subject) + ":"
-    %select{:id => 'subject', :name => 'subject', :class => "small", :onchange => "this.form.submit(); return false;"}
-      %option
-      - t(:list_outgoing_letter_subject).each do |subject|
-        - if params[:subject] == subject
-          %option{:value => subject, :selected => "selected"}
-            = subject
-        - else
-          %option{:value => subject}
-            = subject
+    .inline-block
+      %label{:for=>'project_id'}= l(:field_project) + ":"
+      %select{:id => 'project_id', :name => 'project_id', :class => "small", :onchange => "this.form.submit(); return false;"}
+        %option
+        = project_tree_options_for_select(project_id_for_select, :selected => @project)
 
-    %label{:for=>'shipping_type'}= l(:field_shipping_type) + ":"
-    %select{:id => 'shipping_type', :name => 'shipping_type', :class => "small", :onchange => "this.form.submit(); return false;"}
-      %option
-      - t(:list_shipping_type).each do |shipping_type|
-        - if params[:shipping_type] == shipping_type
-          %option{:value => shipping_type, :selected => "selected"}
-            = shipping_type
-            =# "(#{OutgoingLetter.eql_field(shipping_type, :shipping_type).this_organization(@organization.id).count})"
-        - else
-          %option{:value => shipping_type}
-            = shipping_type
-            =# "(#{OutgoingLetter.eql_field(shipping_type, :shipping_type).this_organization(@organization.id).count})"
+    .inline-block
+      %label{:for=>'subject'}= l(:field_subject) + ":"
+      %select{:id => 'subject', :name => 'subject', :class => "small", :onchange => "this.form.submit(); return false;"}
+        %option
+        - t(:list_outgoing_letter_subject).each do |subject|
+          - if params[:subject] == subject
+            %option{:value => subject, :selected => "selected"}
+              = subject
+          - else
+            %option{:value => subject}
+              = subject
+
+    .inline-block
+      %label{:for=>'shipping_type'}= l(:field_shipping_type) + ":"
+      %select{:id => 'shipping_type', :name => 'shipping_type', :class => "small", :onchange => "this.form.submit(); return false;"}
+        %option
+        - t(:list_shipping_type).each do |shipping_type|
+          - if params[:shipping_type] == shipping_type
+            %option{:value => shipping_type, :selected => "selected"}
+              = shipping_type
+              =# "(#{OutgoingLetter.eql_field(shipping_type, :shipping_type).this_organization(@organization.id).count})"
+          - else
+            %option{:value => shipping_type}
+              = shipping_type
+              =# "(#{OutgoingLetter.eql_field(shipping_type, :shipping_type).this_organization(@organization.id).count})"
 
     - %w{shipping_on served_on created_on}.each do |type_date|
       %br
