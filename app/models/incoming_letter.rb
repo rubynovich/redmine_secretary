@@ -32,7 +32,8 @@ class IncomingLetter < ActiveRecord::Base
   if Rails::VERSION::MAJOR >= 3
     scope :for_project, lambda{ |q|
       if q.present? && q.try(:id)
-        joins(:incoming_issues => :issue).where("#{Issue.table_name}.project_id = ?", q.id)
+        where("id IN (SELECT #{IncomingIssue.table_name}.outgoing_letter_id FROM #{IncomingIssue.table_name} WHERE #{IncomingIssue.table_name}.project_id = ?)",q.id)
+#        joins(:incoming_issues => :issue).where("#{Issue.table_name}.project_id = ?", q.id)
 #        where("id IN (SELECT #{IncomingIssue.table_name}.incoming_letter_id FROM #{IncomingIssue.table_name} WHERE #{IncomingIssue.table_name}.issue_id IN (SELECT #{Issue.table_name}.id FROM #{Issue.table_name} WHERE #{Issue.table_name}.project_id = ?))",q.id)
       end
     }
@@ -113,7 +114,9 @@ class IncomingLetter < ActiveRecord::Base
     named_scope :for_project, lambda{ |q|
       if q.present? && q.try(:id)
         {:conditions =>
-          ["id IN (SELECT #{IncomingIssue.table_name}.incoming_letter_id FROM #{IncomingIssue.table_name} WHERE #{IncomingIssue.table_name}.issue_id IN (SELECT #{Issue.table_name}.id FROM #{Issue.table_name} WHERE #{Issue.table_name}.project_id = ?))",q.id]
+        ["id IN (SELECT #{IncomingIssue.table_name}.outgoing_letter_id FROM #{IncomingIssue.table_name} WHERE #{IncomingIssue.table_name}.project_id = ?)",q.id]
+
+#          ["id IN (SELECT #{IncomingIssue.table_name}.incoming_letter_id FROM #{IncomingIssue.table_name} WHERE #{IncomingIssue.table_name}.issue_id IN (SELECT #{Issue.table_name}.id FROM #{Issue.table_name} WHERE #{Issue.table_name}.project_id = ?))",q.id]
         }
       end
     }
