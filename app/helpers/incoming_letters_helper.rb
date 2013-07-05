@@ -23,7 +23,7 @@ module IncomingLettersHelper
   end
 
   def executor_id_for_select
-    User.where("#{User.table_name}id IN (SELECT #{IncomingLetter.table_name}.executor_id FROM #{IncomingLetter.table_name} WHERE #{IncomingLetter.table_name}.executor_id = #{User.table_name}.id)")
+    User.where("#{User.table_name}.id IN (SELECT #{IncomingLetter.table_name}.executor_id FROM #{IncomingLetter.table_name} WHERE #{IncomingLetter.table_name}.executor_id = #{User.table_name}.id)")
   end
 
   def time_periods
