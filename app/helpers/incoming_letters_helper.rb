@@ -4,9 +4,9 @@ module IncomingLettersHelper
   end
 
   def related_projects
-    Project.active.visible.all
-#    Member.where(:user_id => User.current.id).includes(&:project).all.
-#        map(&:project).select(&:active?)
+#    Project.active.visible.all
+    Member.where(:user_id => User.current.id).includes(&:project).all.
+        map(&:project).select(&:active?)
   end
 
   def project_members
