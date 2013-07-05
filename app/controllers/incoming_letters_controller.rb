@@ -87,7 +87,7 @@ class IncomingLettersController < ApplicationController
     if @object.save
       save_code(@object.incoming_code)
       issues = @object.create_issues.map{ |issue| "##{issue.id}" }.join(", ")
-      add_to_description(issues)
+      #add_to_description(issues)
       render_attachment_warning_if_needed(@object)
       flash[:notice] = l(:notice_successful_create)
       redirect_to( {:action => 'show', :id => @object} )

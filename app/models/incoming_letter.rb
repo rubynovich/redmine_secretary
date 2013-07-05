@@ -284,6 +284,7 @@ class IncomingLetter < ActiveRecord::Base
         :container_type => issue.class.name
       ).save
     end
+    IncomingIssue.create(incoming_letter_id: self.id, issue_id: issue.id) if issue.id.present?
     issue
   end
 
