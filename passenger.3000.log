@@ -1,4 +1,0 @@
-2013/07/05 13:37:43 [error] 2887#0: *4 "/home/redmine/redmine/plugins/redmine_secretary/public/index.html" is not found (2: No such file or directory), client: 127.0.0.1, server: _, request: "HEAD / HTTP/1.1", host: "0.0.0.0"
-2013/07/05 13:38:02 [error] 2887#0: *5 "/home/redmine/redmine/plugins/redmine_secretary/public/index.html" is not found (2: No such file or directory), client: 127.0.0.1, server: _, request: "GET / HTTP/1.1", host: "0.0.0.0:3000"
-2013/07/05 13:38:02 [error] 2887#0: *5 open() "/home/redmine/redmine/plugins/redmine_secretary/public/favicon.ico" failed (2: No such file or directory), client: 127.0.0.1, server: _, request: "GET /favicon.ico HTTP/1.1", host: "0.0.0.0:3000"
-2013/07/05 13:38:21 [error] 2887#0: *7 open() "/home/redmine/redmine/plugins/redmine_secretary/public/staff_request_managers" failed (2: No such file or directory), client: 10.0.2.2, server: _, request: "GET /staff_request_managers HTTP/1.1", host: "localhost:3000"
