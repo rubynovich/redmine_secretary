@@ -4,6 +4,7 @@ class IncomingLettersController < ApplicationController
   before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
   before_filter :find_organization, :only => [:index, :new, :create]
   before_filter :find_current_project, :only => :index
+  before_filter :get_related_projects, :only => [:new, :create]
 
   helper :attachments
   include AttachmentsHelper
