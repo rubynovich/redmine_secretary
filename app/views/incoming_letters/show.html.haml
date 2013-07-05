@@ -39,6 +39,23 @@
       %td.executor_id= h(@object.executor)
       %th.author= l(:field_author)+":"
       %td.author= h(@object.author)
+  %hr
+    #issue_tree
+      %p
+        %strong=l(:label_issue_plural)
+      %table.list.issues
+        - @object.issues.each do |issue|
+          %tr.issue.hascontextmenu{:class => "issue-#{issue.id}"}
+            %td.checkbox=check_box_tag("ids[]", issue.id, false, :id => nil)
+            %td.subject=link_to_issue(issue, :truncate => 60, :project => false, :subject => false)
+            %td=link_to_project(issue.project)
+            %td=issue.status
+            %td=link_to_user(issue.assigned_to)
+            %td=progress_bar(issue.done_ratio, :width => '80px')
+
+
+
+
 
   - if @object.description? || @object.attachments.any?
     %hr
