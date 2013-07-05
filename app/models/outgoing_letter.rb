@@ -30,7 +30,8 @@ class OutgoingLetter < ActiveRecord::Base
   if Rails::VERSION::MAJOR >= 3
     scope :for_project, lambda{ |q|
       if q.present? && q.try(:id)
-        where("id IN (SELECT #{OutgoingProject.table_name}.outgoing_letter_id FROM #{OutgoingProject.table_name} WHERE #{OutgoingProject.table_name}.project_id = ?)",q.id)
+        joins(:outgoing_projects).where("#{OutgoingProject.table_name}.project_id = ?)",q.id)
+#        where("id IN (SELECT #{OutgoingProject.table_name}.outgoing_letter_id FROM #{OutgoingProject.table_name} WHERE #{OutgoingProject.table_name}.project_id = ?)",q.id)
       end
     }
 
