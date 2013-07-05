@@ -11,6 +11,6 @@ class IncomingIssue < ActiveRecord::Base
   after_save :put_project_id
 
   def put_project_id
-    self.update_attribute(project_id: issue.project_id)
+    self.update_attribute(:project_id, issue.project_id)
   end
 end
