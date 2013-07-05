@@ -24,7 +24,7 @@
     = render :partial => 'attachments/form', :locals => {:container => @object}
   - if @related_projects.present?
     %p
-      %label= t(:field_project_plural) + ":"
+      %label= t(:label_project_plural) + ":"
     - @related_projects.each do |project|
       %p
         %label.inline{:for=>"projects_"+project.id.to_s, :id=>"projects_"+project.id.to_s+"_label"}
