@@ -7,3 +7,6 @@
 %p
   = content_tag(:label, l(:label_issue_status))
   = select_tag("settings[issue_status]", options_from_collection_for_select(IssueStatus.all, :id, :name, @settings[:issue_status] && @settings[:issue_status].to_i || IssueStatus.default))
+%p
+  %label= l(:label_assigned_to)
+  = select_tag("settings[assigned_to_id]", principals_options_for_select(Principal.active.all(:order => [:lastname, :firstname]), (Principal.find(@settings[:assigned_to_id]) rescue nil)), :prompt => t(:prompt_please_select))

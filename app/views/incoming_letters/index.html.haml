@@ -17,7 +17,7 @@
       %label{:for=>'project_id'}= l(:field_project) + ":"
       %select{:id => 'project_id', :name => 'project_id', :class => "small", :onchange => "this.form.submit(); return false;"}
         %option
-        = project_tree_options_for_select(project_id_for_select, :selected => @project)
+        = project_tree_options_for_select(related_projects, :selected => @project)
 
     .inline-block
       %label{:for=>'subject'}= l(:field_subject) + ":"
