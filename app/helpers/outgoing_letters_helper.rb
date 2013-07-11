@@ -4,16 +4,21 @@ module OutgoingLettersHelper
   end
 
   def related_projects
-    Member.where(:user_id => User.current.id).includes(&:project).all.
-        map(&:project).select(&:active?)
+    settings = Setting[:plugin_redmine_secretary]
+    begin
+      Principal.find(settings[:assigned_to_id]).projects
+    rescue
 #    Project.active.visible.all
+      Member.where(:user_id => User.current.id).includes(&:project).all.
+          map(&:project).select(&:active?)
+    end
   end
 
   def time_periods
     %w{last_week this_week last_month this_month last_year this_year}
   end
 
-  def project_id_for_select
-    Project.active.visible.all
-  end
+#  def project_id_for_select
+#    Project.active.all
+#  end
 end

@@ -1,7 +1,15 @@
 if Rails::VERSION::MAJOR >= 3
   RedmineApp::Application.routes.draw do
-    resources :incoming_letters
-    resources :outgoing_letters
+    resources :incoming_letters do
+      collection do
+        get :autocomplete_for
+      end
+    end
+    resources :outgoing_letters do
+      collection do
+        get :autocomplete_for
+      end
+    end
     resources :organizations
     resources :secretary_members, :except => :show
     resources :secretary_projects, :except => :show
@@ -12,6 +20,6 @@ else
     map.resources :outgoing_letters
     map.resources :organizations
     map.resources :secretary_members, :except => :show
-    map.resources :secretary_projects, :except => :show 
+    map.resources :secretary_projects, :except => :show
   end
 end
