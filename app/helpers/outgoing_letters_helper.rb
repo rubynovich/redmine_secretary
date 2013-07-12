@@ -6,11 +6,11 @@ module OutgoingLettersHelper
   def related_projects
     settings = Setting[:plugin_redmine_secretary]
     begin
-      Principal.find(settings[:assigned_to_id]).projects
+      Principal.find(settings[:assigned_to_id]).projects.order(:name)
     rescue
 #    Project.active.visible.all
       Member.where(:user_id => User.current.id).includes(&:project).all.
-          map(&:project).select(&:active?)
+          map(&:project).select(&:active?).sort_by(&:name)
     end
   end
 
