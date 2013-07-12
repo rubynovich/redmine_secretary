@@ -1,3 +1,6 @@
+:css
+  input.autocomlete { padding-left: 20px; }
+
 = error_messages_for @object
 .box.tabular
   %p= f.select :subject, t(:list_incoming_letter_subject), :required => true, :prompt => t(:prompt_please_select)
