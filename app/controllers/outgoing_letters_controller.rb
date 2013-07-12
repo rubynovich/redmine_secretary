@@ -107,6 +107,18 @@ class OutgoingLettersController < ApplicationController
     redirect_to :action => 'new'
   end
 
+  def autocomplete_for_signer
+    autocomplete_for_field(:signer)
+  end
+
+  def autocomplete_for_recipient
+    autocomplete_for_field(:recipient)
+  end
+
+  def autocomplete_for_shipping_to
+    autocomplete_for_field(:shipping_to)
+  end
+  
   private
     def get_related_projects
       @related_projects = related_projects
@@ -116,7 +128,7 @@ class OutgoingLettersController < ApplicationController
       OutgoingLetter
     end
 
-    def model_name
+   def model_name
       model_class.name.underscore
     end
 
@@ -164,4 +176,15 @@ class OutgoingLettersController < ApplicationController
     def previous_code(organization_id = find_organization.id)
       PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y"), :organization_id => organization_id})
     end
+
+    
+    def autocomplete_for_field(field)
+      completions = OutgoingLetter.where("#{field} LIKE ?", "#{params[:term]}%").
+        order(field).
+        uniq.
+        limit(10).
+        map{|l| { 'id' => l.id, 'label' => l.send(field), 'value' => l.send(field)} }  
+      render :text => completions.to_json, :layout => false
+    end
+
 end

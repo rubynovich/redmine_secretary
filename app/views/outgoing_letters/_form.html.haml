@@ -6,15 +6,28 @@
     %p= f.text_field :outgoing_code, :required => true, :size => 10
     %p= f.text_field :incoming_code, :size => 10
     %p= f.text_field :answer_for, :size => 10
+
     %p= f.text_field :signer, :size => 40
+    :javascript
+      observeAutocompleteField('outgoing_letter_signer', '#{escape_javascript autocomplete_for_signer_outgoing_letters_path}')
+
     %p= f.text_field :recipient, :size => 40
+    :javascript
+      observeAutocompleteField('outgoing_letter_recipient', '#{escape_javascript autocomplete_for_recipient_outgoing_letters_path}')
+
+
 
   .splitcontentright
     %p
       = f.text_field :shipping_on, :required => true, :size => 10
       = calendar_for('outgoing_letter_shipping_on')
     %p= f.select :shipping_type, t(:list_shipping_type), :required => true, :prompt => t(:prompt_please_select)
+
     %p= f.text_field :shipping_to, :required => true, :size => 40
+    :javascript
+      observeAutocompleteField('outgoing_letter_shipping_to', '#{escape_javascript autocomplete_for_shipping_to_outgoing_letters_path}')
+
+
     %p
       = f.text_field :served_on, :size => 10
       = calendar_for('outgoing_letter_served_on')

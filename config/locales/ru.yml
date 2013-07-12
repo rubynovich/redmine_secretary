@@ -18,7 +18,7 @@ ru:
   label_edit: Правка
   label_delete: Удаление
   field_title: Название
-  field_projects: Объекты
+  field_projects: Проекты
   field_files: Файлы
   field_executor: Исполнитель
   field_original_required: Оригинал

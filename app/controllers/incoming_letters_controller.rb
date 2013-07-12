@@ -15,20 +15,20 @@ class IncomingLettersController < ApplicationController
 
   def index
     sort_init 'incoming_code', 'desc'
-#    sort_update %w(incoming_code outgoing_code answer_for signer shipping_from shipping_type shipping_on original_required recipient executor_id description created_on author_id)
+    #    sort_update %w(incoming_code outgoing_code answer_for signer shipping_from shipping_type shipping_on original_required recipient executor_id description created_on author_id)
     sort_update 'incoming_code' => ["SUBSTRING(incoming_code,6,2)", "incoming_code"],
-                'outgoing_code' => 'outgoing_code',
-                'answer_for' => ["SUBSTRING(answer_for,6,2)", "answer_for"],
-                'signer' => 'signer',
-                'shipping_from' => 'shipping_from',
-                'shipping_type' => 'shipping_type',
-                'shipping_on' => 'shipping_on',
-                'original_required' => 'original_required',
-                'recipient' => 'recipient',
-                'executor_id' => 'executor_id',
-                'created_on' => 'created_on',
-                'author_id' => 'author_id',
-                'subject' => 'subject'
+    'outgoing_code' => 'outgoing_code',
+    'answer_for' => ["SUBSTRING(answer_for,6,2)", "answer_for"],
+    'signer' => 'signer',
+    'shipping_from' => 'shipping_from',
+    'shipping_type' => 'shipping_type',
+    'shipping_on' => 'shipping_on',
+    'original_required' => 'original_required',
+    'recipient' => 'recipient',
+    'executor_id' => 'executor_id',
+    'created_on' => 'created_on',
+    'author_id' => 'author_id',
+    'subject' => 'subject'
 
     scope = model_class.
       for_project(@project).
@@ -53,18 +53,17 @@ class IncomingLettersController < ApplicationController
     @pages = Paginator.new self, @count, @limit, params[:page]
     @offset ||= @pages.current.offset
     @collection =  scope.find :all,
-                              :order => sort_clause,
-                              :limit  =>  @limit,
-                              :offset =>  @offset
+    :order => sort_clause,
+    :limit  =>  @limit,
+    :offset =>  @offset
   end
 
   def new
     @object = model_class.new(
-      :incoming_code => next_code,
-      :organization_id => @organization.id)
+                              :incoming_code => next_code,
+                              :organization_id => @organization.id)
   end
-
-
+  
   def update
     (render_403; return false) unless @object.editable_by?(User.current)
     @object.safe_attributes = params[model_name]
@@ -110,65 +109,88 @@ class IncomingLettersController < ApplicationController
     redirect_to :action => 'new'
   end
 
+  def autocomplete_for_signer
+    autocomplete_for_field(:signer)
+  end
+
+  def autocomplete_for_recipient
+    autocomplete_for_field(:recipient)
+  end
+
+  def autocomplete_for_shipping_from
+    autocomplete_for_field(:shipping_from)
+  end
+  
   private
-    def get_related_projects
-      @related_projects = related_projects
-    end
+  
+  def get_related_projects
+    @related_projects = related_projects
+  end
 
-    def model_class
-      IncomingLetter
-    end
+  def model_class
+    IncomingLetter
+  end
 
-    def model_name
-      model_class.name.underscore
-    end
+  def model_name
+    model_class.name.underscore
+  end
 
-    def find_object_by_id
-      @object = model_class.find(params[:id])
-    end
+  def find_object_by_id
+    @object = model_class.find(params[:id])
+  end
 
-    def find_organization
-      @organization = if params[:organization_id].present?
-        Organization.find(params[:organization_id])
-      end || Organization.default
-    end
+  def find_organization
+    @organization = if params[:organization_id].present?
+                      Organization.find(params[:organization_id])
+                    end || Organization.default
+  end
 
-    def find_current_project
-      @project = begin
-        Project.find(params[:project_id])
-      rescue
-        nil
+  def find_current_project
+    @project = begin
+                 Project.find(params[:project_id])
+               rescue
+                 nil
+               end
+  end
+
+  def save_code(code)
+    attributes = {
+      :value => code[/\d+/],
+      :year => code.split('-').last[/\d+/],
+      :organization_id => @object.organization_id
+    }
+    if prev_code = previous_code(@object.organization_id)
+      if prev_code.value.to_i < attributes[:value].to_i
+        prev_code.update_attributes(attributes)
       end
+    else
+      PreviousCode.create(attributes.merge(:name => model_name))
     end
+  end
 
-    def save_code(code)
-      attributes = {
-        :value => code[/\d+/],
-        :year => code.split('-').last[/\d+/],
-        :organization_id => @object.organization_id
-      }
-      if prev_code = previous_code(@object.organization_id)
-        if prev_code.value.to_i < attributes[:value].to_i
-          prev_code.update_attributes(attributes)
-        end
-      else
-        PreviousCode.create(attributes.merge(:name => model_name))
-      end
+  def next_code
+    if prev_code = previous_code
+      [prev_code.value.succ,Time.now.strftime("%y")].join('-')
+    else
+      Time.now.strftime("0001-%y")
     end
+  end
 
-    def next_code
-      if prev_code = previous_code
-        [prev_code.value.succ,Time.now.strftime("%y")].join('-')
-      else
-        Time.now.strftime("0001-%y")
-      end
-    end
+  def previous_code(organization_id = find_organization.id)
+    PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y"), :organization_id => organization_id})
+  end
 
-    def previous_code(organization_id = find_organization.id)
-      PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y"), :organization_id => organization_id})
-    end
+  def add_to_description(str)
+    @object.update_attribute :description, [@object.description, str].join("\n\n")
+  end
 
-    def add_to_description(str)
-      @object.update_attribute :description, [@object.description, str].join("\n\n")
-    end
+  def autocomplete_for_field(field)
+    completions = IncomingLetter.where("#{field} LIKE ?", "#{params[:term]}%").
+      order(field).
+      uniq.
+      limit(10).
+      map{|l| { 'id' => l.id, 'label' => l.send(field), 'value' => l.send(field)} }  
+    render :text => completions.to_json, :layout => false
+  end
+  
 end

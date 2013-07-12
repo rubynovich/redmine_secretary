@@ -2,12 +2,16 @@ if Rails::VERSION::MAJOR >= 3
   RedmineApp::Application.routes.draw do
     resources :incoming_letters do
       collection do
-        get :autocomplete_for
+        get :autocomplete_for_signer
+        get :autocomplete_for_recipient
+        get :autocomplete_for_shipping_from
       end
     end
     resources :outgoing_letters do
       collection do
-        get :autocomplete_for
+        get :autocomplete_for_signer
+        get :autocomplete_for_recipient
+        get :autocomplete_for_shipping_to
       end
     end
     resources :organizations
