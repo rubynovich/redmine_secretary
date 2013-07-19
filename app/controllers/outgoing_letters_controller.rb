@@ -42,7 +42,7 @@ class OutgoingLettersController < ApplicationController
       eql_field(params[:shipping_type], :shipping_type).
       eql_field(params[:shipping_on], :shipping_on).
       eql_field(params[:served_on], :served_on).
-      eql_field(params[:created_on], :created_on).
+      eql_created_on(params[:created_on]).
       eql_field(params[:subject], :subject).
       time_period(params[:time_period_shipping_on], :shipping_on).
       time_period(params[:time_period_served_on], :served_on).
@@ -118,7 +118,7 @@ class OutgoingLettersController < ApplicationController
   def autocomplete_for_shipping_to
     autocomplete_for_field(:shipping_to)
   end
-  
+
   private
     def get_related_projects
       @related_projects = related_projects
@@ -177,13 +177,13 @@ class OutgoingLettersController < ApplicationController
       PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y"), :organization_id => organization_id})
     end
 
-    
+
     def autocomplete_for_field(field)
       completions = OutgoingLetter.where("#{field} LIKE ?", "#{params[:term]}%").
         order(field).
         uniq.
         limit(10).
-        map{|l| { 'id' => l.id, 'label' => l.send(field), 'value' => l.send(field)} }  
+        map{|l| { 'id' => l.id, 'label' => l.send(field), 'value' => l.send(field)} }
       render :text => completions.to_json, :layout => false
     end
 

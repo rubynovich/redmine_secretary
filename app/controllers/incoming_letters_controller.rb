@@ -44,7 +44,7 @@ class IncomingLettersController < ApplicationController
       eql_field(params[:subject], :subject).
       eql_field(params[:original_required], :original_required).
       eql_field(params[:shipping_on], :shipping_on).
-      eql_field(params[:created_on], :created_on).
+      eql_created_on(params[:created_on]).
       time_period(params[:time_period_shipping_on], :shipping_on).
       time_period(params[:time_period_created_on], :created_on)
 
@@ -63,7 +63,7 @@ class IncomingLettersController < ApplicationController
                               :incoming_code => next_code,
                               :organization_id => @organization.id)
   end
-  
+
   def update
     (render_403; return false) unless @object.editable_by?(User.current)
     @object.safe_attributes = params[model_name]
@@ -120,9 +120,9 @@ class IncomingLettersController < ApplicationController
   def autocomplete_for_shipping_from
     autocomplete_for_field(:shipping_from)
   end
-  
+
   private
-  
+
   def get_related_projects
     @related_projects = related_projects
   end
@@ -189,8 +189,8 @@ class IncomingLettersController < ApplicationController
       order(field).
       uniq.
       limit(10).
-      map{|l| { 'id' => l.id, 'label' => l.send(field), 'value' => l.send(field)} }  
+      map{|l| { 'id' => l.id, 'label' => l.send(field), 'value' => l.send(field)} }
     render :text => completions.to_json, :layout => false
   end
-  
+
 end

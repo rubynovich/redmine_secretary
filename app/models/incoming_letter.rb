@@ -111,6 +111,12 @@ class IncomingLetter < ActiveRecord::Base
         where(field => q)
       end
     }
+
+    scope :eql_created_on, lambda {|q|
+      if q.present?
+        where("DATE(created_on) = ?",q)
+      end
+    }
   else
     named_scope :for_project, lambda{ |q|
       if q.present? && q.try(:id)
@@ -192,6 +198,12 @@ class IncomingLetter < ActiveRecord::Base
     named_scope :eql_field, lambda {|q, field|
       if q.present? && field.present?
         {:conditions => {field => q}}
+      end
+    }
+
+    named_scope :eql_created_on, lambda {|q|
+      if q.present?
+        {:conditions => ["DATE(created_on) = ?",q]}
       end
     }
   end
