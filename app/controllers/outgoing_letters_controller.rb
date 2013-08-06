@@ -68,7 +68,7 @@ class OutgoingLettersController < ApplicationController
     (render_403; return false) unless @object.editable_by?(User.current)
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
-    @object.projects = Project.find(params[:projects].keys) rescue nil
+    @object.projects = Project.where(id: params[:projects].try(:keys))
 
     if @object.update_attributes(params[model_name])
       flash[:notice] = l(:notice_successful_update)
@@ -82,7 +82,7 @@ class OutgoingLettersController < ApplicationController
     @object = model_class.new(:author => User.current)
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
-    @object.projects = Project.find(params[:projects].keys) rescue nil
+    @object.projects = Project.where(id: params[:projects].try(:keys))
     @object.files = params[:attachments].keys if params[:attachments].present?
 
     if @object.save
