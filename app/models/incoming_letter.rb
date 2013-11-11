@@ -305,15 +305,17 @@ class IncomingLetter < ActiveRecord::Base
   end
 
   def next_work_day(now_day = Date.today)
-    next_day = now_day + 1.day
-    case next_day.wday
-      when 6
-        next_day + 1.day
-      when 5
-        next_day + 2.days
-      else
-        next_day
-    end
+    now_day +
+      case now_day.wday
+        when 1..4
+          1.day
+        when 5
+          3.days
+        when 6
+          3.days
+        when 0,7
+          2.days
+      end
   end
 
   def issue_subject
