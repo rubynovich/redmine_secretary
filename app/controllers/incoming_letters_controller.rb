@@ -5,6 +5,7 @@ class IncomingLettersController < ApplicationController
   before_filter :find_organization, :only => [:index, :new, :create]
   before_filter :find_current_project, :only => :index
   before_filter :get_related_projects, :only => [:new, :create]
+#  before_filter :required_view_permission, only: [:index, :show]
 
   helper :attachments
   include AttachmentsHelper
@@ -193,4 +194,7 @@ class IncomingLettersController < ApplicationController
     render :text => completions.to_json, :layout => false
   end
 
+#  def required_view_permission
+
+#  end
 end

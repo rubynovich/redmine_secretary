@@ -20,7 +20,8 @@ class IncomingLetter < ActiveRecord::Base
   validate :answer_for_exist
   validates_presence_of :projects, :files, :on => :create
 
-  acts_as_attachable view_permission: :view_incoming_letters, delete_permission: :delete_incoming_letters
+  acts_as_attachable
+#  view_permission: :view_incoming_letters, delete_permission: :delete_incoming_letters
 
   attr_accessor :project, :projects, :files
 
@@ -248,7 +249,8 @@ class IncomingLetter < ActiveRecord::Base
   end
 
   def attachments_visible?(user=User.current)
-      user.allowed_to?(self.class.attachable_options[:view_permission], nil, :global => true)
+    true
+#      user.allowed_to?(self.class.attachable_options[:view_permission], nil, :global => true)
   end
 
   def attachments_deletable?(user=User.current)
