@@ -19,7 +19,7 @@ class OutgoingLetter < ActiveRecord::Base
   validate :outgoing_code_in_series, :on => :create
   validate :answer_for_exist
 
-  acts_as_attachable
+  acts_as_attachable view_permission: :view_outgoing_letters, delete_permission: :delete_outgoing_letters
 
   attr_accessor :project, :files
 

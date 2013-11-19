@@ -20,7 +20,7 @@ class IncomingLetter < ActiveRecord::Base
   validate :answer_for_exist
   validates_presence_of :projects, :files, :on => :create
 
-  acts_as_attachable
+  acts_as_attachable view_permission: :view_incoming_letters, delete_permission: :delete_incoming_letters
 
   attr_accessor :project, :projects, :files
 
