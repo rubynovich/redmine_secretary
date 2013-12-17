@@ -1,10 +1,10 @@
 class OutgoingLettersController < ApplicationController
   unloadable
 
-  before_filter :find_object_by_id, :only => [:destroy, :edit, :show, :update]
-  before_filter :find_organization, :only => [:index, :new]
-  before_filter :find_current_project, :only => :index
-  before_filter :get_related_projects, :only => [:edit, :update, :new, :create]
+  before_filter :find_object_by_id, only: [:destroy, :edit, :show, :update]
+  before_filter :find_organization, only: [:index, :new]
+  before_filter :find_current_project, only: :index
+  before_filter :get_related_projects, only: [:edit, :update, :new, :create]
 
   helper :attachments
   include AttachmentsHelper
@@ -50,18 +50,26 @@ class OutgoingLettersController < ApplicationController
 
     @limit = per_page_option
     @count = scope.count
-    @pages = Paginator.new self, @count, @limit, params[:page]
-    @offset ||= @pages.current.offset
-    @collection =  scope.find :all,
-                              :order => sort_clause,
-                              :limit  =>  @limit,
-                              :offset =>  @offset
+    @pages = begin
+      Paginator.new @count, @limit, params[:page]
+    rescue
+      Paginator.new self, @count, @limit, params[:page]
+    end
+    @offset ||= begin
+      @pages.offset
+    rescue
+      @pages.current.offset
+    end
+    @collection = scope.
+      order(sort_clause).
+      limit(@limit).
+      offset(@offset)
   end
 
   def new
     @object = model_class.new(
-      :outgoing_code => next_code,
-      :organization_id => @organization.id)
+      outgoing_code: next_code,
+      organization_id: @organization.id)
   end
 
   def update
@@ -71,15 +79,16 @@ class OutgoingLettersController < ApplicationController
     @object.projects = Project.where(id: params[:projects].try(:keys))
 
     if @object.update_attributes(params[model_name])
+      render_attachment_warning_if_needed(@object)
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index'
+      redirect_to action: 'index'
     else
-      render :action => 'edit'
+      render action: 'edit'
     end
   end
 
   def create
-    @object = model_class.new(:author => User.current)
+    @object = model_class.new
     @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
     @object.projects = Project.where(id: params[:projects].try(:keys))
@@ -89,9 +98,9 @@ class OutgoingLettersController < ApplicationController
       save_code(@object.outgoing_code)
       render_attachment_warning_if_needed(@object)
       flash[:notice] = l(:notice_successful_create)
-      redirect_to( {:action => 'show', :id => @object} )
+      redirect_to action: 'show', id: @object
     else
-      render :action => 'new'
+      render action: 'new'
     end
   end
 
@@ -99,12 +108,12 @@ class OutgoingLettersController < ApplicationController
     (render_403; return false) unless @object.destroyable_by?(User.current)
     @object.destroy
     flash[:notice] = l(:notice_successful_delete)
-    redirect_to :action => 'index'
+    redirect_to action: 'index'
   end
 
   def clean_previous_code
-    PreviousCode.destroy_all(:name => model_name)
-    redirect_to :action => 'new'
+    PreviousCode.destroy_all(name: model_name)
+    redirect_to action: 'new'
   end
 
   def autocomplete_for_signer
@@ -152,39 +161,43 @@ class OutgoingLettersController < ApplicationController
 
     def save_code(code)
       attributes = {
-        :value => code[/\d+/],
-        :year => code.split('-').last[/\d+/],
-        :organization_id => @object.organization_id
+        value: code[/\d+/],
+        year: code.split('-').last[/\d+/],
+        organization_id: @object.organization_id
       }
       if prev_code = previous_code(@object.organization_id)
-        if (prev_code.value.to_i < attributes[:value].to_i)||(prev_code.year.to_i < attributes[:year].to_i)
+        if (prev_code.value.to_i < attributes[:value].to_i) || (prev_code.year.to_i < attributes[:year].to_i)
           prev_code.update_attributes(attributes)
         end
       else
-        PreviousCode.create(attributes.merge(:name => model_name))
+        PreviousCode.create(attributes.merge(name: model_name))
       end
     end
 
     def next_code
       if prev_code = previous_code
-        [prev_code.value.succ,Time.now.strftime("%y")].join('-')
+        [prev_code.value.succ, Time.now.strftime("%y")].join('-')
       else
         Time.now.strftime("0001-%y")
       end
     end
 
     def previous_code(organization_id = find_organization.id)
-      PreviousCode.find(:last, :conditions => {:name => model_name, :year => Time.now.strftime("%y"), :organization_id => organization_id})
+      PreviousCode.where(
+        name: model_name,
+        year: Time.now.strftime("%y"),
+        organization_id: organization_id
+      ).last
     end
 
 
     def autocomplete_for_field(field)
       completions = OutgoingLetter.where("#{field} LIKE ?", "#{params[:term]}%").
-        order(field).
-        uniq.
+        uniq(field).
         limit(10).
-        map{|l| { 'id' => l.id, 'label' => l.send(field), 'value' => l.send(field)} }
-      render :text => completions.to_json, :layout => false
+        pluck(field).
+        map{|value| {id: value, label: value, value: value} }
+      render text: completions.to_json, layout: false
     end
 
 end

@@ -2,23 +2,25 @@ class IncomingLetter < ActiveRecord::Base
   unloadable
   include Redmine::SafeAttributes
 
-  belongs_to  :author, :class_name => 'User', :foreign_key => 'author_id'
-  belongs_to  :executor, :class_name => 'User', :foreign_key => 'executor_id'
+  belongs_to  :author, class_name: 'User', foreign_key: 'author_id'
+  belongs_to  :executor, class_name: 'User', foreign_key: 'executor_id'
   belongs_to  :organization
   has_many    :incoming_issues
-  has_many    :issues, :through => :incoming_issues
+  has_many    :issues, through: :incoming_issues
 #  has_many    :projects, :through => :issues
-  has_many    :comments, :as => :commented, :dependent => :destroy
+  has_many    :comments, as: :commented, dependent: :destroy
 
   validates_presence_of :incoming_code, :author_id, :executor_id,
     :shipping_type, :shipping_from, :organization_id, :subject
-  validates_format_of :incoming_code, :with => /^\d+\-\d{2}(\/\d+)?$/,
-    :message => I18n.t(:message_incorrect_format_incoming_code)
-  validates_uniqueness_of :incoming_code, :scope => :organization_id
+  validates_format_of :incoming_code, with: /^\d+\-\d{2}(\/\d+)?$/,
+    message: I18n.t(:message_incorrect_format_incoming_code)
+  validates_uniqueness_of :incoming_code, scope: :organization_id
   validate :incoming_code_incorrect_year
-  validate :incoming_code_in_series, :on => :create
+  validate :incoming_code_in_series, on: :create
   validate :answer_for_exist
-  validates_presence_of :projects, :files, :on => :create
+  validates_presence_of :projects, :files, on: :create
+
+  before_create :add_author_id
 
   acts_as_attachable
 #  view_permission: :view_incoming_letters, delete_permission: :delete_incoming_letters
@@ -30,184 +32,87 @@ class IncomingLetter < ActiveRecord::Base
     :original_required, :recipient, :executor_id, :description,
     :organization_id
 
-  if Rails::VERSION::MAJOR >= 3
-    scope :for_project, lambda{ |q|
-      if q.present? && q.try(:id)
-        joins(:incoming_issues).where("#{IncomingIssue.table_name}.project_id = ?", q.id)
-#        where("id IN (SELECT #{IncomingIssue.table_name}.incoming_letter_id FROM #{IncomingIssue.table_name} WHERE #{IncomingIssue.table_name}.project_id = ?)",q.id)
-#        joins(:incoming_issues => :issue).where("#{Issue.table_name}.project_id = ?", q.id)
-#        where("id IN (SELECT #{IncomingIssue.table_name}.incoming_letter_id FROM #{IncomingIssue.table_name} WHERE #{IncomingIssue.table_name}.issue_id IN (SELECT #{Issue.table_name}.id FROM #{Issue.table_name} WHERE #{Issue.table_name}.project_id = ?))",q.id)
-      end
-    }
+  scope :for_project, lambda{ |q|
+    if q.present? && q.try(:id)
+      joins(:incoming_issues).where("#{IncomingIssue.table_name}.project_id = ?", q.id)
+    end
+  }
 
-    scope :this_organization, lambda {|q|
-      if q.present?
-        where("organization_id=?", q)
-      end
-    }
+  scope :this_organization, lambda {|q|
+    if q.present?
+      where(organization_id: q)
+    end
+  }
 
-    scope :time_period, lambda {|q, field|
-      today = Date.today
-      if q.present? && field.present?
-        {:conditions =>
-          (case q
-            when "yesterday"
-              ["#{field} BETWEEN ? AND ?",
-                2.days.ago,
-                1.day.ago]
-            when "today"
-              ["#{field} BETWEEN ? AND ?",
-                1.day.ago,
-                1.day.from_now]
-            when "last_week"
-              ["#{field} BETWEEN ? AND ?",
-                1.week.ago - today.wday.days,
-                1.week.ago - today.wday.days + 1.week]
-            when "this_week"
-              ["#{field} BETWEEN ? AND ?",
-                1.week.from_now - today.wday.days - 1.week,
-                1.week.from_now - today.wday.days]
-            when "last_month"
-              ["#{field} BETWEEN ? AND ?",
-                1.month.ago - today.day.days,
-                1.month.ago - today.day.days + 1.month]
-            when "this_month"
-              ["#{field} BETWEEN ? AND ?",
-                1.month.from_now - today.day.days - 1.month,
-                1.month.from_now - today.day.days]
-            when "last_year"
-              ["#{field} BETWEEN ? AND ?",
-                1.year.ago - today.yday.days,
-                1.year.ago - today.yday.days + 1.year]
-            when "this_year"
-              ["#{field} BETWEEN ? AND ?",
-                1.year.from_now - today.yday.days - 1.year,
-                1.year.from_now - today.yday.days]
-            else
-              {}
-          end)
-        }
-      end
-    }
+  scope :time_period, lambda {|q, field|
+    today = Date.today
+    if q.present? && field.present?
+      {:conditions =>
+        (case q
+          when "yesterday"
+            ["#{field} BETWEEN ? AND ?",
+              2.days.ago,
+              1.day.ago]
+          when "today"
+            ["#{field} BETWEEN ? AND ?",
+              1.day.ago,
+              1.day.from_now]
+          when "last_week"
+            ["#{field} BETWEEN ? AND ?",
+              1.week.ago - today.wday.days,
+              1.week.ago - today.wday.days + 1.week]
+          when "this_week"
+            ["#{field} BETWEEN ? AND ?",
+              1.week.from_now - today.wday.days - 1.week,
+              1.week.from_now - today.wday.days]
+          when "last_month"
+            ["#{field} BETWEEN ? AND ?",
+              1.month.ago - today.day.days,
+              1.month.ago - today.day.days + 1.month]
+          when "this_month"
+            ["#{field} BETWEEN ? AND ?",
+              1.month.from_now - today.day.days - 1.month,
+              1.month.from_now - today.day.days]
+          when "last_year"
+            ["#{field} BETWEEN ? AND ?",
+              1.year.ago - today.yday.days,
+              1.year.ago - today.yday.days + 1.year]
+          when "this_year"
+            ["#{field} BETWEEN ? AND ?",
+              1.year.from_now - today.yday.days - 1.year,
+              1.year.from_now - today.yday.days]
+          else
+            {}
+        end)
+      }
+    end
+  }
 
-    scope :like_executor, lambda {|q|
-      if q.present?
-        {:conditions =>
-          ["LOWER(users.firstname) LIKE :p OR users.firstname LIKE :p OR LOWER(users.lastname) LIKE :p OR users.lastname LIKE :p",
-          {:p => "%#{q.to_s.downcase}%"}],
-         :include => :executor}
-      end
-    }
+  scope :like_executor, lambda {|q|
+    if q.present?
+      where("LOWER(users.firstname) LIKE :p OR users.firstname LIKE :p OR LOWER(users.lastname) LIKE :p OR users.lastname LIKE :p",
+        p: "%#{q.to_s.downcase}%").includes(:executor)
+    end
+  }
 
-    scope :like_field, lambda {|q, field|
-      if q.present? && field.present?
-        {:conditions =>
-          ["LOWER(#{field}) LIKE :p OR #{field} LIKE :p",
-          {:p => "%#{q.to_s.downcase}%"}]}
-      end
-    }
+  scope :like_field, lambda {|q, field|
+    if q.present? && field.present?
+      where("LOWER(#{field}) LIKE :p OR #{field} LIKE :p",
+        p: "%#{q.to_s.downcase}%")
+    end
+  }
 
-    scope :eql_field, lambda {|q, field|
-      if q.present? && field.present?
-        where(field => q)
-      end
-    }
+  scope :eql_field, lambda {|q, field|
+    if q.present? && field.present?
+      where(field => q)
+    end
+  }
 
-    scope :eql_created_on, lambda {|q|
-      if q.present?
-        where("DATE(created_on) = ?",q)
-      end
-    }
-  else
-    named_scope :for_project, lambda{ |q|
-      if q.present? && q.try(:id)
-        {:conditions =>
-        ["id IN (SELECT #{IncomingIssue.table_name}.outgoing_letter_id FROM #{IncomingIssue.table_name} WHERE #{IncomingIssue.table_name}.project_id = ?)",q.id]
-
-#          ["id IN (SELECT #{IncomingIssue.table_name}.incoming_letter_id FROM #{IncomingIssue.table_name} WHERE #{IncomingIssue.table_name}.issue_id IN (SELECT #{Issue.table_name}.id FROM #{Issue.table_name} WHERE #{Issue.table_name}.project_id = ?))",q.id]
-        }
-      end
-    }
-
-    named_scope :this_organization, lambda {|q|
-      if q.present?
-        {:conditions => ["organization_id=?", q]}
-      end
-    }
-
-    named_scope :time_period, lambda {|q, field|
-      today = Date.today
-      if q.present? && field.present?
-        {:conditions =>
-          (case q
-            when "yesterday"
-              ["#{field} BETWEEN ? AND ?",
-                2.days.ago,
-                1.day.ago]
-            when "today"
-              ["#{field} BETWEEN ? AND ?",
-                1.day.ago,
-                1.day.from_now]
-            when "last_week"
-              ["#{field} BETWEEN ? AND ?",
-                1.week.ago - today.wday.days,
-                1.week.ago - today.wday.days + 1.week]
-            when "this_week"
-              ["#{field} BETWEEN ? AND ?",
-                1.week.from_now - today.wday.days - 1.week,
-                1.week.from_now - today.wday.days]
-            when "last_month"
-              ["#{field} BETWEEN ? AND ?",
-                1.month.ago - today.day.days,
-                1.month.ago - today.day.days + 1.month]
-            when "this_month"
-              ["#{field} BETWEEN ? AND ?",
-                1.month.from_now - today.day.days - 1.month,
-                1.month.from_now - today.day.days]
-            when "last_year"
-              ["#{field} BETWEEN ? AND ?",
-                1.year.ago - today.yday.days,
-                1.year.ago - today.yday.days + 1.year]
-            when "this_year"
-              ["#{field} BETWEEN ? AND ?",
-                1.year.from_now - today.yday.days - 1.year,
-                1.year.from_now - today.yday.days]
-            else
-              {}
-          end)
-        }
-      end
-    }
-
-    named_scope :like_executor, lambda {|q|
-      if q.present?
-        {:conditions =>
-          ["LOWER(users.firstname) LIKE :p OR users.firstname LIKE :p OR LOWER(users.lastname) LIKE :p OR users.lastname LIKE :p",
-          {:p => "%#{q.to_s.downcase}%"}],
-         :include => :executor}
-      end
-    }
-
-    named_scope :like_field, lambda {|q, field|
-      if q.present? && field.present?
-        {:conditions =>
-          ["LOWER(#{field}) LIKE :p OR #{field} LIKE :p",
-          {:p => "%#{q.to_s.downcase}%"}]}
-      end
-    }
-
-    named_scope :eql_field, lambda {|q, field|
-      if q.present? && field.present?
-        {:conditions => {field => q}}
-      end
-    }
-
-    named_scope :eql_created_on, lambda {|q|
-      if q.present?
-        {:conditions => ["DATE(created_on) = ?",q]}
-      end
-    }
-  end
+  scope :eql_created_on, lambda {|q|
+    if q.present?
+      where("DATE(created_on) = ?",q)
+    end
+  }
 
   def incoming_code_incorrect_year
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
@@ -231,9 +136,10 @@ class IncomingLetter < ActiveRecord::Base
 
   def answer_for_exist
     if self.answer_for.present?
-      if OutgoingLetter.find(:first, :conditions => {
-        :outgoing_code => self.answer_for,
-        :organization_id => self.organization_id}).blank?
+      if OutgoingLetter.where(
+          outgoing_code: self.answer_for,
+          organization_id: self.organization_id
+        ).first.present?
 
         errors.add(:answer_for, :not_exist)
       end
@@ -242,9 +148,9 @@ class IncomingLetter < ActiveRecord::Base
 
   def previous_code
     PreviousCode.find(:last, :conditions => {
-      :name => self.class.name.underscore,
-      :year => Time.now.strftime("%y"),
-      :organization_id => self.organization_id
+      name: self.class.name.underscore,
+      year: Time.now.strftime("%y"),
+      organization_id: self.organization_id
     })
   end
 
@@ -285,21 +191,21 @@ class IncomingLetter < ActiveRecord::Base
   def create_issue(project)
     settings = Setting[:plugin_redmine_secretary]
     issue = Issue.create(
-      :status => IssueStatus.find(settings[:issue_status]),
-      :tracker => Tracker.find(settings[:issue_tracker]),
-      :subject => issue_subject,
-      :project => project,
-      :description => description,
-      :author => executor,
-      :start_date => Date.today,
-      :due_date => next_work_day,
-      :priority => IssuePriority.find(settings[:issue_priority]),
-      :assigned_to => executor)
+      status: IssueStatus.find(settings[:issue_status]),
+      tracker: Tracker.find(settings[:issue_tracker]),
+      subject: issue_subject,
+      project: project,
+      description: description,
+      author: executor,
+      start_date: Date.today,
+      due_date: next_work_day,
+      priority: IssuePriority.find(settings[:issue_priority]),
+      assigned_to: executor)
 
     attachments.each do |attachment|
       attachment.copy(
-        :container_id => issue.id,
-        :container_type => issue.class.name
+        container_id: issue.id,
+        container_type: issue.class.name
       ).save
     end
     IncomingIssue.create(incoming_letter_id: self.id, issue_id: issue.id) if issue.id.present?
@@ -329,5 +235,9 @@ class IncomingLetter < ActiveRecord::Base
         result.merge name.to_sym => options[name]
       }
     I18n.t(:incoming_issue_subject, options)
+  end
+
+  def add_author_id
+    self.author = User.current
   end
 end
