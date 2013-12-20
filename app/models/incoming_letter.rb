@@ -26,7 +26,7 @@ class IncomingLetter < ActiveRecord::Base
   acts_as_attachable
 #  view_permission: :view_incoming_letters, delete_permission: :delete_incoming_letters
 
-  attr_accessor :project, :projects, :files, :recipient_user_id
+  attr_accessor :project, :projects, :files
 
   attr_accessible :incoming_code, :outgoing_code, :answer_for, :signer,
     :shipping_from, :shipping_type, :shipping_on, :subject,

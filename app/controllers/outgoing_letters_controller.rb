@@ -74,7 +74,6 @@ class OutgoingLettersController < ApplicationController
 
   def update
     (render_403; return false) unless @object.editable_by?(User.current)
-    @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
     @object.projects = Project.where(id: params[:projects].try(:keys))
 
@@ -89,7 +88,6 @@ class OutgoingLettersController < ApplicationController
 
   def create
     @object = model_class.new
-    @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
     @object.projects = Project.where(id: params[:projects].try(:keys))
     @object.files = params[:attachments].keys if params[:attachments].present?
