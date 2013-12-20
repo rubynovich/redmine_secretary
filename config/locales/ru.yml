@@ -28,7 +28,9 @@ ru:
   field_served_on: Вручено
   field_shipping_type: Вид доставки
   field_recipient: Адресат
+  field_recipient_user: Адресат
   field_signer: Отправитель
+  field_signer_user: Отправитель
   field_outgoing_code: Исходящий №
   field_incoming_code: Входящий №
   field_answer_for: Ответ на

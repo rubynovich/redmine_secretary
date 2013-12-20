@@ -34,7 +34,11 @@
       %td.signer= h(@object.signer)
     %tr
       %th.recipient= l(:field_recipient)+":"
-      %td.recipient= h(@object.recipient)
+      %td.recipient
+        - if @object.recipient_user.present?
+          = link_to @object.recipient_user
+        - else
+          = h(@object.recipient)
       %th.original_required= l(:field_original_required)+":"
       %td.original_required= h(@object.original_required)
     %tr

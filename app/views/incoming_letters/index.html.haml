@@ -144,7 +144,11 @@
             %td.shipping_from= h(object.shipping_from)
             %td.shipping_type= h(object.shipping_type)
             %td.shipping_on= format_date(object.shipping_on)
-            %td.recipient= h(object.recipient)
+            %td.recipient
+              - if object.recipient_user.present?
+                = link_to object.recipient_user
+              - else
+                = h(object.recipient)
             %td.original_required= h(object.original_required)
             %td.created_on{:align=>"center"}= format_time(object.created_on)
             %td.executor= h(object.executor)

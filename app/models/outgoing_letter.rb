@@ -24,11 +24,11 @@ class OutgoingLetter < ActiveRecord::Base
   acts_as_attachable
 #  view_permission: :view_outgoing_letters, delete_permission: :delete_outgoing_letters
 
-  attr_accessor :project, :files
+  attr_accessor :project, :files, :signer_user_id
 
   safe_attributes :outgoing_code, :incoming_code, :answer_for, :signer,
     :shipping_to, :shipping_type, :shipping_on, :subject,
-    :served_on, :recipient, :description, :organization_id
+    :served_on, :recipient, :description, :organization_id, :signer_user_id
 
   scope :for_project, lambda{ |q|
     if q.present? && q.try(:id)

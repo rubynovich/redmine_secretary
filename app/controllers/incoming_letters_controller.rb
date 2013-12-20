@@ -76,7 +76,7 @@ class IncomingLettersController < ApplicationController
 
   def update
     (render_403; return false) unless @object.editable_by?(User.current)
-    @object.safe_attributes = params[model_name]
+#    @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
     @object.projects = params[:projects].keys if params[:projects].present?
 
@@ -90,8 +90,8 @@ class IncomingLettersController < ApplicationController
   end
 
   def create
-    @object = model_class.new
-    @object.safe_attributes = params[model_name]
+    @object = model_class.new(params[model_name])
+#    @object.safe_attributes = params[model_name]
     @object.save_attachments(params[:attachments])
     @object.projects = params[:projects].keys if params[:projects].present?
     @object.files = params[:attachments].keys if params[:attachments].present?

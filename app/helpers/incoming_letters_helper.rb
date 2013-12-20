@@ -4,12 +4,12 @@ module IncomingLettersHelper
   end
 
   def related_projects
-    settings = Setting[:plugin_redmine_secretary]
+    settings = Setting.plugin_redmine_secretary
     begin
       Principal.find(settings[:assigned_to_id]).projects.order(:name)
     rescue
 #    Project.active.visible.all
-      Member.where(:user_id => User.current.id).includes(&:project).all.
+      Member.where(user_id: User.current.id).includes(&:project).all.
           map(&:project).select(&:active?).sort_by(&:name)
     end
   end
@@ -17,12 +17,12 @@ module IncomingLettersHelper
   def project_members
     related_projects.
       map{ |project|
-        Member.where(:project_id => project.id).includes(&:user).all.map(&:user)
+        Member.where(project_id: project.id).includes(&:user).all.map(&:user)
       }
   end
 
   def possible_executors
-    settings = Setting[:plugin_redmine_secretary]
+    settings = Setting.plugin_redmine_secretary
     begin
       principal = Principal.find(settings[:assigned_to_id])
       principal.kind_of?(Group) ? principal.users : [principal]

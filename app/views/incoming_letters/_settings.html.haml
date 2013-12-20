@@ -1,12 +1,15 @@
 %p
-  = content_tag(:label, l(:field_tracker))
+  %label= l(:field_tracker)
   = select_tag("settings[issue_tracker]", options_from_collection_for_select(Tracker.all, :id, :name, @settings[:issue_tracker] && @settings[:issue_tracker].to_i || Tracker.first))
 %p
-  = content_tag(:label, l(:field_priority))
+  %label= l(:field_priority)
   = select_tag("settings[issue_priority]", options_from_collection_for_select(IssuePriority.all, :id, :name, @settings[:issue_priority] && @settings[:issue_priority].to_i || IssuePriority.default))
 %p
-  = content_tag(:label, l(:field_status))
+  %label= l(:field_status)
   = select_tag("settings[issue_status]", options_from_collection_for_select(IssueStatus.all, :id, :name, @settings[:issue_status] && @settings[:issue_status].to_i || IssueStatus.default))
 %p
   %label= l(:field_assigned_to)
-  = select_tag("settings[assigned_to_id]", principals_options_for_select(Principal.active.all(:order => [:lastname, :firstname]), (Principal.find(@settings[:assigned_to_id]) rescue nil)), :prompt => t(:prompt_please_select))
+  = select_tag("settings[assigned_to_id]", principals_options_for_select(Principal.active.sorted, Principal.find_by_id(@settings[:assigned_to_id])), prompt: t(:prompt_please_select))
+%p
+  %label= l(:label_project)
+  = select_tag("settings[contact_project_id]", project_tree_options_for_select(Project.active, selected: Project.find_by_id(@settings[:contact_project_id])), prompt: t(:prompt_please_select))

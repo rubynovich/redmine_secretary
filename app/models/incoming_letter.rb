@@ -1,10 +1,11 @@
 class IncomingLetter < ActiveRecord::Base
   unloadable
-  include Redmine::SafeAttributes
+#  include Redmine::SafeAttributes
 
   belongs_to  :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to  :executor, class_name: 'User', foreign_key: 'executor_id'
   belongs_to  :organization
+  belongs_to  :recipient_user, class_name: 'User', foreign_key: 'recipient_user_id'
   has_many    :incoming_issues
   has_many    :issues, through: :incoming_issues
 #  has_many    :projects, :through => :issues
@@ -25,12 +26,12 @@ class IncomingLetter < ActiveRecord::Base
   acts_as_attachable
 #  view_permission: :view_incoming_letters, delete_permission: :delete_incoming_letters
 
-  attr_accessor :project, :projects, :files
+  attr_accessor :project, :projects, :files, :recipient_user_id
 
-  safe_attributes :incoming_code, :outgoing_code, :answer_for, :signer,
+  attr_accessible :incoming_code, :outgoing_code, :answer_for, :signer,
     :shipping_from, :shipping_type, :shipping_on, :subject,
     :original_required, :recipient, :executor_id, :description,
-    :organization_id
+    :organization_id, :recipient_user_id
 
   scope :for_project, lambda{ |q|
     if q.present? && q.try(:id)

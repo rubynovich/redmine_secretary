@@ -4,51 +4,58 @@
 = error_messages_for @object
 
 .box.tabular
-  %p= f.select :subject, t(:list_outgoing_letter_subject), :required => true, :prompt => t(:prompt_please_select)
+  %p= f.select :subject, t(:list_outgoing_letter_subject), required: true, prompt: t(:prompt_please_select)
   .splitcontentleft
-    %p= f.text_field :outgoing_code, :required => true, :size => 10
-    %p= f.text_field :incoming_code, :size => 10
-    %p= f.text_field :answer_for, :size => 10
+    %p= f.text_field :outgoing_code, required: true, size: 10
+    %p= f.text_field :incoming_code, size: 10
+    %p= f.text_field :answer_for, size: 10
 
-    %p= f.text_field :signer, :size => 40
-    :javascript
-      observeAutocompleteField('outgoing_letter_signer', '#{escape_javascript autocomplete_for_signer_outgoing_letters_path}')
+    %p
+      = f.select :signer_user_id, options_from_collection_for_select(Person.active.sorted, :id, :name), include_blank: t(:prompt_please_select)
+      - if @object.signer.present?
+        %em=h @object.signer
+    -#
+      %p= f.text_field :signer, size: 40
+      :javascript
+        observeAutocompleteField('outgoing_letter_signer', '#{escape_javascript autocomplete_for_signer_outgoing_letters_path}')
 
-    %p= f.text_field :recipient, :size => 40
+    %p
+      = f.text_field :recipient, size: 40
+      = link_to l(:button_add), {controller: 'contacts', action: 'new', project_id: Setting.plugin_redmine_secretary[:contact_project_id]}, class: 'icon icon-add'
     :javascript
       observeAutocompleteField('outgoing_letter_recipient', '#{escape_javascript autocomplete_for_recipient_outgoing_letters_path}')
 
-
-
   .splitcontentright
     %p
-      = f.text_field :shipping_on, :required => true, :size => 10
+      = f.text_field :shipping_on, required: true, size: 10
       = calendar_for('outgoing_letter_shipping_on')
-    %p= f.select :shipping_type, t(:list_shipping_type), :required => true, :prompt => t(:prompt_please_select)
+    %p= f.select :shipping_type, t(:list_shipping_type), required: true, prompt: t(:prompt_please_select)
 
-    %p= f.text_field :shipping_to, :required => true, :size => 40
+    %p
+      = f.text_field :shipping_to, required: true, size: 40
+      = link_to l(:button_add), {controller: 'contacts', action: 'new', project_id: Setting.plugin_redmine_secretary[:contact_project_id], contact: {is_company: true}}, class: 'icon icon-add'
+
     :javascript
       observeAutocompleteField('outgoing_letter_shipping_to', '#{escape_javascript autocomplete_for_shipping_to_outgoing_letters_path}')
 
-
     %p
-      = f.text_field :served_on, :size => 10
+      = f.text_field :served_on, size: 10
       = calendar_for('outgoing_letter_served_on')
 
-  %div{:style=>"clear:both"}
+  %div{style: "clear:both"}
 
-  %p= f.text_area :description, :cols => 60, :rows => 15, :class => 'wiki-edit'
+  %p= f.text_area :description, cols: 60, rows: 15, class: 'wiki-edit'
   = link_to_attachments @object if @object.attachments.any?
   %p#attachments_form
     = label_tag('attachments[1][file]', l(:label_attachment_plural))
-    = render :partial => 'attachments/form', :locals => {:container => @object}
+    = render partial: 'attachments/form', locals: {container: @object}
 
   - if @related_projects.present?
     %p
       %label= t(:label_project_plural)
     - @related_projects.each do |project|
       %p
-        %label.inline{:for=>"projects_"+project.id.to_s, :id=>"projects_"+project.id.to_s+"_label"}
+        %label.inline{for: "projects_#{project.id}", id: "projects_#{project.id}_label"}
           = check_box_tag("projects[#{project.id}]", 'yes', @object.projects.include?(project))
           = project.name
 
