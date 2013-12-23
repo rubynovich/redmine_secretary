@@ -27,6 +27,7 @@ ru:
   field_shipping_on: Отправлено
   field_served_on: Вручено
   field_shipping_type: Вид доставки
+  field_shipping_user: Нарочный
   field_recipient: Адресат
   field_recipient_user: Адресат
   field_signer: Отправитель
@@ -51,7 +52,7 @@ ru:
     - Факс
     - Курьер
     - Электронная почта
-    - Доставка сотрудником
+    - Доставка нарочно
   list_original_required:
     - Требуется
     - Не требуется

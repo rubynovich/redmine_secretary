@@ -29,7 +29,11 @@
       %td.shipping_to= h(@object.shipping_to)
     %tr
       %th.shipping_type= l(:field_shipping_type)+":"
-      %td.shipping_type= h(@object.shipping_type)
+      %td.shipping_type
+        = h(@object.shipping_type)
+        %em
+          - if @object.shipping_user.present?
+            = " (#{link_to_user @object.shipping_user})"
       %th.signer= l(:field_signer)+":"
       %td.signer= h(@object.signer)
     %tr

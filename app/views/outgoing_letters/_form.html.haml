@@ -29,6 +29,7 @@
       = f.text_field :shipping_on, required: true, size: 10
       = calendar_for('outgoing_letter_shipping_on')
     %p= f.select :shipping_type, t(:list_shipping_type), required: true, prompt: t(:prompt_please_select)
+    %p= f.select :shipping_user_id, options_from_collection_for_select(Person.active.sorted, :id, :name), include_blank: t(:prompt_please_select)
 
     %p
       = f.text_field :shipping_to, required: true, size: 40

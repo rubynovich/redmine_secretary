@@ -28,7 +28,8 @@ class OutgoingLetter < ActiveRecord::Base
 
   attr_accessible :outgoing_code, :incoming_code, :answer_for, :signer,
     :shipping_to, :shipping_type, :shipping_on, :subject,
-    :served_on, :recipient, :description, :organization_id, :signer_user_id
+    :served_on, :recipient, :description, :organization_id, :signer_user_id,
+    :shipping_user_id
 
   scope :for_project, lambda{ |q|
     if q.present? && q.try(:id)
