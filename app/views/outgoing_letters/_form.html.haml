@@ -7,7 +7,6 @@
   %p= f.select :subject, t(:list_outgoing_letter_subject), required: true, prompt: t(:prompt_please_select)
   .splitcontentleft
     %p= f.text_field :outgoing_code, required: true, size: 10
-    %p= f.text_field :incoming_code, size: 10
     %p= f.text_field :answer_for, size: 10
 
     %p
@@ -21,7 +20,7 @@
 
     %p
       = f.text_field :recipient, size: 40
-      = link_to l(:button_add), {controller: 'contacts', action: 'new', project_id: Setting.plugin_redmine_secretary[:contact_project_id]}, class: 'icon icon-add'
+      =# link_to l(:button_add), {controller: 'contacts', action: 'new', project_id: Setting.plugin_redmine_secretary[:contact_project_id]}, class: 'icon icon-add'
     :javascript
       observeAutocompleteField('outgoing_letter_recipient', '#{escape_javascript autocomplete_for_recipient_outgoing_letters_path}')
 
@@ -33,11 +32,12 @@
 
     %p
       = f.text_field :shipping_to, required: true, size: 40
-      = link_to l(:button_add), {controller: 'contacts', action: 'new', project_id: Setting.plugin_redmine_secretary[:contact_project_id], contact: {is_company: true}}, class: 'icon icon-add'
+      =# link_to l(:button_add), {controller: 'contacts', action: 'new', project_id: Setting.plugin_redmine_secretary[:contact_project_id], contact: {is_company: true}}, class: 'icon icon-add'
 
     :javascript
       observeAutocompleteField('outgoing_letter_shipping_to', '#{escape_javascript autocomplete_for_shipping_to_outgoing_letters_path}')
 
+    %p= f.text_field :incoming_code, size: 10
     %p
       = f.text_field :served_on, size: 10
       = calendar_for('outgoing_letter_served_on')

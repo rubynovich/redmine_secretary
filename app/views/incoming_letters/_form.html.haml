@@ -11,7 +11,7 @@
 
     %p
       = f.text_field :signer, size: 40
-      = link_to l(:button_add), {controller: 'contacts', action: 'new', project_id: Setting.plugin_redmine_secretary[:contact_project_id]}, class: 'icon icon-add'
+      =# link_to l(:button_add), {controller: 'contacts', action: 'new', project_id: Setting.plugin_redmine_secretary[:contact_project_id]}, class: 'icon icon-add'
     :javascript
       observeAutocompleteField('incoming_letter_signer', '#{escape_javascript autocomplete_for_signer_incoming_letters_path}')
 
@@ -33,7 +33,7 @@
 
     %p
       = f.text_field :shipping_from, required: true, size: 40
-      = link_to l(:button_add), {controller: 'contacts', action: 'new', project_id: Setting.plugin_redmine_secretary[:contact_project_id], contact: {is_company: true}}, class: 'icon icon-add'
+      =# link_to l(:button_add), {controller: 'contacts', action: 'new', project_id: Setting.plugin_redmine_secretary[:contact_project_id], contact: {is_company: true}}, class: 'icon icon-add'
     :javascript
       observeAutocompleteField('incoming_letter_shipping_from', '#{escape_javascript autocomplete_for_shipping_from_incoming_letters_path}')
 

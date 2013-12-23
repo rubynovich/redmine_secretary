@@ -34,7 +34,7 @@ class IncomingLettersController < ApplicationController
     scope = model_class.
       for_project(@project).
       this_organization(@organization.id).
-      like_executor(params[:executor]).
+#      like_executor(params[:executor]).
       like_field(params[:incoming_code], :incoming_code).
       like_field(params[:outgoing_code], :outgoing_code).
       like_field(params[:answer_for], :answer_for).
@@ -45,6 +45,7 @@ class IncomingLettersController < ApplicationController
       eql_field(params[:subject], :subject).
       eql_field(params[:original_required], :original_required).
       eql_field(params[:shipping_on], :shipping_on).
+      eql_field(params[:executor_id], :executor_id).
       eql_created_on(params[:created_on]).
       time_period(params[:time_period_shipping_on], :shipping_on).
       time_period(params[:time_period_created_on], :created_on)
