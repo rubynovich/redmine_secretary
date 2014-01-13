@@ -11,7 +11,7 @@ class IncomingLetter < ActiveRecord::Base
 #  has_many    :projects, :through => :issues
   has_many    :comments, as: :commented, dependent: :destroy
 
-  validates_presence_of :incoming_code, :author_id, :executor_id,
+  validates_presence_of :incoming_code, :executor_id,
     :shipping_type, :shipping_from, :organization_id, :subject
   validates_format_of :incoming_code, with: /^\d+\-\d{2}(\/\d+)?$/,
     message: I18n.t(:message_incorrect_format_incoming_code)
