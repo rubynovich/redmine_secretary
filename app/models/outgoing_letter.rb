@@ -4,9 +4,9 @@ class OutgoingLetter < ActiveRecord::Base
 
   belongs_to  :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to  :organization
+  belongs_to  :shipping_user, class_name: 'User', foreign_key: 'shipping_user_id'
   has_many    :outgoing_projects
   has_many    :projects, through: :outgoing_projects
-
   has_many    :comments, as: :commented, dependent: :destroy
 
   validates_presence_of :outgoing_code, :shipping_type, :shipping_to,
