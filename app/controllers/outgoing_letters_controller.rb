@@ -87,8 +87,7 @@ class OutgoingLettersController < ApplicationController
   end
 
   def create
-    @object = model_class.new
-    @object.attributes = params[model_name]
+    @object = model_class.new(params[model_name])
     @object.save_attachments(params[:attachments])
     @object.projects = Project.where(id: params[:projects].try(:keys))
     @object.files = params[:attachments].keys if params[:attachments].present?

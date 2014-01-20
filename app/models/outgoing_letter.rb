@@ -13,11 +13,11 @@ class OutgoingLetter < ActiveRecord::Base
     :shipping_on, :organization_id, :subject
   validates_presence_of :files, on: :create
   validates_format_of :outgoing_code, with: /^\d+\-\d{2}(\/\d+)?$/,
-    message: I18n.t(:message_incorrect_format_outgoing_code)
-  validates_uniqueness_of :outgoing_code, scope: :organization_id
-  validate :outgoing_code_incorrect_year
-  validate :outgoing_code_in_series, on: :create
-  validate :answer_for_exist
+    message: I18n.t(:message_incorrect_format_outgoing_code), if: -> { self.outgoing_code.present? }
+  validates_uniqueness_of :outgoing_code, scope: :organization_id, if: -> { self.outgoing_code.present? }
+  validate :outgoing_code_incorrect_year, if: -> { self.outgoing_code.present? }
+  validate :outgoing_code_in_series, on: :create, if: -> { self.outgoing_code.present? }
+  validate :answer_for_exist, if: -> { self.answer_for.present? }
 
   before_save :add_author_id
 
@@ -108,7 +108,7 @@ class OutgoingLetter < ActiveRecord::Base
 
   def outgoing_code_incorrect_year
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
-    if outgoing_code && outgoing_code[regexp]
+    if outgoing_code[regexp]
       return if outgoing_code[regexp,2].to_i <= Time.now.strftime("%y").to_i
     end
     errors.add(:outgoing_code, :incorrect_year)
@@ -116,7 +116,7 @@ class OutgoingLetter < ActiveRecord::Base
 
   def outgoing_code_in_series
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
-    if outgoing_code && outgoing_code[regexp]
+    if outgoing_code[regexp]
       return if created_on.present?
       return if outgoing_code[regexp,3].present?
       return if outgoing_code[regexp,2].to_i < Time.now.strftime("%y").to_i
