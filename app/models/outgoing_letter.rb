@@ -108,7 +108,7 @@ class OutgoingLetter < ActiveRecord::Base
 
   def outgoing_code_incorrect_year
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
-    if outgoing_code[regexp]
+    if outgoing_code && outgoing_code[regexp]
       return if outgoing_code[regexp,2].to_i <= Time.now.strftime("%y").to_i
     end
     errors.add(:outgoing_code, :incorrect_year)
@@ -116,7 +116,7 @@ class OutgoingLetter < ActiveRecord::Base
 
   def outgoing_code_in_series
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
-    if outgoing_code[regexp]
+    if outgoing_code && outgoing_code[regexp]
       return if created_on.present?
       return if outgoing_code[regexp,3].present?
       return if outgoing_code[regexp,2].to_i < Time.now.strftime("%y").to_i
