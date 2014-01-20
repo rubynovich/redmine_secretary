@@ -13,11 +13,11 @@ class OutgoingLetter < ActiveRecord::Base
     :shipping_on, :organization_id, :subject
   validates_presence_of :files, on: :create
   validates_format_of :outgoing_code, with: /^\d+\-\d{2}(\/\d+)?$/,
-    message: I18n.t(:message_incorrect_format_outgoing_code)
-  validates_uniqueness_of :outgoing_code, scope: :organization_id
-  validate :outgoing_code_incorrect_year
-  validate :outgoing_code_in_series, on: :create
-  validate :answer_for_exist
+    message: I18n.t(:message_incorrect_format_outgoing_code), if: -> { self.outgoing_code.present? }
+  validates_uniqueness_of :outgoing_code, scope: :organization_id, if: -> { self.outgoing_code.present? }
+  validate :outgoing_code_incorrect_year, if: -> { self.outgoing_code.present? }
+  validate :outgoing_code_in_series, on: :create, if: -> { self.outgoing_code.present? }
+  validate :answer_for_exist, if: -> { self.answer_for.present? }
 
   before_save :add_author_id
 
@@ -127,14 +127,12 @@ class OutgoingLetter < ActiveRecord::Base
   end
 
   def answer_for_exist
-    if self.answer_for.present?
-      if IncomingLetter.where(
-          incoming_code: self.answer_for,
-          organization_id: self.organization_id
-        ).first
+    if IncomingLetter.where(
+        incoming_code: self.answer_for,
+        organization_id: self.organization_id
+      ).first
 
-        errors.add(:answer_for, :not_exist)
-      end
+      errors.add(:answer_for, :not_exist)
     end
   end
 
