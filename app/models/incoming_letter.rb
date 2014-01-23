@@ -137,7 +137,7 @@ class IncomingLetter < ActiveRecord::Base
 
   def answer_for_exist
     if self.answer_for.present?
-      unless OutgoingLetter.where(incoming_code: self.answer_for, organization_id: self.organization_id).first
+      unless OutgoingLetter.where(outgoing_code: self.answer_for, organization_id: self.organization_id).first
         errors.add(:answer_for, :not_exist)
       end
     end
