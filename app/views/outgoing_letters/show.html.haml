@@ -23,8 +23,17 @@
     %tr
       %th.answer_for= l(:field_answer_for)+":"
       %td.answer_for
+        -# - if @object.answer_for.present?
+        -#   = link_to h(@object.answer_for), :controller => :incoming_letters, :action => :show, :id => IncomingLetter.find(:first, :conditions => {:organization_id => @object.organization_id, :incoming_code => @object.answer_for})
+
         - if @object.answer_for.present?
-          = link_to h(@object.answer_for), :controller => :incoming_letters, :action => :show, :id => IncomingLetter.find(:first, :conditions => {:organization_id => @object.organization_id, :incoming_code => @object.answer_for})
+          - incoming_letter = IncomingLetter.find(:first, :conditions => {:organization_id => @object.organization_id, :incoming_code => @object.answer_for})
+          - if incoming_letter
+            = link_to h(@object.answer_for), :controller => :incoming_letters, :action => :show, :id => incoming_letter
+          - else
+            %span{style: 'color: red'}= @object.answer_for
+
+
       %th.shipping_to= l(:field_shipping_to)+":"
       %td.shipping_to= h(@object.shipping_to)
     %tr

@@ -93,8 +93,14 @@
             %td.incoming_code
               = h(object.incoming_code)
             %td.answer_for
+              -# - if object.answer_for.present?
+              -#   = link_to h(object.answer_for), :controller => :incoming_letters, :action => :show, :id => IncomingLetter.find(:first, :conditions => {:organization_id => @organization.id, :incoming_code => object.answer_for})
               - if object.answer_for.present?
-                = link_to h(object.answer_for), :controller => :incoming_letters, :action => :show, :id => IncomingLetter.find(:first, :conditions => {:organization_id => @organization.id, :incoming_code => object.answer_for})
+                - incoming_letter = IncomingLetter.find(:first, :conditions => {:organization_id => @organization.id, :incoming_code => object.answer_for})
+                - if incoming_letter
+                  = link_to h(object.answer_for), :controller => :incoming_letters, :action => :show, :id => incoming_letter
+                - else
+                  %span{style: 'color: red'}= object.answer_for
             %td.subject
               = h(object.subject)
             %td.signer
