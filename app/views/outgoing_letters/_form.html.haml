@@ -10,7 +10,8 @@
     %p= f.text_field :answer_for, size: 10
 
     %p
-      = f.select :signer_user_id, options_from_collection_for_select(Person.active.sorted, :id, :name), include_blank: t(:prompt_please_select)
+      - if @object.signer_user_id.blank?
+        = f.select :signer_user_id, options_from_collection_for_select(Person.active.sorted, :id, :name), include_blank: t(:prompt_please_select)
       - if @object.signer.present?
         %em=h @object.signer
     -#
