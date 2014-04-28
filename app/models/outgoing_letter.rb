@@ -21,6 +21,8 @@ class OutgoingLetter < ActiveRecord::Base
 
   before_save :add_author_id
 
+  after_save :set_signer
+
   acts_as_attachable
 #  view_permission: :view_outgoing_letters, delete_permission: :delete_outgoing_letters
 
@@ -106,13 +108,12 @@ class OutgoingLetter < ActiveRecord::Base
     end
   }
 
-  def signer
-    s = attributes['signer']
-    if s.nil? && self.signer_user_id.present?
+  def set_signer
+    unless self.signer_user_id.nil?
       s = User.where(self.signer_user_id).first.try(:name)
       self.update_column(:signer, s)
     end
-    s
+    true
   end
 
   def outgoing_code_incorrect_year
