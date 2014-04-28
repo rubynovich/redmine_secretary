@@ -110,7 +110,7 @@ class OutgoingLetter < ActiveRecord::Base
 
   def set_signer
     unless self.signer_user_id.nil?
-      s = User.where(self.signer_user_id).first.try(:name)
+      s = User.where(id: self.signer_user_id).first.try(:name)
       self.update_column(:signer, s)
     end
     true
