@@ -106,6 +106,15 @@ class OutgoingLetter < ActiveRecord::Base
     end
   }
 
+  def signer
+    s = attributes['signer']
+    if s.nil? && signer_user_id.present?
+      s = User.where(signer_user_id).first.try(:name)
+      self.update_colum(:signer, s)
+    end
+    s
+  end
+
   def outgoing_code_incorrect_year
     regexp = /^(\d+)-(\d{2})(\/\d+)?$/
     if outgoing_code[regexp]
