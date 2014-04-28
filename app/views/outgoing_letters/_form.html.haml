@@ -12,6 +12,8 @@
     %p
       - if @object.signer_user_id.blank?
         = f.select :signer_user_id, options_from_collection_for_select(Person.active.sorted, :id, :name), include_blank: t(:prompt_please_select)
+      - else
+        %label{for: "outgoing_letter_signer_user_id"}= t(:field_signer)
       - if @object.signer.present?
         %em=h @object.signer
     -#
