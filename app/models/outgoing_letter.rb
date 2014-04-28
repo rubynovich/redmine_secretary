@@ -110,7 +110,7 @@ class OutgoingLetter < ActiveRecord::Base
     s = attributes['signer']
     if s.nil? && signer_user_id.present?
       s = User.where(signer_user_id).first.try(:name)
-      self.update_colum(:signer, s)
+      self.update_column(:signer, s)
     end
     s
   end
