@@ -6,6 +6,7 @@ class IncomingLetter < ActiveRecord::Base
   belongs_to  :executor, class_name: 'User', foreign_key: 'executor_id'
   belongs_to  :organization
   belongs_to  :recipient_user, class_name: 'User', foreign_key: 'recipient_user_id'
+  belongs_to  :courier, class_name: 'User', foreign_key: 'courier_id'
   has_many    :incoming_issues
   has_many    :issues, through: :incoming_issues
 #  has_many    :projects, :through => :issues
@@ -31,7 +32,7 @@ class IncomingLetter < ActiveRecord::Base
   attr_accessible :incoming_code, :outgoing_code, :answer_for, :signer,
     :shipping_from, :shipping_type, :shipping_on, :subject,
     :original_required, :recipient, :executor_id, :description,
-    :organization_id, :recipient_user_id
+    :organization_id, :recipient_user_id, :courier_id
 
   scope :for_project, lambda{ |q|
     if q.present? && q.try(:id)

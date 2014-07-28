@@ -43,6 +43,9 @@ ru:
   field_outgoing_edit: Правка исходящих
   field_outgoing_delete: Удаление исходящих
   field_secretary_member: Пользователь
+  field_courier: Нарочный
+  field_courier_context: нарочный
+  field_courier_shipping_type: Вид доставки с нарочным
   message_confirm_destroy: Вы уверены, что ходите удалить эту запись?
   message_incorrect_format_incoming_code: имеет неверный формат (НННН-ГГ или НННН-ГГ/Д)
   message_incorrect_format_outgoing_code: имеет неверный формат (НННН-ГГ или НННН-ГГ/Д)

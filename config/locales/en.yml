@@ -27,6 +27,9 @@ en:
   field_outgoing_code: "Incoming #"
   field_incoming_code: "Outgoing #"
   field_answer_for: "Answer for"
+  field_courier: Courier
+  field_courier_context: courier
+  field_courier_shipping_type: Shipping type with courier
   message_confirm_destroy: "Are you shure?"
   list_shipping_type:
     - Mail

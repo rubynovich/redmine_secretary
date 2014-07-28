@@ -3,6 +3,14 @@ module IncomingLettersHelper
     [t(:field_incoming_code), object.incoming_code, t(:dated), format_date(object.created_on)].join(' ')
   end
 
+  def shipping_type_with_courier(object)
+    if object.shipping_type == Setting[:plugin_redmine_secretary][:shipping_type] && !object.courier.nil?
+      h(object.shipping_type) + " (" + l(:field_courier_context) + ": " + link_to_user(object.courier) + ")"
+    else
+      h(object.shipping_type)
+    end
+  end
+
   def related_projects
     settings = Setting.plugin_redmine_secretary
     begin

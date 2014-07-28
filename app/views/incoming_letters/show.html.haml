@@ -41,7 +41,7 @@
       %td.shipping_from= h(@object.shipping_from)
     %tr
       %th.shipping_type= l(:field_shipping_type)+":"
-      %td.shipping_type= h(@object.shipping_type)
+      %td.shipping_type= shipping_type_with_courier(@object)
       %th.signer= l(:field_signer)+":"
       %td.signer= h(@object.signer)
     %tr

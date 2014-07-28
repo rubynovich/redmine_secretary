@@ -13,3 +13,6 @@
 %p
   %label= l(:label_project)
   = select_tag("settings[contact_project_id]", project_tree_options_for_select(Project.active, selected: Project.find_by_id(@settings[:contact_project_id])), prompt: t(:prompt_please_select))
+%p
+  %label= l(:field_courier_shipping_type)
+  = select_tag("settings[shipping_type]", options_for_select(t(:list_shipping_type), @settings[:shipping_type]) , prompt: t(:prompt_please_select))
