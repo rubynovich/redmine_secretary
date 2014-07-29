@@ -32,13 +32,13 @@
       = f.text_field :shipping_on, required: true, size: 10
       = calendar_for('outgoing_letter_shipping_on')
     %p= f.select :shipping_type, t(:list_shipping_type), required: true, prompt: t(:prompt_please_select)
-    %p= f.select :shipping_user_id, options_from_collection_for_select(Person.active.sorted, :id, :name, @object.shipping_user_id), {include_blank: t(:prompt_please_select)}, {:disabled => @object.shipping_user_id.nil? && @object.shipping_type != Setting[:plugin_redmine_secretary][:shipping_type]}
+    %p= f.select :shipping_user_id, options_from_collection_for_select(Person.active.sorted, :id, :name, @object.shipping_user_id), {include_blank: t(:prompt_please_select)}, {:disabled =>  @object.shipping_type != Setting[:plugin_redmine_secretary][:shipping_type]}
     :javascript
       $("select#outgoing_letter_shipping_type").change( function() {        
         if ($("select#outgoing_letter_shipping_type option:selected")[0].value == "Доставка нарочно"){
-          $("select#outgoing_letter_shipping_user_id").prop( "disabled", false );
+          $("select#outgoing_letter_shipping_user_id").attr( "disabled", false );
         } else {
-          $("select#outgoing_letter_shipping_user_id").prop( "disabled", true );   
+          $("select#outgoing_letter_shipping_user_id").attr( "disabled", true );   
         }
       }); 
 
