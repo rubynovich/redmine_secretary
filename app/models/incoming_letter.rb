@@ -198,6 +198,7 @@ class IncomingLetter < ActiveRecord::Base
       start_date: Date.today,
       due_date: next_work_day,
       priority: IssuePriority.find(settings[:issue_priority]),
+      estimated_hours: 1.0,
       assigned_to: executor)
 
     attachments.each do |attachment|
